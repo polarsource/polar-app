@@ -72,7 +72,7 @@ export default function Index() {
           headerTitle: "Home",
         }}
       />
-      <View style={{ padding: 16 }}>
+      <View style={{ padding: 16, gap: 24, flex: 1, flexDirection: "column" }}>
         <View style={{ gap: 8 }}>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <OrganizationTile />
@@ -101,8 +101,8 @@ export default function Index() {
           </View>
         </View>
 
-        <View style={{ gap: 24, marginTop: 8 }}>
-          <Text style={{ fontSize: 14, color: "#999", marginBottom: 8 }}>
+        <View style={{ gap: 16 }}>
+          <Text style={{ fontSize: 18, color: colors.text }}>
             Recent Orders
           </Text>
           <View style={{ gap: 8 }}>

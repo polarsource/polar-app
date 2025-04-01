@@ -8,6 +8,7 @@ import { onlineManager } from "@tanstack/react-query";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useTheme } from "@/hooks/theme";
 import { StatusBar } from "react-native";
+
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
     setOnline(!!state.isConnected);

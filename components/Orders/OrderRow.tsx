@@ -51,7 +51,9 @@ export const OrderRow = ({ order, style }: OrderRowProps) => {
           <Text style={styles.productName}>{order.product.name}</Text>
           <View style={styles.metadataContainer}>
             <Text style={[styles.amount, { color: colors.text }]}>
-              {formatCurrencyAndAmount(order.netAmount)}
+              {order.createdAt.toLocaleDateString("en-US", {
+                dateStyle: "medium",
+              })}
             </Text>
             <Text style={{ color: colors.text }}>•</Text>
             <Text style={[styles.email, { color: colors.text }]}>

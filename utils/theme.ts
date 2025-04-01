@@ -2,6 +2,7 @@ export const themes = {
   light: {
     background: "#FFFFFF",
     text: "#000000",
+    subtext: "#999999",
     primary: "#007AFF",
     secondary: "#5856D6",
     border: "#E5E5EA",
@@ -9,7 +10,8 @@ export const themes = {
   },
   dark: {
     background: "#0D0E10",
-    text: "#D5D6DC",
+    text: "#fff",
+    subtext: "#6c6e7f",
     primary: "#0062FF",
     secondary: "#00bc7d",
     border: "#222328",
