@@ -5,13 +5,22 @@ import { OrganizationContext } from "@/utils/providers";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { Link } from "expo-router";
 import { useContext } from "react";
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  StyleProp,
+  TextStyle,
+} from "react-native";
 
 export interface OrderRowProps {
   order: Order;
+  style?: StyleProp<TextStyle>;
 }
 
-export const OrderRow = ({ order }: OrderRowProps) => {
+export const OrderRow = ({ order, style }: OrderRowProps) => {
   const { colors } = useTheme();
   const { organization } = useContext(OrganizationContext);
   const { data: product } = useProduct(organization.id, order.product.id);
@@ -19,7 +28,7 @@ export const OrderRow = ({ order }: OrderRowProps) => {
   return (
     <Link
       href={`/orders/${order.id}`}
-      style={[styles.container, { backgroundColor: colors.card }]}
+      style={[styles.container, { backgroundColor: colors.card }, style]}
       asChild
     >
       <Pressable>
@@ -32,7 +41,7 @@ export const OrderRow = ({ order }: OrderRowProps) => {
             />
           ) : (
             <View style={styles.imageFallback}>
-              <Text style={styles.fallbackText}>
+              <Text style={[styles.fallbackText, { color: colors.text }]}>
                 {order.product.name.charAt(0).toUpperCase()}
               </Text>
             </View>
@@ -41,11 +50,13 @@ export const OrderRow = ({ order }: OrderRowProps) => {
         <View style={styles.contentContainer}>
           <Text style={styles.productName}>{order.product.name}</Text>
           <View style={styles.metadataContainer}>
-            <Text style={styles.amount}>
+            <Text style={[styles.amount, { color: colors.text }]}>
               {formatCurrencyAndAmount(order.netAmount)}
             </Text>
-            <Text>•</Text>
-            <Text style={styles.email}>{order.customer.email}</Text>
+            <Text style={{ color: colors.text }}>•</Text>
+            <Text style={[styles.email, { color: colors.text }]}>
+              {order.customer.email}
+            </Text>
           </View>
         </View>
       </Pressable>
@@ -74,7 +85,7 @@ const styles = StyleSheet.create({
   imageFallback: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#2d2d2d",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -86,7 +97,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     flexDirection: "column",
-    gap: 2,
+    gap: 6,
   },
   productName: {
     fontSize: 16,
@@ -95,14 +106,12 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 16,
-    color: "#999",
   },
   email: {
     fontSize: 16,
-    color: "#999",
   },
   metadataContainer: {
     flexDirection: "row",
-    gap: 4,
+    gap: 6,
   },
 });

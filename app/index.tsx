@@ -31,13 +31,13 @@ export default function Index() {
     limit: 3,
   });
 
-  const flatData = useMemo(() => {
+  const flatOrders = useMemo(() => {
     return data?.pages.flatMap((page) => page.result.items) ?? [];
   }, [data]);
 
   const totalRevenue = useMemo(() => {
-    return flatData.reduce((acc, order) => acc + order.netAmount, 0);
-  }, [flatData]);
+    return flatOrders.reduce((acc, order) => acc + order.netAmount, 0);
+  }, [flatOrders]);
 
   const isRefetching = useMemo(() => {
     return isRefetchingOrders;
@@ -69,6 +69,7 @@ export default function Index() {
               <PolarLogo size={36} />
             </SafeAreaView>
           ),
+          headerTitle: "Home",
         }}
       />
       <View style={{ padding: 16 }}>
@@ -94,50 +95,38 @@ export default function Index() {
               </Text>
             </Tile>
 
-            <Tile href="/orders">
-              <Text style={{ color: "#999", fontSize: 14 }}>Orders</Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontWeight: "600",
-                  marginTop: 4,
-                }}
-              >
-                {flatData.length}
-              </Text>
+            <Tile href="/customers">
+              <Text style={{ color: "#999", fontSize: 14 }}>Customers</Text>
             </Tile>
           </View>
         </View>
 
         <View style={{ gap: 24, marginTop: 8 }}>
-          <View>
-            <Text style={{ fontSize: 14, color: "#999", marginBottom: 8 }}>
-              Recent Orders
-            </Text>
-            <View style={{ gap: 8 }}>
-              {flatData.map((order) => (
-                <OrderRow key={order.id} order={order} />
-              ))}
-            </View>
-            <Link href="/orders" asChild>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  flex: 1,
-                  backgroundColor: colors.primary,
-                  borderRadius: 12,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 16,
-                }}
-              >
-                <Text style={{ color: "#fff", fontSize: 16 }}>
-                  View all orders
-                </Text>
-              </TouchableOpacity>
-            </Link>
+          <Text style={{ fontSize: 14, color: "#999", marginBottom: 8 }}>
+            Recent Orders
+          </Text>
+          <View style={{ gap: 8 }}>
+            {flatOrders.map((order) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
           </View>
+          <Link href="/orders" asChild>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{
+                flex: 1,
+                backgroundColor: colors.primary,
+                borderRadius: 12,
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 16,
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>
+                View all orders
+              </Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </ScrollView>

@@ -6,6 +6,7 @@ import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { OrganizationContext } from "@/utils/providers";
 import { useContext } from "react";
+import { CustomerRow } from "@/components/Customers/CustomerRow";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -31,6 +32,7 @@ export default function Index() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={{ flex: 1, flexDirection: "column", gap: 16 }}
     >
       <Stack.Screen
         options={{
@@ -58,48 +60,9 @@ export default function Index() {
         </Text>
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.card }]}>
-        <View style={styles.customerContainer}>
-          <View style={styles.avatarContainer}>
-            {order.customer.avatarUrl ? (
-              <Image
-                source={{ uri: order.customer.avatarUrl }}
-                style={styles.avatar}
-                resizeMode="cover"
-              />
-            ) : (
-              <View
-                style={[
-                  styles.avatarFallback,
-                  { backgroundColor: colors.card },
-                ]}
-              >
-                <Text
-                  style={[styles.avatarFallbackText, { color: colors.text }]}
-                >
-                  {order.customer.name?.charAt(0).toUpperCase() ||
-                    order.customer.email.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-            )}
-          </View>
-          <View style={styles.customerInfo}>
-            {order.customer.name && (
-              <Text style={[styles.customerName, { color: colors.text }]}>
-                {order.customer.name}
-              </Text>
-            )}
-            <Text style={[styles.customerEmail, { color: colors.text }]}>
-              {order.customer.email}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <CustomerRow customer={order.customer} />
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          Order Details
-        </Text>
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.text }]}>Order ID</Text>
@@ -154,9 +117,6 @@ export default function Index() {
 
       {order.billingAddress && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Billing Address
-          </Text>
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             {order.billingAddress.line1 && (
               <View style={styles.row}>
@@ -284,12 +244,12 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 24,
+    gap: 12,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 8,
   },
   label: {
     fontSize: 16,

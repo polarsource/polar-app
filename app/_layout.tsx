@@ -32,6 +32,7 @@ export default function RootLayout() {
                 color: DarkTheme.colors.text,
                 fontSize: 20,
               },
+              contentStyle: { backgroundColor: colors.background },
               headerShadowVisible: false,
             }}
           />

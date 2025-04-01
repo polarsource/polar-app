@@ -9,7 +9,17 @@ interface AvatarProps {
 export const Avatar = ({ name, size = 32, image }: AvatarProps) => {
   if (image) {
     return (
-      <Image style={{ width: size, height: size }} source={{ uri: image }} />
+      <Image
+        style={{
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        source={{ uri: image }}
+      />
     );
   }
 

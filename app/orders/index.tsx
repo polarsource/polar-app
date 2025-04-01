@@ -52,10 +52,20 @@ export default function Index() {
         data={groupOrdersByDate(flatData)}
         renderItem={({ item }: { item: Order | string }) => {
           if (typeof item === "string") {
-            return <Text style={{ color: "#999" }}>{item}</Text>;
+            return (
+              <Text
+                style={{
+                  color: colors.text,
+                  paddingVertical: 12,
+                  fontSize: 16,
+                }}
+              >
+                {item}
+              </Text>
+            );
           }
 
-          return <OrderRow order={item} />;
+          return <OrderRow order={item} style={{ marginBottom: 8 }} />;
         }}
         contentContainerStyle={{
           padding: 8,
