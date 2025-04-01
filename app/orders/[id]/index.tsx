@@ -2,7 +2,14 @@ import { useOrder } from "@/hooks/polar/orders";
 import { useProduct } from "@/hooks/polar/products";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { useTheme } from "@/hooks/theme";
-import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { OrganizationContext } from "@/utils/providers";
 import { useContext } from "react";
@@ -13,7 +20,7 @@ export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
-  const { data: order } = useOrder(id as string);
+  const { data: order, refetch, isRefetching } = useOrder(id as string);
   const { data: product } = useProduct(
     organization.id,
     order?.product?.id ?? ""
@@ -33,6 +40,9 @@ export default function Index() {
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={{ flex: 1, flexDirection: "column", gap: 16 }}
+      refreshControl={
+        <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
+      }
     >
       <Stack.Screen
         options={{
@@ -221,15 +231,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   imageFallback: {
-    width: 120,
-    height: 120,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
   },
   fallbackText: {
-    fontSize: 36,
+    fontSize: 16,
     fontWeight: "600",
   },
   productName: {

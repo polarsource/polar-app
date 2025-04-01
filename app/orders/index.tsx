@@ -57,7 +57,7 @@ export default function Index() {
                 style={{
                   color: colors.text,
                   paddingVertical: 12,
-                  fontSize: 16,
+                  fontSize: 18,
                 }}
               >
                 {item}
@@ -82,6 +82,7 @@ export default function Index() {
             fetchNextPage();
           }
         }}
+        onEndReachedThreshold={0.8}
       />
     </>
   );

@@ -61,6 +61,7 @@ export default function Index() {
             fetchNextPage();
           }
         }}
+        onEndReachedThreshold={0.8}
       />
     </>
   );

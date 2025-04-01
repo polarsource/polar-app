@@ -42,7 +42,7 @@ export const RevenueTile = () => {
         (acc, period) => [
           ...acc,
           {
-            value: (acc[acc.length - 1]?.value ?? 0) + period.revenue,
+            value: (acc[acc.length - 1]?.value ?? 0) + (period.revenue ?? 0),
             date: period.timestamp,
           },
         ],
@@ -81,7 +81,7 @@ export const RevenueTile = () => {
                     const values = cumulativeRevenueData.map((d) => d.value);
                     const maxValue = Math.max(...values);
                     const minValue = Math.min(...values);
-                    const valueRange = Math.abs(maxValue - minValue);
+                    const valueRange = Math.abs(maxValue - minValue) || 1; // Prevent division by zero
 
                     // Scale y value between top and bottom padding
                     const y =

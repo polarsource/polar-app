@@ -1,5 +1,6 @@
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { OrganizationContext } from "@/utils/providers";
 import { Link, Stack } from "expo-router";
 import { useCallback, useContext, useMemo } from "react";
@@ -12,8 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { formatCurrencyAndAmount } from "@/utils/money";
-import { Tile } from "@/components/Home/Tile";
 import { RevenueTile } from "@/components/Home/RevenueTile";
 import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
@@ -61,72 +60,75 @@ export default function Index() {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-between",
                 backgroundColor: colors.background,
                 height: 100,
+                marginHorizontal: 32,
               }}
             >
               <PolarLogo size={36} />
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                <Link href="/settings" asChild>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <MaterialIcons name="tune" size={24} color={colors.text} />
+                  </TouchableOpacity>
+                </Link>
+                <Link href="/settings" asChild>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <MaterialIcons name="face" size={24} color={colors.text} />
+                  </TouchableOpacity>
+                </Link>
+              </View>
             </SafeAreaView>
           ),
           headerTitle: "Home",
         }}
       />
-      <View style={{ padding: 16, gap: 24, flex: 1, flexDirection: "column" }}>
+      <View style={{ padding: 16, gap: 32, flex: 1, flexDirection: "column" }}>
         <View style={{ gap: 8 }}>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <OrganizationTile />
             <RevenueTile />
           </View>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            <Tile href="/orders">
-              <Text style={{ color: "#999", fontSize: 14 }}>
-                Available Funds
-              </Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontWeight: "600",
-                  marginTop: 4,
-                }}
-              >
-                {formatCurrencyAndAmount(totalRevenue)}
-              </Text>
-            </Tile>
-
-            <Tile href="/customers">
-              <Text style={{ color: "#999", fontSize: 14 }}>Customers</Text>
-            </Tile>
-          </View>
         </View>
 
-        <View style={{ gap: 16 }}>
-          <Text style={{ fontSize: 18, color: colors.text }}>
-            Recent Orders
-          </Text>
+        <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 18, color: colors.text }}>
+              Recent Orders
+            </Text>
+            <Link href="/orders" asChild>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={{
+                  width: "auto",
+                  backgroundColor: colors.primary,
+                  borderRadius: 100,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
+                >
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
           <View style={{ gap: 8 }}>
             {flatOrders.map((order) => (
-              <OrderRow key={order.id} order={order} />
+              <OrderRow key={order.id} order={order} showTimestamp />
             ))}
           </View>
-          <Link href="/orders" asChild>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={{
-                flex: 1,
-                backgroundColor: colors.primary,
-                borderRadius: 12,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 16,
-              }}
-            >
-              <Text style={{ color: "#fff", fontSize: 16 }}>
-                View all orders
-              </Text>
-            </TouchableOpacity>
-          </Link>
         </View>
       </View>
     </ScrollView>

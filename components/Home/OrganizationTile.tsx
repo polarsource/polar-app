@@ -3,10 +3,11 @@ import { Avatar } from "../Common/Avatar";
 import { Tile } from "./Tile";
 import { OrganizationContext } from "@/utils/providers";
 import { useContext } from "react";
+import { useTheme } from "@/hooks/theme";
 
 export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);
-
+  const { colors } = useTheme();
   return (
     <Tile href="/orders">
       <View
@@ -16,7 +17,7 @@ export const OrganizationTile = () => {
           justifyContent: "space-between",
         }}
       >
-        <Avatar name={organization.name} />
+        <Avatar name={organization.name} backgroundColor={colors.primary} />
         <View style={{ flexDirection: "column", gap: 4 }}>
           <Text
             style={{

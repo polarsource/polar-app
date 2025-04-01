@@ -4,9 +4,15 @@ interface AvatarProps {
   name?: string;
   size?: number;
   image?: string;
+  backgroundColor?: string;
 }
 
-export const Avatar = ({ name, size = 32, image }: AvatarProps) => {
+export const Avatar = ({
+  name,
+  size = 32,
+  image,
+  backgroundColor,
+}: AvatarProps) => {
   if (image) {
     return (
       <Image
@@ -14,7 +20,7 @@ export const Avatar = ({ name, size = 32, image }: AvatarProps) => {
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          backgroundColor: backgroundColor ?? "rgba(255, 255, 255, 0.1)",
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -31,7 +37,7 @@ export const Avatar = ({ name, size = 32, image }: AvatarProps) => {
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: "#2d2d2d",
+        backgroundColor: backgroundColor ?? "#2d2d2d",
         alignItems: "center",
         justifyContent: "center",
       }}

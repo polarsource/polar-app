@@ -1,26 +1,26 @@
 import { useProduct } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
-import { formatCurrencyAndAmount } from "@/utils/money";
 import { OrganizationContext } from "@/utils/providers";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { Link } from "expo-router";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  Pressable,
   StyleProp,
   TextStyle,
+  TouchableOpacity,
 } from "react-native";
 
 export interface OrderRowProps {
   order: Order;
+  showTimestamp?: boolean;
   style?: StyleProp<TextStyle>;
 }
 
-export const OrderRow = ({ order, style }: OrderRowProps) => {
+export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
   const { colors } = useTheme();
   const { organization } = useContext(OrganizationContext);
   const { data: product } = useProduct(organization.id, order.product.id);
@@ -31,7 +31,7 @@ export const OrderRow = ({ order, style }: OrderRowProps) => {
       style={[styles.container, { backgroundColor: colors.card }, style]}
       asChild
     >
-      <Pressable>
+      <TouchableOpacity activeOpacity={0.6}>
         <View style={styles.imageContainer}>
           {product?.medias?.[0]?.publicUrl ? (
             <Image
@@ -50,18 +50,22 @@ export const OrderRow = ({ order, style }: OrderRowProps) => {
         <View style={styles.contentContainer}>
           <Text style={styles.productName}>{order.product.name}</Text>
           <View style={styles.metadataContainer}>
-            <Text style={[styles.amount, { color: colors.text }]}>
-              {order.createdAt.toLocaleDateString("en-US", {
-                dateStyle: "medium",
-              })}
-            </Text>
-            <Text style={{ color: colors.text }}>•</Text>
-            <Text style={[styles.email, { color: colors.text }]}>
+            {showTimestamp && (
+              <>
+                <Text style={[styles.amount, { color: colors.subtext }]}>
+                  {order.createdAt.toLocaleDateString("en-US", {
+                    dateStyle: "medium",
+                  })}
+                </Text>
+                <Text style={{ color: colors.subtext }}>•</Text>
+              </>
+            )}
+            <Text style={[styles.email, { color: colors.subtext }]}>
               {order.customer.email}
             </Text>
           </View>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </Link>
   );
 };
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     flexDirection: "column",
-    gap: 6,
+    gap: 4,
   },
   productName: {
     fontSize: 16,
