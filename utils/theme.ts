@@ -10,8 +10,8 @@ export const themes = {
   dark: {
     background: "#0D0E10",
     text: "#D5D6DC",
-    primary: "#0A84FF",
-    secondary: "#5E5CE6",
+    primary: "#0062FF",
+    secondary: "#00bc7d",
     border: "#222328",
     card: "#141518",
   },

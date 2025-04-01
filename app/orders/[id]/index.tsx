@@ -19,7 +19,13 @@ export default function Index() {
   );
 
   if (!order) {
-    return null;
+    return (
+      <Stack.Screen
+        options={{
+          title: "Order",
+        }}
+      />
+    );
   }
 
   return (

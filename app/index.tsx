@@ -2,19 +2,32 @@ import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import { OrganizationContext } from "@/utils/providers";
 import { Link, Stack } from "expo-router";
-import { useContext, useMemo } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { useCallback, useContext, useMemo } from "react";
+import {
+  Pressable,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { Tile } from "@/components/Home/Tile";
 import { RevenueTile } from "@/components/Home/RevenueTile";
 import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
+import PolarLogo from "@/components/Common/PolarLogo";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
-  const { data } = useOrders(organization.id, {
+  const {
+    data,
+    refetch: refetchOrders,
+    isRefetching: isRefetchingOrders,
+  } = useOrders(organization.id, {
     limit: 3,
   });
 
@@ -26,13 +39,38 @@ export default function Index() {
     return flatData.reduce((acc, order) => acc + order.netAmount, 0);
   }, [flatData]);
 
-  if (!flatData.length) {
-    return <Text style={{ color: "#fff" }}>Loading...</Text>;
-  }
+  const isRefetching = useMemo(() => {
+    return isRefetchingOrders;
+  }, [isRefetchingOrders]);
+
+  const refresh = useCallback(() => {
+    refetchOrders();
+  }, [refetchOrders]);
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }}>
-      <Stack.Screen options={{ title: "Home" }} />
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      refreshControl={
+        <RefreshControl onRefresh={refresh} refreshing={isRefetching} />
+      }
+    >
+      <Stack.Screen
+        options={{
+          header: () => (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: colors.background,
+                height: 100,
+              }}
+            >
+              <PolarLogo size={36} />
+            </SafeAreaView>
+          ),
+        }}
+      />
       <View style={{ padding: 16 }}>
         <View style={{ gap: 8 }}>
           <View style={{ flexDirection: "row", gap: 8 }}>
@@ -83,7 +121,8 @@ export default function Index() {
               ))}
             </View>
             <Link href="/orders" asChild>
-              <Pressable
+              <TouchableOpacity
+                activeOpacity={0.6}
                 style={{
                   flex: 1,
                   backgroundColor: colors.primary,
@@ -96,7 +135,7 @@ export default function Index() {
                 <Text style={{ color: "#fff", fontSize: 16 }}>
                   View all orders
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             </Link>
           </View>
         </View>

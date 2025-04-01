@@ -5,7 +5,7 @@ import { OrganizationContext } from "@/utils/providers";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
-import { useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { RefreshControl, Text, View } from "react-native";
 
 const groupOrdersByDate = (orders: Order[]) => {
@@ -44,10 +44,6 @@ export default function Index() {
   const flatData = useMemo(() => {
     return data?.pages.flatMap((page) => page.result.items) ?? [];
   }, [data]);
-
-  if (!flatData.length) {
-    return <Text>Loading...</Text>;
-  }
 
   return (
     <>
