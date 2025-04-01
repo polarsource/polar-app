@@ -1,39 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import {
+  PolarOrganizationProvider,
+  PolarQueryClientProvider,
+} from "@/utils/providers";
+import { Stack } from "expo-router";
+import NetInfo from "@react-native-community/netinfo";
+import { onlineManager } from "@tanstack/react-query";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { useTheme } from "@/hooks/theme";
+import { StatusBar } from "react-native";
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected);
+  });
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  const { colors } = useTheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+    <ThemeProvider value={DarkTheme}>
+      <PolarQueryClientProvider>
+        <PolarOrganizationProvider>
+          <StatusBar barStyle="light-content" />
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: colors.background,
+                borderBottomWidth: 0,
+              },
+              headerTitleStyle: {
+                color: DarkTheme.colors.text,
+                fontSize: 20,
+              },
+              headerShadowVisible: false,
+            }}
+          />
+        </PolarOrganizationProvider>
+      </PolarQueryClientProvider>
     </ThemeProvider>
   );
 }

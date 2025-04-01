@@ -1,0 +1,106 @@
+import { OrderRow } from "@/components/Orders/OrderRow";
+import { useOrders } from "@/hooks/polar/orders";
+import { OrganizationContext } from "@/utils/providers";
+import { Link, Stack } from "expo-router";
+import { useContext, useMemo } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { formatCurrencyAndAmount } from "@/utils/money";
+import { Tile } from "@/components/Home/Tile";
+import { RevenueTile } from "@/components/Home/RevenueTile";
+import { OrganizationTile } from "@/components/Home/OrganizationTile";
+import { useTheme } from "@/hooks/theme";
+
+export default function Index() {
+  const { organization } = useContext(OrganizationContext);
+  const { colors } = useTheme();
+
+  const { data } = useOrders(organization.id, {
+    limit: 3,
+  });
+
+  const flatData = useMemo(() => {
+    return data?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [data]);
+
+  const totalRevenue = useMemo(() => {
+    return flatData.reduce((acc, order) => acc + order.netAmount, 0);
+  }, [flatData]);
+
+  if (!flatData.length) {
+    return <Text style={{ color: "#fff" }}>Loading...</Text>;
+  }
+
+  return (
+    <ScrollView style={{ backgroundColor: colors.background }}>
+      <Stack.Screen options={{ title: "Home" }} />
+      <View style={{ padding: 16 }}>
+        <View style={{ gap: 8 }}>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <OrganizationTile />
+            <RevenueTile />
+          </View>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Tile href="/orders">
+              <Text style={{ color: "#999", fontSize: 14 }}>
+                Available Funds
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 18,
+                  fontWeight: "600",
+                  marginTop: 4,
+                }}
+              >
+                {formatCurrencyAndAmount(totalRevenue)}
+              </Text>
+            </Tile>
+
+            <Tile href="/orders">
+              <Text style={{ color: "#999", fontSize: 14 }}>Orders</Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 18,
+                  fontWeight: "600",
+                  marginTop: 4,
+                }}
+              >
+                {flatData.length}
+              </Text>
+            </Tile>
+          </View>
+        </View>
+
+        <View style={{ gap: 24, marginTop: 8 }}>
+          <View>
+            <Text style={{ fontSize: 14, color: "#999", marginBottom: 8 }}>
+              Recent Orders
+            </Text>
+            <View style={{ gap: 8 }}>
+              {flatData.map((order) => (
+                <OrderRow key={order.id} order={order} />
+              ))}
+            </View>
+            <Link href="/orders" asChild>
+              <Pressable
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.primary,
+                  borderRadius: 12,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 16,
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>
+                  View all orders
+                </Text>
+              </Pressable>
+            </Link>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
