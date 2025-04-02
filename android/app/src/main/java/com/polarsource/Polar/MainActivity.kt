@@ -1,4 +1,4 @@
-package com.anonymous.Polar
+package com.polarsource.Polar
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

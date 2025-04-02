@@ -1,4 +1,4 @@
-import { polar } from "@/utils/polar";
+import { usePolarClient } from "@/providers/PolarClientProvider";
 import { MetricsGetRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/metricsget";
 import { RFCDate } from "@polar-sh/sdk/dist/commonjs/types/rfcdate";
 import { useQuery } from "@tanstack/react-query";
@@ -8,8 +8,10 @@ export const useMetrics = (
   startDate: Date,
   endDate: Date,
   parameters: Omit<MetricsGetRequest, "startDate" | "endDate">
-) =>
-  useQuery({
+) => {
+  const { polar } = usePolarClient();
+
+  return useQuery({
     queryKey: [
       "metrics",
       organizationId,
@@ -24,3 +26,4 @@ export const useMetrics = (
       }),
     enabled: !!organizationId,
   });
+};

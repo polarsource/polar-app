@@ -1,7 +1,7 @@
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import { useTheme } from "@/hooks/theme";
-import { OrganizationContext } from "@/utils/providers";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";

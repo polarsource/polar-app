@@ -11,9 +11,9 @@ import {
   RefreshControl,
 } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { OrganizationContext } from "@/utils/providers";
 import { useContext } from "react";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 export default function Index() {
   const { id } = useLocalSearchParams();

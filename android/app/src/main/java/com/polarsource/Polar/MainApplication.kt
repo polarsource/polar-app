@@ -1,4 +1,4 @@
-package com.anonymous.Polar
+package com.polarsource.Polar
 
 import android.app.Application
 import android.content.res.Configuration

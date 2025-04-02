@@ -1,13 +1,12 @@
 import { CustomerRow } from "@/components/Customers/CustomerRow";
 import { useCustomers } from "@/hooks/polar/customers";
 import { useTheme } from "@/hooks/theme";
-import { OrganizationContext } from "@/utils/providers";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { Customer } from "@polar-sh/sdk/dist/commonjs/models/components/customer";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
 import React, { useContext, useMemo, useState } from "react";
 import { RefreshControl, TextInput, View } from "react-native";
-import { SearchBar } from "react-native-screens";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);

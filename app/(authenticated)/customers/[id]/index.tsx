@@ -1,7 +1,7 @@
 import { Avatar } from "@/components/Common/Avatar";
 import { useCustomer } from "@/hooks/polar/customers";
 import { useTheme } from "@/hooks/theme";
-import { OrganizationContext } from "@/utils/providers";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useContext } from "react";
 import {

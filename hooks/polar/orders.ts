@@ -1,18 +1,23 @@
-import { polar } from "@/utils/polar";
 import { OrdersListRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/orderslist";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { usePolarClient } from "@/providers/PolarClientProvider";
 
-export const useOrder = (id: string) =>
-  useQuery({
+export const useOrder = (id: string) => {
+  const { polar } = usePolarClient();
+
+  return useQuery({
     queryKey: ["orders", { id }],
     queryFn: () => polar.orders.get({ id }),
   });
+};
 
 export const useOrders = (
   organizationId?: string,
   parameters?: Omit<OrdersListRequest, "organizationId">
-) =>
-  useInfiniteQuery({
+) => {
+  const { polar } = usePolarClient();
+
+  return useInfiniteQuery({
     queryKey: ["orders", { organizationId, ...(parameters || {}) }],
     queryFn: ({ pageParam = 1 }) =>
       polar.orders.list({
@@ -27,3 +32,4 @@ export const useOrders = (
       return pages.length + 1;
     },
   });
+};

@@ -1,9 +1,9 @@
 import { View, Text } from "react-native";
 import { Avatar } from "../Common/Avatar";
 import { Tile } from "./Tile";
-import { OrganizationContext } from "@/utils/providers";
 import { useContext } from "react";
 import { useTheme } from "@/hooks/theme";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);

@@ -1,7 +1,6 @@
 import { useContext } from "react";
-import { ThemeContext } from "@/utils/providers";
 import { themes } from "@/utils/theme";
-
+import { ThemeContext } from "@/providers/ThemeProvider";
 export function useTheme() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const colors = themes[theme as keyof typeof themes];

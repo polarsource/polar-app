@@ -1,136 +1,145 @@
-import { OrderRow } from "@/components/Orders/OrderRow";
-import { useOrders } from "@/hooks/polar/orders";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { OrganizationContext } from "@/utils/providers";
-import { Link, Stack } from "expo-router";
-import { useCallback, useContext, useMemo } from "react";
+import { useEffect } from "react";
+import * as WebBrowser from "expo-web-browser";
 import {
-  Pressable,
-  RefreshControl,
+  DiscoveryDocument,
+  exchangeCodeAsync,
+  makeRedirectUri,
+  useAuthRequest,
+} from "expo-auth-session";
+import {
+  Button,
   SafeAreaView,
-  ScrollView,
+  StatusBar,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import { RevenueTile } from "@/components/Home/RevenueTile";
-import { OrganizationTile } from "@/components/Home/OrganizationTile";
+import { useRouter } from "expo-router";
+import { useSession } from "@/providers/SessionProvider";
 import { useTheme } from "@/hooks/theme";
-import PolarLogo from "@/components/Common/PolarLogo";
+import LogoIcon from "@/components/Common/PolarLogo";
 
-export default function Index() {
-  const { organization } = useContext(OrganizationContext);
+WebBrowser.maybeCompleteAuthSession();
+
+const CLIENT_ID = "polar_ci_yZLBGwoWZVsOdfN5CODRwVSTlJfwJhXqwg65e2CuNMZ";
+
+const discovery: DiscoveryDocument = {
+  authorizationEndpoint: "https://polar.sh/oauth2/authorize",
+  tokenEndpoint: "https://api.polar.sh/v1/oauth2/token",
+  registrationEndpoint: "https://api.polar.sh/v1/oauth2/register",
+  revocationEndpoint: "https://api.polar.sh/v1/oauth2/revoke",
+};
+
+const config = {
+  scopes: [
+    "openid",
+    "profile",
+    "email",
+    "user:read",
+    "organizations:read",
+    "organizations:write",
+    "orders:read",
+    "products:read",
+    "benefits:read",
+    "discounts:read",
+    "customers:read",
+    "metrics:read",
+  ],
+};
+
+export default function App() {
+  const { navigate } = useRouter();
+  const { setSession } = useSession();
   const { colors } = useTheme();
 
-  const {
-    data,
-    refetch: refetchOrders,
-    isRefetching: isRefetchingOrders,
-  } = useOrders(organization.id, {
-    limit: 3,
-  });
+  const [request, , promptAsync] = useAuthRequest(
+    {
+      clientId: CLIENT_ID,
+      scopes: config.scopes,
+      redirectUri: makeRedirectUri({
+        native: "polar://oauth/callback",
+      }),
+      usePKCE: true,
+    },
+    discovery
+  );
 
-  const flatOrders = useMemo(() => {
-    return data?.pages.flatMap((page) => page.result.items) ?? [];
-  }, [data]);
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
 
-  const totalRevenue = useMemo(() => {
-    return flatOrders.reduce((acc, order) => acc + order.netAmount, 0);
-  }, [flatOrders]);
-
-  const isRefetching = useMemo(() => {
-    return isRefetchingOrders;
-  }, [isRefetchingOrders]);
-
-  const refresh = useCallback(() => {
-    refetchOrders();
-  }, [refetchOrders]);
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.background }}
-      refreshControl={
-        <RefreshControl onRefresh={refresh} refreshing={isRefetching} />
-      }
+    <SafeAreaView
+      style={[LoginStyle.container, { backgroundColor: colors.background }]}
     >
-      <Stack.Screen
-        options={{
-          header: () => (
-            <SafeAreaView
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: colors.background,
-                height: 100,
-                marginHorizontal: 32,
-              }}
-            >
-              <PolarLogo size={36} />
-              <View style={{ flexDirection: "row", gap: 16 }}>
-                <Link href="/settings" asChild>
-                  <TouchableOpacity activeOpacity={0.6}>
-                    <MaterialIcons name="tune" size={24} color={colors.text} />
-                  </TouchableOpacity>
-                </Link>
-                <Link href="/settings" asChild>
-                  <TouchableOpacity activeOpacity={0.6}>
-                    <MaterialIcons name="face" size={24} color={colors.text} />
-                  </TouchableOpacity>
-                </Link>
-              </View>
-            </SafeAreaView>
-          ),
-          headerTitle: "Home",
+      <StatusBar barStyle="light-content" />
+      <LogoIcon size={60} />
+      <Text style={[LoginStyle.title, { color: colors.text }]}>
+        The monetization platform for your Digital Products
+      </Text>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        disabled={!request}
+        style={[
+          LoginStyle.button,
+          { backgroundColor: "#fff", borderRadius: 100 },
+        ]}
+        onPress={async () => {
+          const res = await promptAsync();
+          if (res.type === "success") {
+            const token = await exchangeCodeAsync(
+              {
+                clientId: CLIENT_ID,
+                code: res.params.code,
+                redirectUri: makeRedirectUri({
+                  native: "polar://oauth/callback",
+                }),
+                extraParams: {
+                  code_verifier: request?.codeVerifier ?? "",
+                },
+              },
+              discovery
+            );
+            setSession(token.accessToken);
+            navigate("/(authenticated)/home");
+          }
         }}
-      />
-      <View style={{ padding: 16, gap: 32, flex: 1, flexDirection: "column" }}>
-        <View style={{ gap: 8 }}>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            <OrganizationTile />
-            <RevenueTile />
-          </View>
-        </View>
-
-        <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 18, color: colors.text }}>
-              Recent Orders
-            </Text>
-            <Link href="/orders" asChild>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  width: "auto",
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                }}
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                >
-                  View All
-                </Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-          <View style={{ gap: 8 }}>
-            {flatOrders.map((order) => (
-              <OrderRow key={order.id} order={order} showTimestamp />
-            ))}
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      >
+        <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
+          Get Started
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
+
+const LoginStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 54,
+  },
+  title: {
+    fontSize: 28,
+    textAlign: "center",
+    fontWeight: "500",
+    lineHeight: 42,
+    marginHorizontal: 24,
+  },
+  button: {
+    width: "auto",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  buttonText: {
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "500",
+    lineHeight: 24,
+  },
+});

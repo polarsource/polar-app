@@ -3,11 +3,11 @@ import { Tile } from "./Tile";
 import { useMetrics } from "@/hooks/polar/metrics";
 import { TimeInterval } from "@polar-sh/sdk/dist/commonjs/models/components/timeinterval";
 import { useContext, useMemo, useState } from "react";
-import { OrganizationContext } from "@/utils/providers";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { useTheme } from "@/hooks/theme";
 import { Path } from "react-native-svg";
 import Svg from "react-native-svg";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);

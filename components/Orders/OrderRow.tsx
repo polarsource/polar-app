@@ -1,6 +1,6 @@
 import { useProduct } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
-import { OrganizationContext } from "@/utils/providers";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { Link } from "expo-router";
 import React, { useContext } from "react";
@@ -60,7 +60,13 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
                 <Text style={{ color: colors.subtext }}>•</Text>
               </>
             )}
-            <Text style={[styles.email, { color: colors.subtext }]}>
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.email,
+                { color: colors.subtext, flexWrap: "wrap" },
+              ]}
+            >
               {order.customer.email}
             </Text>
           </View>
@@ -115,8 +121,10 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 16,
+    flexShrink: 1,
   },
   metadataContainer: {
+    flex: 1,
     flexDirection: "row",
     gap: 6,
   },
