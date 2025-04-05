@@ -7,38 +7,41 @@ import { PolarQueryClientProvider } from "@/providers/PolarQueryClientProvider";
 import { PolarOrganizationProvider } from "@/providers/OrganizationProvider";
 import { useSession } from "@/providers/SessionProvider";
 import { PolarClientProvider } from "@/providers/PolarClientProvider";
+import NotificationsProvider from "@/providers/NotificationsProvider";
 
 export default function RootLayout() {
   const { colors } = useTheme();
   const { session } = useSession();
 
   if (!session) {
-    return <Redirect href="/login" />;
+    return <Redirect href="/" />;
   }
 
   return (
     <ThemeProvider value={DarkTheme}>
       <PolarClientProvider>
         <PolarQueryClientProvider>
-          <PolarOrganizationProvider>
-            <>
-              <StatusBar barStyle="light-content" />
-              <Stack
-                screenOptions={{
-                  headerStyle: {
-                    backgroundColor: colors.background,
-                    borderBottomWidth: 0,
-                  },
-                  headerTitleStyle: {
-                    color: DarkTheme.colors.text,
-                    fontSize: 20,
-                  },
-                  contentStyle: { backgroundColor: colors.background },
-                  headerShadowVisible: false,
-                }}
-              />
-            </>
-          </PolarOrganizationProvider>
+          <NotificationsProvider>
+            <PolarOrganizationProvider>
+              <>
+                <StatusBar barStyle="light-content" />
+                <Stack
+                  screenOptions={{
+                    headerStyle: {
+                      backgroundColor: colors.background,
+                      borderBottomWidth: 0,
+                    },
+                    headerTitleStyle: {
+                      color: DarkTheme.colors.text,
+                      fontSize: 18,
+                    },
+                    contentStyle: { backgroundColor: colors.background },
+                    headerShadowVisible: false,
+                  }}
+                />
+              </>
+            </PolarOrganizationProvider>
+          </NotificationsProvider>
         </PolarQueryClientProvider>
       </PolarClientProvider>
     </ThemeProvider>

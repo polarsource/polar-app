@@ -3,7 +3,7 @@ import { View, Text, Image } from "react-native";
 interface AvatarProps {
   name?: string;
   size?: number;
-  image?: string;
+  image?: string | null;
   backgroundColor?: string;
 }
 

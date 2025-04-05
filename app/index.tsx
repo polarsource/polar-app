@@ -7,14 +7,14 @@ import {
   useAuthRequest,
 } from "expo-auth-session";
 import {
-  Button,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useSession } from "@/providers/SessionProvider";
 import { useTheme } from "@/hooks/theme";
 import LogoIcon from "@/components/Common/PolarLogo";
@@ -49,7 +49,7 @@ const config = {
 
 export default function App() {
   const { navigate } = useRouter();
-  const { setSession } = useSession();
+  const { session, setSession } = useSession();
   const { colors } = useTheme();
 
   const [request, , promptAsync] = useAuthRequest(
@@ -71,6 +71,14 @@ export default function App() {
       WebBrowser.coolDownAsync();
     };
   }, []);
+
+  if (!request) {
+    return <View style={LoginStyle.container} />;
+  }
+
+  if (session) {
+    return <Redirect href="/(authenticated)/home" />;
+  }
 
   return (
     <SafeAreaView

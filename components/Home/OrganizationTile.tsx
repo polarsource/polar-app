@@ -9,7 +9,7 @@ export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
   return (
-    <Tile href="/orders">
+    <Tile href="/settings">
       <View
         style={{
           flex: 1,
@@ -17,7 +17,11 @@ export const OrganizationTile = () => {
           justifyContent: "space-between",
         }}
       >
-        <Avatar name={organization.name} backgroundColor={colors.primary} />
+        <Avatar
+          name={organization.name}
+          image={organization.avatarUrl}
+          backgroundColor={colors.primary}
+        />
         <View style={{ flexDirection: "column", gap: 4 }}>
           <Text
             style={{

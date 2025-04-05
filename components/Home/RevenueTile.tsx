@@ -17,7 +17,7 @@ export const RevenueTile = () => {
   const { colors } = useTheme();
 
   const startOfMonth = useMemo(() => {
-    return new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+    return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   }, []);
 
   const endDate = useMemo(() => {
@@ -100,7 +100,7 @@ export const RevenueTile = () => {
           </View>
         )}
         <Text style={[styles.revenueValue, { color: colors.text }]}>
-          {formatCurrencyAndAmount(cumulativeRevenue, "usd", 0)}
+          {formatCurrencyAndAmount(cumulativeRevenue, "usd", 0, "compact")}
         </Text>
       </View>
     </Tile>
@@ -120,6 +120,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   revenueValue: {
-    fontSize: 28,
+    fontSize: 26,
   },
 });
