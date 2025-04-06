@@ -17,9 +17,8 @@ import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
 import PolarLogo from "@/components/Common/PolarLogo";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { useNotificationSubscription } from "@/hooks/polar/notifications";
+import { useCreateNotificationRecipient } from "@/hooks/polar/notifications";
 import { useNotifications } from "@/providers/NotificationsProvider";
-import { useSession } from "@/providers/SessionProvider";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -50,11 +49,14 @@ export default function Index() {
   }, [refetchOrders]);
 
   const { expoPushToken } = useNotifications();
-  const { mutate: registerNotification } = useNotificationSubscription();
+  const { mutate: createNotificationRecipient } =
+    useCreateNotificationRecipient();
 
   useEffect(() => {
-    registerNotification("ExponentPushToken[rslQIaORUGFfuHROUSIru4]");
-  }, []);
+    if (expoPushToken) {
+      createNotificationRecipient(expoPushToken);
+    }
+  }, [expoPushToken, createNotificationRecipient]);
 
   return (
     <ScrollView

@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { router, Stack, useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -7,20 +7,39 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTheme } from "@/hooks/theme";
 import { useOrganizations } from "@/hooks/polar/organizations";
 import { useSession } from "@/providers/SessionProvider";
+import { useNotifications } from "@/providers/NotificationsProvider";
+import { useGetNotificationRecipient } from "@/hooks/polar/notifications";
+import { useDeleteNotificationRecipient } from "@/hooks/polar/notifications";
+import * as Notifications from "expo-notifications";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
     useContext(OrganizationContext);
   const { colors } = useTheme();
-  const { signOut } = useSession();
-
+  const { setSession } = useSession();
   const { data: organizationData, refetch, isRefetching } = useOrganizations();
+
+  const { expoPushToken } = useNotifications();
+
+  const deleteNotificationRecipient = useDeleteNotificationRecipient();
+  const { data: notificationRecipient } =
+    useGetNotificationRecipient(expoPushToken);
+
+  const signOut = useCallback(async () => {
+    if (notificationRecipient) {
+      deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
+    }
+
+    Notifications.unregisterForNotificationsAsync();
+
+    setSession(null);
+  }, [setSession, deleteNotificationRecipient, expoPushToken]);
 
   return (
     <ScrollView

@@ -36,6 +36,6 @@ export const useOAuthConfig = () => {
 
   return {
     scopes,
-    ...(process.env.NODE_ENV === "development" ? development : production),
+    ...production,
   };
 };
