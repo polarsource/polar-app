@@ -14,48 +14,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect, usePathname, useRouter } from "expo-router";
 import { useSession } from "@/providers/SessionProvider";
 import { useTheme } from "@/hooks/theme";
 import LogoIcon from "@/components/Common/PolarLogo";
+import { useOAuthConfig } from "@/hooks/oauth";
 
 WebBrowser.maybeCompleteAuthSession();
-
-const CLIENT_ID = "polar_ci_yZLBGwoWZVsOdfN5CODRwVSTlJfwJhXqwg65e2CuNMZ";
-
-const discovery: DiscoveryDocument = {
-  authorizationEndpoint: "https://polar.sh/oauth2/authorize",
-  tokenEndpoint: "https://api.polar.sh/v1/oauth2/token",
-  registrationEndpoint: "https://api.polar.sh/v1/oauth2/register",
-  revocationEndpoint: "https://api.polar.sh/v1/oauth2/revoke",
-};
-
-const config = {
-  scopes: [
-    "openid",
-    "profile",
-    "email",
-    "user:read",
-    "organizations:read",
-    "organizations:write",
-    "orders:read",
-    "products:read",
-    "benefits:read",
-    "discounts:read",
-    "customers:read",
-    "metrics:read",
-  ],
-};
 
 export default function App() {
   const { navigate } = useRouter();
   const { session, setSession } = useSession();
   const { colors } = useTheme();
-
+  const { CLIENT_ID, scopes, discovery } = useOAuthConfig();
   const [request, , promptAsync] = useAuthRequest(
     {
       clientId: CLIENT_ID,
-      scopes: config.scopes,
+      scopes,
       redirectUri: makeRedirectUri({
         native: "polar://oauth/callback",
       }),

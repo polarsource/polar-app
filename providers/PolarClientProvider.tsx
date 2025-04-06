@@ -25,6 +25,10 @@ export function PolarClientProvider({ children }: PropsWithChildren) {
 
   const polar = new Polar({
     accessToken: session ?? "",
+    serverURL:
+      process.env.NODE_ENV === "development"
+        ? process.env.EXPO_PUBLIC_POLAR_SERVER_URL
+        : "https://api.polar.sh",
   });
 
   return (

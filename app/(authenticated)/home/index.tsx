@@ -1,8 +1,8 @@
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Link, Stack } from "expo-router";
-import { useCallback, useContext, useMemo } from "react";
+import { Link, Stack, usePathname } from "expo-router";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import {
   Pressable,
   RefreshControl,
@@ -17,6 +17,9 @@ import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
 import PolarLogo from "@/components/Common/PolarLogo";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import { useNotificationSubscription } from "@/hooks/polar/notifications";
+import { useNotifications } from "@/providers/NotificationsProvider";
+import { useSession } from "@/providers/SessionProvider";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -45,6 +48,13 @@ export default function Index() {
   const refresh = useCallback(() => {
     refetchOrders();
   }, [refetchOrders]);
+
+  const { expoPushToken } = useNotifications();
+  const { mutate: registerNotification } = useNotificationSubscription();
+
+  useEffect(() => {
+    registerNotification("ExponentPushToken[rslQIaORUGFfuHROUSIru4]");
+  }, []);
 
   return (
     <ScrollView
