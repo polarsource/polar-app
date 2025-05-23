@@ -28,7 +28,7 @@ export default function Index() {
     <>
       <Stack.Screen
         options={{
-          title: "Customer Details",
+          title: customer?.name ?? "Customer",
         }}
       />
       <ScrollView
@@ -48,7 +48,7 @@ export default function Index() {
             <Text style={[styles.customerName, { color: "#fff" }]}>
               {customer?.name ?? "—"}
             </Text>
-            <Text style={[styles.customerEmail, { color: colors.text }]}>
+            <Text style={[styles.customerEmail, { color: colors.subtext }]}>
               {customer?.email}
             </Text>
           </View>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   hero: {
     flexDirection: "column",
     alignItems: "center",
-    gap: 12,
+    gap: 24,
   },
   heroInfo: {
     alignItems: "center",

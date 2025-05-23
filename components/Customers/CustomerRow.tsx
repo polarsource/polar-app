@@ -23,7 +23,7 @@ export const CustomerRow = ({ customer }: CustomerRowProps) => {
       style={[styles.container, { backgroundColor: colors.card }]}
       asChild
     >
-      <TouchableOpacity activeOpacity={0.8}>
+      <TouchableOpacity activeOpacity={0.6}>
         <Avatar image={customer.avatarUrl} name={customer.email} size={36} />
         <View style={styles.contentContainer}>
           <Text style={styles.name}>{customer.name ?? "—"}</Text>

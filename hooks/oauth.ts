@@ -32,6 +32,7 @@ export const useOAuthConfig = () => {
     "discounts:read",
     "customers:read",
     "metrics:read",
+    "events:read",
   ];
 
   return {

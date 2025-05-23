@@ -76,7 +76,10 @@ export default function Index() {
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.text }]}>Order ID</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            <Text
+              style={[styles.value, { color: colors.text, maxWidth: "50%" }]}
+              numberOfLines={1}
+            >
               {order.id}
             </Text>
           </View>
@@ -253,7 +256,7 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 16,
-    borderRadius: 24,
+    borderRadius: 12,
     gap: 12,
   },
   row: {

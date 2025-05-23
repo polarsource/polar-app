@@ -1,10 +1,9 @@
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Link, Stack, usePathname } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useCallback, useContext, useEffect, useMemo } from "react";
 import {
-  Pressable,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -19,34 +18,45 @@ import PolarLogo from "@/components/Common/PolarLogo";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { useCreateNotificationRecipient } from "@/hooks/polar/notifications";
 import { useNotifications } from "@/providers/NotificationsProvider";
+import { useCustomers } from "@/hooks/polar/customers";
+import { CustomerCard } from "@/components/Customers/CustomerCard";
+import React from "react";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
   const {
-    data,
+    data: orders,
     refetch: refetchOrders,
     isRefetching: isRefetchingOrders,
   } = useOrders(organization.id, {
-    limit: 3,
+    limit: 5,
+  });
+
+  const {
+    data: customers,
+    refetch: refetchCustomers,
+    isRefetching: isRefetchingCustomers,
+  } = useCustomers(organization.id, {
+    limit: 5,
   });
 
   const flatOrders = useMemo(() => {
-    return data?.pages.flatMap((page) => page.result.items) ?? [];
-  }, [data]);
+    return orders?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [orders]);
 
-  const totalRevenue = useMemo(() => {
-    return flatOrders.reduce((acc, order) => acc + order.netAmount, 0);
-  }, [flatOrders]);
+  const flatCustomers = useMemo(() => {
+    return customers?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [customers]);
 
   const isRefetching = useMemo(() => {
-    return isRefetchingOrders;
+    return isRefetchingOrders || isRefetchingCustomers;
   }, [isRefetchingOrders]);
 
   const refresh = useCallback(() => {
-    refetchOrders();
-  }, [refetchOrders]);
+    Promise.all([refetchOrders(), refetchCustomers()]);
+  }, [refetchOrders, refetchCustomers]);
 
   const { expoPushToken } = useNotifications();
   const { mutate: createNotificationRecipient } =
@@ -142,6 +152,53 @@ export default function Index() {
             ))}
           </View>
         </View>
+
+        {flatCustomers && flatCustomers.length > 0 ? (
+          <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 18, color: colors.text }}>
+                Recent Customers
+              </Text>
+              <Link href="/customers" asChild>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={{
+                    width: "auto",
+                    backgroundColor: colors.primary,
+                    borderRadius: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                  }}
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
+                  >
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ flexDirection: "row", gap: 16 }}
+            >
+              {flatCustomers.map((customer) => (
+                <CustomerCard key={customer.id} customer={customer} />
+              ))}
+            </ScrollView>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     </ScrollView>
   );
