@@ -6,25 +6,19 @@ import {
   Text,
   View,
   StyleSheet,
-  Image,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useContext } from "react";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
-import { OrganizationContext } from "@/providers/OrganizationProvider";
+import * as Clipboard from "expo-clipboard";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
-  const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
   const { data: order, refetch, isRefetching } = useOrder(id as string);
-  const { data: product } = useProduct(
-    organization.id,
-    order?.product?.id ?? ""
-  );
 
   if (!order) {
     return (
@@ -49,64 +43,99 @@ export default function Index() {
           title: "Order",
         }}
       />
-      <View style={styles.header}>
-        {product?.medias?.[0]?.publicUrl ? (
-          <Image
-            source={{ uri: product.medias[0].publicUrl }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ) : (
-          <View
-            style={[styles.imageFallback, { backgroundColor: colors.card }]}
+
+      <View style={[styles.section, { gap: 12, flexDirection: "row" }]}>
+        <TouchableOpacity
+          style={[
+            styles.box,
+            { backgroundColor: colors.card, flex: 1, gap: 4, width: "50%" },
+          ]}
+          onPress={() => {
+            Clipboard.setStringAsync(order.id);
+          }}
+          activeOpacity={0.6}
+        >
+          <Text style={[styles.label, { color: colors.subtext, fontSize: 18 }]}>
+            #
+          </Text>
+          <Text
+            style={[
+              styles.value,
+              { color: colors.text, textTransform: "uppercase", fontSize: 18 },
+            ]}
+            numberOfLines={1}
           >
-            <Text style={[styles.fallbackText, { color: colors.text }]}>
-              {order.product.name.charAt(0).toUpperCase()}
-            </Text>
-          </View>
-        )}
-        <Text style={[styles.productName, { color: colors.text }]}>
-          {order.product.name}
-        </Text>
+            {order.id.split("-").pop()?.slice(-6, -1)}
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={[
+            styles.box,
+            { backgroundColor: colors.card, flex: 1, gap: 4, width: "50%" },
+          ]}
+        >
+          <Text style={[styles.label, { color: colors.subtext }]}>Date</Text>
+          <Text style={[styles.value, { color: colors.text }]}>
+            {order.createdAt.toLocaleDateString("en-US", {
+              dateStyle: "medium",
+            })}
+          </Text>
+        </View>
       </View>
 
       <CustomerRow customer={order.customer} />
 
       <View style={styles.section}>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.card, gap: 0, paddingVertical: 0 },
+          ]}
+        >
+          {order.items.map((item, index, arr) => (
+            <View
+              key={item.id}
+              style={{
+                borderBottomWidth: index === arr.length - 1 ? 0 : 1,
+                borderColor: colors.border,
+                gap: 4,
+                paddingVertical: 16,
+              }}
+            >
+              <Text
+                style={[styles.label, { color: colors.text }]}
+                numberOfLines={1}
+              >
+                {item.label}
+              </Text>
+              <Text style={[styles.value, { color: colors.text }]}>
+                {formatCurrencyAndAmount(item.amount)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.section}>
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>Order ID</Text>
-            <Text
-              style={[styles.value, { color: colors.text, maxWidth: "50%" }]}
-              numberOfLines={1}
-            >
-              {order.id}
+            <Text style={[styles.label, { color: colors.subtext }]}>
+              Subtotal
             </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>
-              Order Date
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {order.createdAt.toLocaleDateString("en-US", {
-                dateStyle: "medium",
-              })}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>Subtotal</Text>
             <Text style={[styles.value, { color: colors.text }]}>
               {formatCurrencyAndAmount(order.subtotalAmount)}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>Discount</Text>
+            <Text style={[styles.label, { color: colors.subtext }]}>
+              Discount
+            </Text>
             <Text style={[styles.value, { color: colors.text }]}>
               -{formatCurrencyAndAmount(order.discountAmount)}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>
+            <Text style={[styles.label, { color: colors.subtext }]}>
               Net amount
             </Text>
             <Text style={[styles.value, { color: colors.text }]}>
@@ -114,7 +143,7 @@ export default function Index() {
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>Tax</Text>
+            <Text style={[styles.label, { color: colors.subtext }]}>Tax</Text>
             <Text style={[styles.value, { color: colors.text }]}>
               {formatCurrencyAndAmount(order.taxAmount)}
             </Text>
@@ -136,8 +165,11 @@ export default function Index() {
                 <Text style={[styles.label, { color: colors.text }]}>
                   Address
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.line1}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.line1 ?? "—"}
                 </Text>
               </View>
             )}
@@ -146,16 +178,22 @@ export default function Index() {
                 <Text style={[styles.label, { color: colors.text }]}>
                   Address 2
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.line2}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.line2 ?? "—"}
                 </Text>
               </View>
             )}
             {order.billingAddress.city && (
               <View style={styles.row}>
                 <Text style={[styles.label, { color: colors.text }]}>City</Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.city}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.city ?? "—"}
                 </Text>
               </View>
             )}
@@ -164,8 +202,11 @@ export default function Index() {
                 <Text style={[styles.label, { color: colors.text }]}>
                   State
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.state}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.state ?? "—"}
                 </Text>
               </View>
             )}
@@ -174,8 +215,11 @@ export default function Index() {
                 <Text style={[styles.label, { color: colors.text }]}>
                   Postal Code
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.postalCode}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.postalCode ?? "—"}
                 </Text>
               </View>
             )}
@@ -184,8 +228,11 @@ export default function Index() {
                 <Text style={[styles.label, { color: colors.text }]}>
                   Country
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {order.billingAddress.country}
+                <Text
+                  style={[styles.value, { color: colors.text }]}
+                  numberOfLines={1}
+                >
+                  {order.billingAddress.country ?? "—"}
                 </Text>
               </View>
             )}
@@ -223,11 +270,6 @@ const styles = StyleSheet.create({
     gap: 12,
     flexDirection: "column",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
   image: {
     width: 40,
     height: 40,
@@ -254,6 +296,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 8,
   },
+  box: {
+    flexDirection: "column",
+    gap: 4,
+    borderRadius: 12,
+    padding: 12,
+  },
   card: {
     padding: 16,
     borderRadius: 12,
@@ -262,6 +310,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 6,
   },
   label: {
     fontSize: 16,

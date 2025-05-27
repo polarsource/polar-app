@@ -8,6 +8,7 @@
     "scheme": "polar",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "owner": "polar-sh",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.polarsource.Polar"
@@ -35,7 +36,8 @@
           "backgroundColor": "#0D0E10"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

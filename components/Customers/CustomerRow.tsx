@@ -28,7 +28,9 @@ export const CustomerRow = ({ customer }: CustomerRowProps) => {
         <View style={styles.contentContainer}>
           <Text style={styles.name}>{customer.name ?? "—"}</Text>
           <View style={styles.metadataContainer}>
-            <Text style={styles.metadata}>{customer.email}</Text>
+            <Text style={[styles.metadata, { color: colors.subtext }]}>
+              {customer.email}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -78,7 +80,6 @@ const styles = StyleSheet.create({
   },
   metadata: {
     fontSize: 16,
-    color: "#999",
   },
   dot: {
     fontSize: 16,
