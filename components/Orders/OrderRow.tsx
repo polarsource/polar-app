@@ -1,6 +1,7 @@
 import { useProduct } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { Link } from "expo-router";
 import React, { useContext } from "react";
@@ -32,7 +33,7 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
       asChild
     >
       <TouchableOpacity activeOpacity={0.6}>
-        <View style={styles.imageContainer}>
+        <View style={[styles.imageContainer]}>
           {product?.medias?.[0]?.publicUrl ? (
             <Image
               source={{ uri: product?.medias?.[0]?.publicUrl }}
@@ -40,10 +41,17 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
               resizeMode="cover"
             />
           ) : (
-            <View style={styles.imageFallback}>
-              <Text style={[styles.fallbackText, { color: colors.text }]}>
-                {order.product.name.charAt(0).toUpperCase()}
-              </Text>
+            <View
+              style={[
+                styles.imageFallback,
+                {
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  borderRadius: 8,
+                },
+              ]}
+            >
+              <MaterialIcons name="texture" size={24} color={colors.subtext} />
             </View>
           )}
         </View>
@@ -97,7 +105,6 @@ const styles = StyleSheet.create({
   imageFallback: {
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
     justifyContent: "center",
     alignItems: "center",
   },

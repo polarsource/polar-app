@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/theme";
 import { View, Text, Image } from "react-native";
 
 interface AvatarProps {
@@ -13,14 +14,16 @@ export const Avatar = ({
   image,
   backgroundColor,
 }: AvatarProps) => {
+  const { colors } = useTheme();
+
   if (image) {
     return (
       <Image
+        height={size}
+        width={size}
         style={{
-          width: size,
-          height: size,
           borderRadius: size / 2,
-          backgroundColor: backgroundColor ?? "rgba(255, 255, 255, 0.1)",
+          backgroundColor: backgroundColor ?? colors.subtext,
           alignItems: "center",
           justifyContent: "center",
         }}

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
+  SafeAreaView,
 } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
@@ -17,6 +18,8 @@ import { useNotifications } from "@/providers/NotificationsProvider";
 import { useGetNotificationRecipient } from "@/hooks/polar/notifications";
 import { useDeleteNotificationRecipient } from "@/hooks/polar/notifications";
 import * as Notifications from "expo-notifications";
+import { Avatar } from "@/components/Common/Avatar";
+import { Button } from "@/components/Common/Button";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
@@ -48,52 +51,63 @@ export default function Index() {
       }
     >
       <Stack.Screen options={{ title: "Settings" }} />
-      <Text style={[SettingsStyle.title, { color: colors.text }]}>
-        Organizations
-      </Text>
-      <View style={SettingsStyle.organizationsContainer}>
-        {organizationData?.result.items.map((organization) => (
-          <TouchableOpacity
-            key={organization.id}
-            style={[
-              SettingsStyle.organization,
-              {
-                backgroundColor: colors.card,
-              },
-            ]}
-            onPress={() => setOrganization(organization)}
-            activeOpacity={0.6}
-          >
-            <MaterialIcons
-              name="check"
-              size={20}
-              color={
-                selectedOrganization?.id === organization.id
-                  ? colors.secondary
-                  : "transparent"
-              }
-            />
-            <Text
-              style={[SettingsStyle.organizationName, { color: colors.text }]}
-            >
-              {organization.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <TouchableOpacity style={SettingsStyle.logoutButton} onPress={signOut}>
-        <Text style={[SettingsStyle.logoutButtonText, { color: colors.text }]}>
-          Logout
+      <View style={SettingsStyle.container}>
+        <Text style={[SettingsStyle.title, { color: colors.text }]}>
+          Organizations
         </Text>
-      </TouchableOpacity>
+        <View style={SettingsStyle.organizationsContainer}>
+          {organizationData?.result.items.map((organization) => (
+            <TouchableOpacity
+              key={organization.id}
+              style={[
+                SettingsStyle.organization,
+                {
+                  backgroundColor: colors.card,
+                },
+              ]}
+              onPress={() => {
+                setOrganization(organization);
+                router.back();
+              }}
+              activeOpacity={0.6}
+            >
+              <View style={SettingsStyle.organizationContent}>
+                <Avatar size={32} image={organization.avatarUrl} />
+                <Text
+                  style={[
+                    SettingsStyle.organizationName,
+                    { color: colors.text },
+                  ]}
+                >
+                  {organization.name}
+                </Text>
+              </View>
+              <MaterialIcons
+                name="check"
+                size={20}
+                color={
+                  selectedOrganization?.id === organization.id
+                    ? colors.secondary
+                    : "transparent"
+                }
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Button onPress={signOut}>Logout</Button>
+      </View>
     </ScrollView>
   );
 }
 
 const SettingsStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    gap: 16,
+  },
   organizationsContainer: {
     flexDirection: "column",
-    padding: 16,
     gap: 4,
     flex: 1,
   },
@@ -103,18 +117,22 @@ const SettingsStyle = StyleSheet.create({
   },
   organization: {
     flex: 1,
-    padding: 16,
+    paddingVertical: 16,
+    paddingLeft: 16,
+    paddingRight: 24,
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    justifyContent: "space-between",
+  },
+  organizationContent: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
   },
   organizationName: {
     fontSize: 16,
-  },
-  logoutButton: {
-    padding: 16,
-    borderRadius: 8,
   },
   logoutButtonText: {
     fontSize: 16,

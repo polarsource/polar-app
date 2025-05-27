@@ -1,15 +1,22 @@
 import { useTheme } from "@/hooks/theme";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 
 export interface ButtonProps {
   children: React.ReactNode;
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const Button = (props: ButtonProps) => {
-  const { children, onPress, disabled, loading } = props;
+  const { children, onPress, disabled, loading, style } = props;
   const { colors } = useTheme();
 
   return (
@@ -17,7 +24,7 @@ export const Button = (props: ButtonProps) => {
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.6}
-      style={[styles.button, { backgroundColor: colors.primary }]}
+      style={[styles.button, { backgroundColor: colors.primary }, style]}
     >
       <Text style={[styles.text, { color: colors.text }]}>{children}</Text>
     </TouchableOpacity>
@@ -30,7 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    height: 40,
+    height: 50,
   },
   text: {
     fontSize: 16,
