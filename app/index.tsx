@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import * as WebBrowser from "expo-web-browser";
 import {
-  DiscoveryDocument,
   exchangeCodeAsync,
   makeRedirectUri,
   useAuthRequest,
@@ -14,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Redirect, usePathname, useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useSession } from "@/providers/SessionProvider";
 import { useTheme } from "@/hooks/theme";
 import LogoIcon from "@/components/Common/PolarLogo";
