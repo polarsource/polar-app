@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="polar"/>
         <data android:scheme="com.polarsource.Polar"/>
+        <data android:scheme="exp+polar"/>
       </intent-filter>
     </activity>
   </application>
