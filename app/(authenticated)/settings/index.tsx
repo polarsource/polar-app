@@ -20,6 +20,9 @@ import { useDeleteNotificationRecipient } from "@/hooks/polar/notifications";
 import * as Notifications from "expo-notifications";
 import { Avatar } from "@/components/Common/Avatar";
 import { Button } from "@/components/Common/Button";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+import { useUpdates } from "expo-updates";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
@@ -43,7 +46,10 @@ export default function Index() {
     Notifications.unregisterForNotificationsAsync();
 
     setSession(null);
+    AsyncStorage.removeItem("organizationId");
   }, [setSession, deleteNotificationRecipient, expoPushToken]);
+
+  const { downloadedUpdate } = useUpdates();
 
   return (
     <ScrollView
@@ -94,6 +100,12 @@ export default function Index() {
               />
             </TouchableOpacity>
           ))}
+        </View>
+        <View>
+          <Text>App Version</Text>
+          <Text>{Constants.expoConfig?.version}</Text>
+          <Text>Update ID</Text>
+          <Text>{downloadedUpdate?.updateId}</Text>
         </View>
         <Button onPress={signOut}>Logout</Button>
       </View>
