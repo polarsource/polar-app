@@ -21,16 +21,6 @@ export const useOAuthConfig = () => {
     },
   };
 
-  const development = {
-    CLIENT_ID: "polar_ci_RW5LDNLrEjeOzCovwUf7pp9dwe3PKUCut3CwO135uvX",
-    discovery: {
-      authorizationEndpoint: `http://127.0.0.1:3000/oauth2/authorize`,
-      tokenEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/token`,
-      registrationEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/register`,
-      revocationEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/revoke`,
-    },
-  };
-
   const scopes = [
     "openid",
     "profile",
