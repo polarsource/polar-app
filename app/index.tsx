@@ -15,7 +15,7 @@ import { useOAuth } from "@/hooks/oauth";
 export default function App() {
   const { session } = useSession();
   const { colors } = useTheme();
-  const { authRequest, authenticate } = useOAuth();
+  const { authRequest, promptAsync } = useOAuth();
 
   if (!authRequest) {
     return <View style={LoginStyle.container} />;
@@ -41,7 +41,9 @@ export default function App() {
           LoginStyle.button,
           { backgroundColor: "#fff", borderRadius: 100 },
         ]}
-        onPress={authenticate}
+        onPress={() => {
+          promptAsync().then(console.log);
+        }}
       >
         <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
           Get Started

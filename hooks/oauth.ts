@@ -1,9 +1,10 @@
 import {
   exchangeCodeAsync,
   makeRedirectUri,
+  Prompt,
   useAuthRequest,
 } from "expo-auth-session";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { useSession } from "@/providers/SessionProvider";
 import * as WebBrowser from "expo-web-browser";
@@ -58,27 +59,33 @@ export const useOAuth = () => {
   }, []);
 
   const { CLIENT_ID, scopes, discovery } = useOAuthConfig();
-  const [authRequest, , promptAsync] = useAuthRequest(
+  const [authRequest, response, promptAsync] = useAuthRequest(
     {
       clientId: CLIENT_ID,
       scopes,
       redirectUri: makeRedirectUri({
-        native: "polar://oauth/callback",
+        scheme: "com.polarsource.Polar",
+        path: "oauth",
       }),
+      prompt: Prompt.Consent,
       usePKCE: true,
     },
     discovery
   );
 
-  const authenticate = useCallback(async () => {
-    const res = await promptAsync();
-    if (res.type === "success") {
+  useEffect(() => {
+    const exchangeCode = async () => {
+      if (response?.type !== "success") {
+        return;
+      }
+
       const token = await exchangeCodeAsync(
         {
           clientId: CLIENT_ID,
-          code: res.params.code,
+          code: response.params.code,
           redirectUri: makeRedirectUri({
-            native: "polar://oauth/callback",
+            scheme: "com.polarsource.Polar",
+            path: "oauth",
           }),
           extraParams: {
             code_verifier: authRequest?.codeVerifier ?? "",
@@ -86,10 +93,15 @@ export const useOAuth = () => {
         },
         discovery
       );
+
       setSession(token.accessToken);
       navigate("/(authenticated)/home");
-    }
-  }, [CLIENT_ID, discovery, navigate, setSession]);
+    };
 
-  return { authenticate, authRequest };
+    if (response?.type === "success") {
+      exchangeCode();
+    }
+  }, [response]);
+
+  return { authRequest, promptAsync };
 };
