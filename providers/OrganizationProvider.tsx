@@ -2,6 +2,7 @@ import { useOrganizations } from "@/hooks/polar/organizations";
 import { createContext, useEffect, useMemo, useState } from "react";
 import { Organization } from "@polar-sh/sdk/dist/commonjs/models/components/organization";
 import { useStorageState } from "@/hooks/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface OrganizationContextValue {
   organization: Organization;
@@ -30,6 +31,12 @@ export function PolarOrganizationProvider({
   const { data: organizationData } = useOrganizations();
 
   useEffect(() => {
+    AsyncStorage.getItem("organizationId").then((organizationId) => {
+      setOrganizationId(organizationId ?? null);
+    });
+  }, []);
+
+  useEffect(() => {
     if (!organizationId) {
       setOrganizationId(organizationData?.result.items[0].id ?? null);
     }
@@ -52,6 +59,8 @@ export function PolarOrganizationProvider({
         organizations: organizationData?.result.items ?? [],
         setOrganization: (organization: Organization) => {
           setOrganizationId(organization.id);
+
+          AsyncStorage.setItem("organizationId", organization.id);
         },
       }}
     >

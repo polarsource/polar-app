@@ -27,7 +27,7 @@ export default function Index() {
           title: "Customers",
         }}
       />
-      <View style={{ padding: 8, backgroundColor: colors.background }}>
+      <View style={{ padding: 16, backgroundColor: colors.background }}>
         <TextInput
           placeholder="Search Customers"
           onChangeText={setSearch}
@@ -46,7 +46,7 @@ export default function Index() {
           return <CustomerRow customer={item} />;
         }}
         contentContainerStyle={{
-          padding: 8,
+          padding: 16,
           backgroundColor: colors.background,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 6 }} />}

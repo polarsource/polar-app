@@ -24,6 +24,7 @@ import { Button } from "@/components/Common/Button";
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
     useContext(OrganizationContext);
+
   const { colors } = useTheme();
   const { setSession } = useSession();
   const { data: organizationData, refetch, isRefetching } = useOrganizations();

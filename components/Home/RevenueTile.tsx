@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 16,
   },
   revenueValue: {
     fontSize: 26,

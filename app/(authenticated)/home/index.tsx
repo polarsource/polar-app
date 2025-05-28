@@ -69,163 +69,154 @@ export default function Index() {
   }, [expoPushToken, createNotificationRecipient]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={{ backgroundColor: colors.background, gap: 32 }}
-        refreshControl={
-          <RefreshControl onRefresh={refresh} refreshing={isRefetching} />
-        }
-      >
-        <Stack.Screen
-          options={{
-            header: () => (
-              <SafeAreaView
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  backgroundColor: colors.background,
-                  height: 100,
-                  marginHorizontal: 32,
-                }}
-              >
-                <PolarLogo size={36} />
-                <View style={{ flexDirection: "row", gap: 20 }}>
-                  <Link href="/settings" asChild>
-                    <TouchableOpacity activeOpacity={0.6}>
-                      <MaterialIcons
-                        name="bolt"
-                        size={24}
-                        color={colors.text}
-                      />
-                    </TouchableOpacity>
-                  </Link>
-                  <Link href="/settings" asChild>
-                    <TouchableOpacity activeOpacity={0.6}>
-                      <MaterialIcons
-                        name="tune"
-                        size={24}
-                        color={colors.text}
-                      />
-                    </TouchableOpacity>
-                  </Link>
-                </View>
-              </SafeAreaView>
-            ),
-            headerTitle: "Home",
-          }}
-        />
-        <View
-          style={{
-            padding: 16,
-            gap: 32,
-            flex: 1,
-            flexDirection: "column",
-          }}
-        >
-          <View style={{ gap: 8 }}>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <OrganizationTile />
-              <RevenueTile />
-            </View>
-          </View>
-
-          <View style={{ gap: 24, flexDirection: "column", flex: 1 }}>
-            <View
+    <ScrollView
+      contentContainerStyle={{ backgroundColor: colors.background, gap: 32 }}
+      refreshControl={
+        <RefreshControl onRefresh={refresh} refreshing={isRefetching} />
+      }
+      contentInset={{ bottom: 48 }}
+    >
+      <Stack.Screen
+        options={{
+          header: () => (
+            <SafeAreaView
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                backgroundColor: colors.background,
+                height: 100,
+                marginHorizontal: 32,
               }}
             >
-              <Text style={{ fontSize: 18, color: colors.text }}>
-                Recent Orders
-              </Text>
-              <Link href="/orders" asChild>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  style={{
-                    width: "auto",
-                    backgroundColor: colors.primary,
-                    borderRadius: 100,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                  }}
-                >
-                  <Text
-                    style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                  >
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </Link>
-            </View>
-            <View style={{ gap: 8 }}>
-              {flatOrders.map((order) => (
-                <OrderRow key={order.id} order={order} showTimestamp />
-              ))}
-            </View>
+              <PolarLogo size={36} />
+              <View style={{ flexDirection: "row", gap: 20 }}>
+                <Link href="/settings" asChild>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <MaterialIcons name="bolt" size={24} color={colors.text} />
+                  </TouchableOpacity>
+                </Link>
+                <Link href="/settings" asChild>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <MaterialIcons name="tune" size={24} color={colors.text} />
+                  </TouchableOpacity>
+                </Link>
+              </View>
+            </SafeAreaView>
+          ),
+          headerTitle: "Home",
+        }}
+      />
+      <View
+        style={{
+          padding: 16,
+          gap: 32,
+          flex: 1,
+          flexDirection: "column",
+        }}
+      >
+        <View style={{ gap: 8 }}>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <OrganizationTile />
+            <RevenueTile />
           </View>
         </View>
 
-        {flatCustomers && flatCustomers.length > 0 ? (
+        <View style={{ gap: 24, flexDirection: "column", flex: 1 }}>
           <View
             style={{
-              gap: 24,
-              flexDirection: "column",
-              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingHorizontal: 16,
-              }}
-            >
-              <Text style={{ fontSize: 18, color: colors.text }}>
-                Recent Customers
-              </Text>
-              <Link href="/customers" asChild>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  style={{
-                    width: "auto",
-                    backgroundColor: colors.primary,
-                    borderRadius: 100,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                  }}
+            <Text style={{ fontSize: 24, color: colors.text }}>
+              Recent Orders
+            </Text>
+            <Link href="/orders" asChild>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={{
+                  width: "auto",
+                  backgroundColor: colors.primary,
+                  borderRadius: 100,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
                 >
-                  <Text
-                    style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                  >
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </Link>
-            </View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ flexDirection: "row", gap: 16 }}
-              contentInset={{ left: 16, right: 16 }}
-              contentOffset={{ x: -16, y: 0 }}
-            >
-              {flatCustomers.map((customer) => (
-                <CustomerCard key={customer.id} customer={customer} />
-              ))}
-            </ScrollView>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </Link>
           </View>
-        ) : (
-          <></>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+          <View style={{ gap: 8 }}>
+            {flatOrders.map((order) => (
+              <OrderRow key={order.id} order={order} showTimestamp />
+            ))}
+          </View>
+        </View>
+      </View>
+
+      {flatCustomers && flatCustomers.length > 0 ? (
+        <View
+          style={{
+            gap: 24,
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: 16,
+            }}
+          >
+            <Text style={{ fontSize: 24, color: colors.text }}>
+              Recent Customers
+            </Text>
+            <Link href="/customers" asChild>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={{
+                  width: "auto",
+                  backgroundColor: colors.primary,
+                  borderRadius: 100,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
+                >
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ flexDirection: "row", gap: 16 }}
+            contentInset={{ left: 16, right: 16 }}
+            contentOffset={{ x: -16, y: 0 }}
+          >
+            {flatCustomers.map((customer) => (
+              <CustomerCard key={customer.id} customer={customer} />
+            ))}
+          </ScrollView>
+        </View>
+      ) : (
+        <></>
+      )}
+    </ScrollView>
   );
 }

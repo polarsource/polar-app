@@ -8,6 +8,7 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
+
   return (
     <Tile href="/settings">
       <View
@@ -25,7 +26,7 @@ export const OrganizationTile = () => {
         <View style={{ flexDirection: "column", gap: 4 }}>
           <Text
             style={{
-              color: "#fff",
+              color: colors.text,
               fontSize: 18,
               fontWeight: "600",
               marginTop: 4,
@@ -33,7 +34,10 @@ export const OrganizationTile = () => {
           >
             {organization.name}
           </Text>
-          <Text style={{ color: "#999", fontSize: 14 }}>
+          <Text
+            style={{ color: colors.subtext, fontSize: 16 }}
+            numberOfLines={1}
+          >
             {organization.slug}
           </Text>
         </View>
