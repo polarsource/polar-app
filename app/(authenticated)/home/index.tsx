@@ -16,7 +16,10 @@ import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
 import PolarLogo from "@/components/Common/PolarLogo";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { useCreateNotificationRecipient } from "@/hooks/polar/notifications";
+import {
+  useCreateNotificationRecipient,
+  useListNotificationRecipients,
+} from "@/hooks/polar/notifications";
 import { useNotifications } from "@/providers/NotificationsProvider";
 import { useCustomers } from "@/hooks/polar/customers";
 import { CustomerCard } from "@/components/Customers/CustomerCard";
@@ -67,6 +70,9 @@ export default function Index() {
       createNotificationRecipient(expoPushToken);
     }
   }, [expoPushToken, createNotificationRecipient]);
+
+  const { data: notificationRecipients } = useListNotificationRecipients();
+  console.log(notificationRecipients);
 
   return (
     <ScrollView

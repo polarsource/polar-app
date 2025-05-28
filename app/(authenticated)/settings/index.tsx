@@ -102,10 +102,16 @@ export default function Index() {
           ))}
         </View>
         <View>
-          <Text>App Version</Text>
-          <Text>{Constants.expoConfig?.version}</Text>
-          <Text>Update ID</Text>
-          <Text>{downloadedUpdate?.updateId}</Text>
+          <Text style={{ color: colors.text }}>App Version</Text>
+          <Text style={{ color: colors.text }}>
+            {Constants.expoConfig?.version}
+          </Text>
+          <Text style={{ color: colors.text }}>Update ID</Text>
+          <Text style={{ color: colors.text }}>
+            {downloadedUpdate?.updateId}
+          </Text>
+          <Text style={{ color: colors.text }}>Notification Token</Text>
+          <Text style={{ color: colors.text }}>{expoPushToken}</Text>
         </View>
         <Button onPress={signOut}>Logout</Button>
       </View>

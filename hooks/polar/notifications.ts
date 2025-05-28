@@ -1,3 +1,4 @@
+import { usePolarClient } from "@/providers/PolarClientProvider";
 import { useSession } from "@/providers/SessionProvider";
 import {
   useMutation,
