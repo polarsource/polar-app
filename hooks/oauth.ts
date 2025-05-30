@@ -52,7 +52,7 @@ export const useOAuthConfig = () => {
 
   return {
     scopes,
-    ...development,
+    ...production,
   };
 };
 
