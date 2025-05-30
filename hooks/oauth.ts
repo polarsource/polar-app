@@ -74,7 +74,7 @@ export const useOAuth = () => {
       clientId: CLIENT_ID,
       scopes,
       redirectUri: makeRedirectUri({
-        scheme: "com.polarsource.Polar",
+        scheme: "polar",
         path: "oauth/callback",
       }),
       prompt: Prompt.Consent,
@@ -95,7 +95,7 @@ export const useOAuth = () => {
         clientId: CLIENT_ID,
         code: response.params.code,
         redirectUri: makeRedirectUri({
-          scheme: "com.polarsource.Polar",
+          scheme: "polar",
           path: "oauth/callback",
         }),
         extraParams: {
