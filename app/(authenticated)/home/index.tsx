@@ -91,7 +91,7 @@ export default function Index() {
             >
               <PolarLogo size={36} />
               <View style={{ flexDirection: "row", gap: 20 }}>
-                <Link href="/settings" asChild>
+                <Link href="/notifications" asChild>
                   <TouchableOpacity activeOpacity={0.6}>
                     <MaterialIcons name="bolt" size={24} color={colors.text} />
                   </TouchableOpacity>

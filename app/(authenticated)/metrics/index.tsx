@@ -35,9 +35,8 @@ export default function Index() {
   return (
     <ScrollView style={MetricsStyles.container}>
       <Stack.Screen options={{ title: "Metrics" }} />
-      <Text>This Month</Text>
       <Text style={[MetricsStyles.title, { color: colors.text }]}>
-        {formatCurrencyAndAmount(cumulativeRevenue, undefined, 0)}
+        Not implemented
       </Text>
     </ScrollView>
   );
