@@ -22,6 +22,16 @@ export const useOAuthConfig = () => {
     },
   };
 
+  const development = {
+    CLIENT_ID: "polar_ci_RW5LDNLrEjeOzCovwUf7pp9dwe3PKUCut3CwO135uvX",
+    discovery: {
+      authorizationEndpoint: `http://127.0.0.1:3000/oauth2/authorize`,
+      tokenEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/token`,
+      registrationEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/register`,
+      revocationEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/revoke`,
+    },
+  };
+
   const scopes = [
     "openid",
     "profile",
@@ -42,7 +52,7 @@ export const useOAuthConfig = () => {
 
   return {
     scopes,
-    ...production,
+    ...development,
   };
 };
 
@@ -59,13 +69,13 @@ export const useOAuth = () => {
   }, []);
 
   const { CLIENT_ID, scopes, discovery } = useOAuthConfig();
-  const [authRequest, response, promptAsync] = useAuthRequest(
+  const [authRequest, , promptAsync] = useAuthRequest(
     {
       clientId: CLIENT_ID,
       scopes,
       redirectUri: makeRedirectUri({
         scheme: "com.polarsource.Polar",
-        path: "oauth",
+        path: "oauth/callback",
       }),
       prompt: Prompt.Consent,
       usePKCE: true,
@@ -73,35 +83,31 @@ export const useOAuth = () => {
     discovery
   );
 
-  useEffect(() => {
-    const exchangeCode = async () => {
-      if (response?.type !== "success") {
-        return;
-      }
+  const authenticate = async () => {
+    const response = await promptAsync();
 
-      const token = await exchangeCodeAsync(
-        {
-          clientId: CLIENT_ID,
-          code: response.params.code,
-          redirectUri: makeRedirectUri({
-            scheme: "com.polarsource.Polar",
-            path: "oauth",
-          }),
-          extraParams: {
-            code_verifier: authRequest?.codeVerifier ?? "",
-          },
-        },
-        discovery
-      );
-
-      setSession(token.accessToken);
-      navigate("/(authenticated)/home");
-    };
-
-    if (response?.type === "success") {
-      exchangeCode();
+    if (response?.type !== "success") {
+      return;
     }
-  }, [response]);
 
-  return { authRequest, promptAsync };
+    const token = await exchangeCodeAsync(
+      {
+        clientId: CLIENT_ID,
+        code: response.params.code,
+        redirectUri: makeRedirectUri({
+          scheme: "com.polarsource.Polar",
+          path: "oauth/callback",
+        }),
+        extraParams: {
+          code_verifier: authRequest?.codeVerifier ?? "",
+        },
+      },
+      discovery
+    );
+
+    setSession(token.accessToken);
+    navigate("/(authenticated)/home");
+  };
+
+  return { authRequest, authenticate };
 };

@@ -15,11 +15,7 @@ import { useOAuth } from "@/hooks/oauth";
 export default function App() {
   const { session } = useSession();
   const { colors } = useTheme();
-  const { authRequest, promptAsync } = useOAuth();
-
-  if (!authRequest) {
-    return <View style={LoginStyle.container} />;
-  }
+  const { authRequest, authenticate } = useOAuth();
 
   if (session) {
     return <Redirect href="/(authenticated)/home" />;
@@ -41,9 +37,7 @@ export default function App() {
           LoginStyle.button,
           { backgroundColor: "#fff", borderRadius: 100 },
         ]}
-        onPress={() => {
-          promptAsync().then(console.log);
-        }}
+        onPress={authenticate}
       >
         <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
           Get Started
