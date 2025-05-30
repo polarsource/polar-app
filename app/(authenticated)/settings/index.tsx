@@ -7,19 +7,15 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTheme } from "@/hooks/theme";
 import { useOrganizations } from "@/hooks/polar/organizations";
 import { useSession } from "@/providers/SessionProvider";
-import { useNotifications } from "@/providers/NotificationsProvider";
-import { useGetNotificationRecipient } from "@/hooks/polar/notifications";
-import { useDeleteNotificationRecipient } from "@/hooks/polar/notifications";
-import * as Notifications from "expo-notifications";
 import { Avatar } from "@/components/Common/Avatar";
 import { Button } from "@/components/Common/Button";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLogout } from "@/hooks/auth";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
@@ -29,22 +25,7 @@ export default function Index() {
   const { setSession } = useSession();
   const { data: organizationData, refetch, isRefetching } = useOrganizations();
 
-  const { expoPushToken } = useNotifications();
-
-  const deleteNotificationRecipient = useDeleteNotificationRecipient();
-  const { data: notificationRecipient } =
-    useGetNotificationRecipient(expoPushToken);
-
-  const signOut = useCallback(async () => {
-    if (notificationRecipient) {
-      deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
-    }
-
-    Notifications.unregisterForNotificationsAsync();
-
-    setSession(null);
-    AsyncStorage.removeItem("organizationId");
-  }, [setSession, deleteNotificationRecipient, expoPushToken]);
+  const logout = useLogout();
 
   return (
     <ScrollView
@@ -96,7 +77,7 @@ export default function Index() {
             </TouchableOpacity>
           ))}
         </View>
-        <Button onPress={signOut}>Logout</Button>
+        <Button onPress={logout}>Logout</Button>
       </View>
     </ScrollView>
   );

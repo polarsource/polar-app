@@ -1,5 +1,11 @@
 import { useOrganizations } from "@/hooks/polar/organizations";
-import { createContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Organization } from "@polar-sh/sdk/dist/commonjs/models/components/organization";
 import { useStorageState } from "@/hooks/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,11 +26,7 @@ export const OrganizationContext =
   // @ts-ignore
   createContext<OrganizationContextValue>(stub);
 
-export function PolarOrganizationProvider({
-  children,
-}: {
-  children: React.ReactElement;
-}) {
+export function PolarOrganizationProvider({ children }: PropsWithChildren) {
   const [[isLoading, organizationId], setOrganizationId] =
     useStorageState("organizationId");
 
