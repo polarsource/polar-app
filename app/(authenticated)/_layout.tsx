@@ -32,7 +32,7 @@ const RootLayout = () => {
             gap: 32,
           }}
         >
-          <Text>Something went wrong</Text>
+          <Text style={{ color: colors.text }}>Something went wrong</Text>
           <Button title="Logout" onPress={logout} />
         </View>
       }

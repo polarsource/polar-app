@@ -90,6 +90,7 @@ export default function Notifications() {
           padding: 16,
           backgroundColor: colors.background,
         }}
+        style={{ flex: 1 }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
         estimatedItemSize={50}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
