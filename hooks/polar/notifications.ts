@@ -153,24 +153,26 @@ export type MaintainerNewProductSaleNotificationPayload = {
   organization_name: string;
 };
 
+export type Notification = {
+  id: string;
+  created_at: string;
+  type:
+    | "MaintainerAccountUnderReview"
+    | "MaintainerAccountReviewed"
+    | "MaintainerCreateAccount"
+    | "MaintainerNewPaidSubscription"
+    | "MaintainerNewProductSale";
+  payload:
+    | MaintainerAccountUnderReviewNotificationPayload
+    | MaintainerAccountReviewedNotificationPayload
+    | MaintainerCreateAccountNotificationPayload
+    | MaintainerNewPaidSubscriptionNotificationPayload
+    | MaintainerNewProductSaleNotificationPayload;
+};
+
 export const useListNotifications = (): UseQueryResult<
   {
-    notifications: {
-      id: string;
-      created_at: string;
-      type:
-        | "MaintainerAccountUnderReview"
-        | "MaintainerAccountReviewed"
-        | "MaintainerCreateAccount"
-        | "MaintainerNewPaidSubscription"
-        | "MaintainerNewProductSale";
-      payload:
-        | MaintainerAccountUnderReviewNotificationPayload
-        | MaintainerAccountReviewedNotificationPayload
-        | MaintainerCreateAccountNotificationPayload
-        | MaintainerNewPaidSubscriptionNotificationPayload
-        | MaintainerNewProductSaleNotificationPayload;
-    }[];
+    notifications: Notification[];
     last_read_notification_id: string;
   },
   Error
