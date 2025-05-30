@@ -21,6 +21,7 @@ import { useNotifications } from "@/providers/NotificationsProvider";
 import { useCustomers } from "@/hooks/polar/customers";
 import { CustomerCard } from "@/components/Customers/CustomerCard";
 import React from "react";
+import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -91,11 +92,7 @@ export default function Index() {
             >
               <PolarLogo size={36} />
               <View style={{ flexDirection: "row", gap: 20 }}>
-                <Link href="/notifications" asChild>
-                  <TouchableOpacity activeOpacity={0.6}>
-                    <MaterialIcons name="bolt" size={24} color={colors.text} />
-                  </TouchableOpacity>
-                </Link>
+                <NotificationBadge />
                 <Link href="/settings" asChild>
                   <TouchableOpacity activeOpacity={0.6}>
                     <MaterialIcons name="tune" size={24} color={colors.text} />

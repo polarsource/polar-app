@@ -46,6 +46,8 @@ export const useOAuthConfig = () => {
     "customers:read",
     "metrics:read",
     "events:read",
+    "notifications:read",
+    "notifications:write",
     "notification_recipients:read",
     "notification_recipients:write",
   ];

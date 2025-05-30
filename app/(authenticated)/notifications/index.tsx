@@ -1,14 +1,24 @@
-import { View, Text } from "react-native";
-import { useTheme } from "@/hooks/theme";
+import { ScrollView, View } from "react-native";
 import { Stack } from "expo-router";
-
+import { useListNotifications } from "@/hooks/polar/notifications";
+import { Notification } from "@/components/Notifications/Notification";
 export default function Notifications() {
-  const { colors } = useTheme();
+  const { data: notifications } = useListNotifications();
 
   return (
-    <View>
+    <ScrollView
+      contentContainerStyle={{ padding: 16, gap: 16, flex: 1 }}
+      style={{ flex: 1 }}
+    >
       <Stack.Screen options={{ title: "Notifications" }} />
-      <Text style={{ color: colors.text }}>Notifications</Text>
-    </View>
+
+      {notifications?.notifications.map((notification) => (
+        <Notification
+          key={notification.id}
+          type={notification.type}
+          payload={notification.payload}
+        />
+      ))}
+    </ScrollView>
   );
 }

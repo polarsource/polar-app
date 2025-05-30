@@ -1,4 +1,4 @@
-import { router, Stack, useRouter } from "expo-router";
+import { router, Stack } from "expo-router";
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  SafeAreaView,
 } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
@@ -21,8 +20,6 @@ import * as Notifications from "expo-notifications";
 import { Avatar } from "@/components/Common/Avatar";
 import { Button } from "@/components/Common/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from "expo-constants";
-import { useUpdates } from "expo-updates";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
@@ -48,8 +45,6 @@ export default function Index() {
     setSession(null);
     AsyncStorage.removeItem("organizationId");
   }, [setSession, deleteNotificationRecipient, expoPushToken]);
-
-  const { downloadedUpdate } = useUpdates();
 
   return (
     <ScrollView
