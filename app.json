@@ -14,12 +14,17 @@
       "bundleIdentifier": "com.polarsource.Polar",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "icon": {
+        "dark": "./assets/images/ios-dark.png",
+        "light": "./assets/images/ios-light.png",
+        "tinted": "./assets/images/ios-tinted.png"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0D0E10"
       },
       "package": "com.polarsource.Polar"
     },
@@ -34,7 +39,7 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "imageWidth": 120,
           "resizeMode": "contain",
           "backgroundColor": "#0D0E10"
         }
