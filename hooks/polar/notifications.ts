@@ -93,6 +93,7 @@ export const useGetNotificationRecipient = (
 
       return response.json().then((data) => data.items[0]);
     },
+    enabled: !!expoPushToken,
   });
 };
 
