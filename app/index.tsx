@@ -13,7 +13,7 @@ import LogoIcon from "@/components/Common/PolarLogo";
 import { useOAuth } from "@/hooks/oauth";
 
 export default function App() {
-  const { session } = useSession();
+  const { session, setSession } = useSession();
   const { colors } = useTheme();
   const { authRequest, authenticate } = useOAuth();
 
@@ -38,6 +38,9 @@ export default function App() {
           { backgroundColor: "#fff", borderRadius: 100 },
         ]}
         onPress={authenticate}
+        onLongPress={() => {
+          setSession(process.env.POLAR_DEMO_TOKEN ?? null);
+        }}
       >
         <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
           Get Started
