@@ -39,7 +39,7 @@ export default function App() {
         ]}
         onPress={authenticate}
         onLongPress={() => {
-          setSession(process.env.POLAR_DEMO_TOKEN ?? null);
+          setSession(process.env.EXPO_PUBLIC_POLAR_DEMO_TOKEN ?? null);
         }}
       >
         <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
