@@ -27,3 +27,8 @@ export const useLogout = () => {
 
   return signOut;
 };
+
+export const isDemoSession = () => {
+  const { session } = useSession();
+  return session === process.env.EXPO_PUBLIC_POLAR_DEMO_TOKEN;
+};

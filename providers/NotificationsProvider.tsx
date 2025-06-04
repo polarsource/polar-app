@@ -3,6 +3,8 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { isDemoSession } from "@/hooks/auth";
+import { useSession } from "./SessionProvider";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -55,7 +57,6 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);
@@ -87,7 +88,14 @@ export default function NotificationsProvider({
   const notificationListener = useRef<Notifications.EventSubscription>();
   const responseListener = useRef<Notifications.EventSubscription>();
 
+  const { session } = useSession();
+  const isDemo = isDemoSession();
+
   useEffect(() => {
+    if (!session || isDemo) {
+      return;
+    }
+
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token ?? "")
     );
@@ -106,7 +114,7 @@ export default function NotificationsProvider({
       notificationListener.current && notificationListener.current.remove();
       responseListener.current && responseListener.current.remove();
     };
-  }, []);
+  }, [isDemo]);
 
   return (
     <NotificationsContext.Provider value={{ expoPushToken, notification }}>

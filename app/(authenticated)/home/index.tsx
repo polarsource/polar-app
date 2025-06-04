@@ -22,6 +22,7 @@ import { useCustomers } from "@/hooks/polar/customers";
 import { CustomerCard } from "@/components/Customers/CustomerCard";
 import React from "react";
 import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
+import { isDemoSession } from "@/hooks/auth";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -63,11 +64,13 @@ export default function Index() {
   const { mutate: createNotificationRecipient } =
     useCreateNotificationRecipient();
 
+  const isDemo = isDemoSession();
+
   useEffect(() => {
-    if (expoPushToken) {
+    if (expoPushToken && !isDemo) {
       createNotificationRecipient(expoPushToken);
     }
-  }, [expoPushToken, createNotificationRecipient]);
+  }, [expoPushToken, createNotificationRecipient, isDemo]);
 
   return (
     <ScrollView
@@ -92,7 +95,7 @@ export default function Index() {
             >
               <PolarLogo size={36} />
               <View style={{ flexDirection: "row", gap: 20 }}>
-                <NotificationBadge />
+                {!isDemo && <NotificationBadge />}
                 <Link href="/settings" asChild>
                   <TouchableOpacity activeOpacity={0.6}>
                     <MaterialIcons name="tune" size={24} color={colors.text} />
