@@ -5,6 +5,7 @@ import { useDeleteNotificationRecipient } from "./polar/notifications";
 import { useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useLogout = () => {
   const { setSession } = useSession();
@@ -14,12 +15,16 @@ export const useLogout = () => {
   const { data: notificationRecipient } =
     useGetNotificationRecipient(expoPushToken);
 
+  const queryClient = useQueryClient();
+
   const signOut = useCallback(async () => {
     if (notificationRecipient) {
       deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
     }
 
     Notifications.unregisterForNotificationsAsync();
+
+    queryClient.clear();
 
     setSession(null);
     AsyncStorage.removeItem("organizationId");
