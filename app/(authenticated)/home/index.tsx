@@ -2,7 +2,7 @@ import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, Stack } from "expo-router";
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { use, useCallback, useContext, useEffect, useMemo } from "react";
 import {
   RefreshControl,
   SafeAreaView,
@@ -24,6 +24,13 @@ import React from "react";
 import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
 import { isDemoSession } from "@/hooks/auth";
 import { EmptyState } from "@/components/Common/EmptyState";
+import {
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  reloadAsync,
+  useUpdates,
+} from "expo-updates";
+import { Banner } from "@/components/Common/Banner";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -73,6 +80,20 @@ export default function Index() {
     }
   }, [expoPushToken, createNotificationRecipient, isDemo]);
 
+  const { isDownloading, isRestarting, isUpdateAvailable } = useUpdates();
+
+  async function onFetchUpdateAsync() {
+    try {
+      if (isUpdateAvailable) {
+        await fetchUpdateAsync();
+        await reloadAsync();
+      }
+    } catch (error) {
+      // You can also add an alert() to see the error message in case of an error when fetching updates.
+      alert(`Error fetching latest update: ${error}`);
+    }
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ backgroundColor: colors.background, gap: 32 }}
@@ -116,6 +137,17 @@ export default function Index() {
           flexDirection: "column",
         }}
       >
+        {isUpdateAvailable && (
+          <Banner
+            title="New Update Available"
+            description="Update to the latest version to get the latest features and bug fixes"
+            button={{
+              onPress: onFetchUpdateAsync,
+              children: "Update",
+              loading: isDownloading || isRestarting,
+            }}
+          />
+        )}
         <View style={{ gap: 8 }}>
           <View style={{ flexDirection: "row", gap: 16 }}>
             <OrganizationTile />

@@ -3,6 +3,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
@@ -13,10 +14,11 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 export const Button = (props: ButtonProps) => {
-  const { children, onPress, disabled, loading, style } = props;
+  const { children, onPress, disabled, loading, style, textStyle } = props;
   const { colors } = useTheme();
 
   return (
@@ -26,7 +28,9 @@ export const Button = (props: ButtonProps) => {
       activeOpacity={0.6}
       style={[styles.button, { backgroundColor: colors.primary }, style]}
     >
-      <Text style={[styles.text, { color: colors.text }]}>{children}</Text>
+      <Text style={[styles.text, { color: colors.text }, textStyle]}>
+        {children}
+      </Text>
     </TouchableOpacity>
   );
 };
