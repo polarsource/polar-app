@@ -199,7 +199,7 @@ export default function Index() {
           ) : (
             <EmptyState
               title="No Orders"
-              description="No orders found for this organization"
+              description="No orders found for this customer"
             />
           )}
         </View>
