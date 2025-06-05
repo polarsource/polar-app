@@ -10,6 +10,7 @@ import { Notification } from "@/components/Notifications/Notification";
 import { useEffect } from "react";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
+import { setBadgeCountAsync } from "expo-notifications";
 
 const groupNotificationsByDate = (notifications: PolarNotification[]) => {
   if (!notifications?.length) return [];
@@ -52,6 +53,8 @@ export default function Notifications() {
       markNotificationAsRead.mutateAsync({
         notificationId: notifications.notifications[0].id,
       });
+
+      setBadgeCountAsync(0);
     }
   }, [notifications]);
 
@@ -90,7 +93,6 @@ export default function Notifications() {
           padding: 16,
           backgroundColor: colors.background,
         }}
-        style={{ flex: 1 }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
         estimatedItemSize={50}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}

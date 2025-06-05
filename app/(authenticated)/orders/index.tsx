@@ -49,7 +49,6 @@ export default function Index() {
     <>
       <Stack.Screen options={{ title: "Orders" }} />
       <FlashList
-        style={{ flex: 1 }}
         data={groupOrdersByDate(flatData)}
         renderItem={({ item }: { item: Order | string }) => {
           if (typeof item === "string") {
