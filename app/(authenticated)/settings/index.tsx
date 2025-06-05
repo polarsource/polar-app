@@ -83,13 +83,7 @@ export default function Index() {
             ))}
           </View>
         </View>
-        <Details>
-          <DetailRow
-            label="Update ID"
-            value={updates.currentlyRunning.updateId}
-          />
-          <DetailRow label="Notification Token" value={expoPushToken} />
-        </Details>
+
         <Button onPress={logout}>Logout</Button>
       </View>
     </ScrollView>

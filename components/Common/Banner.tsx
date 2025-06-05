@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    gap: 4,
+    gap: 6,
   },
   title: {
-    fontSize: 14,
+    fontSize: 16,
   },
   description: {
     fontSize: 14,
