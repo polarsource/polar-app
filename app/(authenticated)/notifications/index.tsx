@@ -1,5 +1,5 @@
 import { useTheme } from "@/hooks/theme";
-import { ScrollView, RefreshControl, Text, View } from "react-native";
+import { ScrollView, RefreshControl, Text, View, FlatList } from "react-native";
 import { Stack } from "expo-router";
 import {
   Notification as PolarNotification,
@@ -61,7 +61,7 @@ export default function Notifications() {
   return (
     <React.Fragment>
       <Stack.Screen options={{ title: "Notifications" }} />
-      <FlashList
+      <FlatList
         data={groupNotificationsByDate(notifications?.notifications ?? [])}
         renderItem={({ item }: { item: PolarNotification | string }) => {
           if (typeof item === "string") {
@@ -94,7 +94,6 @@ export default function Notifications() {
           backgroundColor: colors.background,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-        estimatedItemSize={50}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         refreshControl={
           <RefreshControl

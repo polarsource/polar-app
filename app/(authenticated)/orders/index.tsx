@@ -6,7 +6,7 @@ import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
 import React, { useContext, useMemo } from "react";
-import { RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, Text, View } from "react-native";
 
 const groupOrdersByDate = (orders: Order[]) => {
   if (!orders?.length) return [];
@@ -48,7 +48,7 @@ export default function Index() {
   return (
     <>
       <Stack.Screen options={{ title: "Orders" }} />
-      <FlashList
+      <FlatList
         data={groupOrdersByDate(flatData)}
         renderItem={({ item }: { item: Order | string }) => {
           if (typeof item === "string") {
@@ -72,7 +72,6 @@ export default function Index() {
           backgroundColor: colors.background,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-        estimatedItemSize={50}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
