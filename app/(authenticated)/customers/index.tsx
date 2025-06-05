@@ -6,7 +6,7 @@ import { Customer } from "@polar-sh/sdk/dist/commonjs/models/components/customer
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
 import React, { useContext, useMemo, useState } from "react";
-import { RefreshControl, TextInput, View } from "react-native";
+import { FlatList, RefreshControl, TextInput, View } from "react-native";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -40,7 +40,7 @@ export default function Index() {
           }}
         />
       </View>
-      <FlashList
+      <FlatList
         data={customersData}
         renderItem={({ item }: { item: Customer }) => {
           return <CustomerRow customer={item} />;
@@ -50,7 +50,6 @@ export default function Index() {
           backgroundColor: colors.background,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
-        estimatedItemSize={50}
         keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isRefetching} />

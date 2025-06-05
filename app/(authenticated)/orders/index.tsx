@@ -68,7 +68,7 @@ export default function Index() {
           return <OrderRow order={item} style={{ marginBottom: 8 }} />;
         }}
         contentContainerStyle={{
-          padding: 8,
+          padding: 16,
           backgroundColor: colors.background,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
