@@ -25,6 +25,7 @@ export const DetailRow = ({
       <Text style={[styles.label, { color: colors.subtext }]}>{label}</Text>
       <Text
         numberOfLines={1}
+        ellipsizeMode="tail"
         style={[styles.value, { color: value ? colors.text : colors.subtext }]}
       >
         {value && value?.length > 0 ? value : "—"}
@@ -50,5 +51,7 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: "#fff",
+    flex: 1,
+    width: "auto",
   },
 });
