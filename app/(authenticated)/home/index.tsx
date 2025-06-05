@@ -65,7 +65,7 @@ export default function Index() {
   }, [isRefetchingOrders]);
 
   const refresh = useCallback(() => {
-    Promise.all([refetchOrders(), refetchCustomers()]);
+    Promise.all([refetchOrders(), refetchCustomers(), checkForUpdateAsync()]);
   }, [refetchOrders, refetchCustomers]);
 
   const { expoPushToken } = useNotifications();

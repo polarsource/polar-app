@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 8,
   },
   label: {
     fontSize: 16,
