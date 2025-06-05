@@ -45,7 +45,7 @@ export default function Index() {
     refetch: refetchOrders,
     isRefetching: isRefetchingOrders,
   } = useOrders(organization.id, {
-    limit: 5,
+    limit: 3,
   });
 
   const {
@@ -53,7 +53,7 @@ export default function Index() {
     refetch: refetchSubscriptions,
     isRefetching: isRefetchingSubscriptions,
   } = useSubscriptions(organization.id, {
-    limit: 5,
+    limit: 3,
     active: true,
     sorting: ["-started_at"],
   });
@@ -186,7 +186,7 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 24, color: colors.text }}>
+            <Text style={{ fontSize: 20, color: colors.text }}>
               Recent Subscriptions
             </Text>
             <Link href="/subscriptions" asChild>
@@ -236,7 +236,7 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 24, color: colors.text }}>
+            <Text style={{ fontSize: 20, color: colors.text }}>
               Recent Orders
             </Text>
             <Link href="/orders" asChild>
@@ -290,7 +290,7 @@ export default function Index() {
             paddingHorizontal: 16,
           }}
         >
-          <Text style={{ fontSize: 24, color: colors.text }}>
+          <Text style={{ fontSize: 20, color: colors.text }}>
             Recent Customers
           </Text>
           <Link href="/customers" asChild>

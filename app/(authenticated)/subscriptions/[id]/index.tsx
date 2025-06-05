@@ -17,6 +17,9 @@ import { DetailRow } from "@/components/Common/Details";
 import { Details } from "@/components/Common/Details";
 import { useSubscription } from "@/hooks/polar/subscriptions";
 import { OrderRow } from "@/components/Orders/OrderRow";
+import { useMemo } from "react";
+import React from "react";
+import { EmptyState } from "@/components/Common/EmptyState";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -32,6 +35,10 @@ export default function Index() {
     customerId: subscription?.customer.id,
     productId: subscription?.product.id,
   });
+
+  const flatSubscriptionOrders = useMemo(() => {
+    return subscriptionOrders?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [subscriptionOrders]);
 
   if (!subscription) {
     return (
@@ -126,14 +133,36 @@ export default function Index() {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.label, { color: colors.text }]}>
-          Subscription Orders
-        </Text>
-        {subscriptionOrders?.pages.map((page) =>
-          page.result.items.map((order) => (
-            <OrderRow key={order.id} order={order} />
-          ))
-        )}
+        <Details>
+          <DetailRow
+            label="Status"
+            value={subscription.status.split("_").join(" ")}
+          />
+          <DetailRow
+            label="Recurring Interval"
+            value={subscription.recurringInterval.split("_").join(" ")}
+          />
+          <DetailRow
+            label="Start Date"
+            value={subscription.startedAt?.toLocaleDateString("en-US", {
+              dateStyle: "medium",
+            })}
+          />
+          <DetailRow
+            label="Renewal Date"
+            value={subscription.currentPeriodEnd?.toLocaleDateString("en-US", {
+              dateStyle: "medium",
+            })}
+          />
+          {subscription.endsAt && (
+            <DetailRow
+              label="End Date"
+              value={subscription.endsAt?.toLocaleDateString("en-US", {
+                dateStyle: "medium",
+              })}
+            />
+          )}
+        </Details>
       </View>
 
       {subscription.metadata &&
@@ -146,6 +175,24 @@ export default function Index() {
             </Details>
           </View>
         )}
+
+      <View style={[styles.section, { gap: 16, paddingVertical: 12 }]}>
+        <Text style={[styles.label, { color: colors.text, fontSize: 20 }]}>
+          Subscription Orders
+        </Text>
+        {flatSubscriptionOrders.length > 0 ? (
+          <>
+            {flatSubscriptionOrders.map((order) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
+          </>
+        ) : (
+          <EmptyState
+            title="No Subscription Orders"
+            description="This Subscription has no associated orders"
+          />
+        )}
+      </View>
     </ScrollView>
   );
 }

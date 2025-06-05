@@ -49,7 +49,7 @@ export const SubscriptionRow = ({
               style={[
                 styles.imageFallback,
                 {
-                  backgroundColor: colors.border,
+                  borderColor: colors.border,
                   borderWidth: 1,
                   borderRadius: 8,
                 },
@@ -60,24 +60,27 @@ export const SubscriptionRow = ({
           )}
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.productName}>{subscription.product.name}</Text>
+          <Text
+            style={styles.productName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {subscription.product.name}
+          </Text>
           <View style={styles.metadataContainer}>
             <Pill color={subscription.status === "active" ? "green" : "red"}>
               {subscription.status.split("_").join(" ")}
             </Pill>
             {showCustomer && (
-              <>
-                <Text style={{ color: colors.subtext }}>•</Text>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.email,
-                    { color: colors.subtext, flexWrap: "wrap" },
-                  ]}
-                >
-                  {subscription.customer.email}
-                </Text>
-              </>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.email,
+                  { color: colors.subtext, flexWrap: "wrap" },
+                ]}
+              >
+                {subscription.customer.email}
+              </Text>
             )}
           </View>
         </View>
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
   metadataContainer: {
     flex: 1,
     flexDirection: "row",
-    gap: 6,
+    alignItems: "center",
+    gap: 8,
   },
 });

@@ -54,5 +54,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "auto",
     textAlign: "right",
+    textTransform: "capitalize",
   },
 });

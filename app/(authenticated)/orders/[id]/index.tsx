@@ -123,6 +123,32 @@ export default function Index() {
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.subtext }]}>
+              Status
+            </Text>
+            <Text
+              style={[
+                styles.value,
+                { color: colors.text, textTransform: "capitalize" },
+              ]}
+            >
+              {order.status.split("_").join(" ")}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.label, { color: colors.subtext }]}>
+              Billing Reason
+            </Text>
+            <Text
+              style={[
+                styles.value,
+                { color: colors.text, textTransform: "capitalize" },
+              ]}
+            >
+              {order.billingReason.split("_").join(" ")}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.label, { color: colors.subtext }]}>
               Subtotal
             </Text>
             <Text style={[styles.value, { color: colors.text }]}>

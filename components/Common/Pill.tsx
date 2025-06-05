@@ -4,7 +4,7 @@ export const Pill = ({
   color,
   children,
 }: {
-  color: "green" | "yellow" | "red" | "blue" | "purple";
+  color: "green" | "yellow" | "red" | "blue";
   children: React.ReactNode;
 }) => {
   return (
@@ -16,32 +16,28 @@ export const Pill = ({
 
 const styles = StyleSheet.create({
   pill: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
     paddingVertical: 4,
-    borderRadius: 9999,
+    borderRadius: 6,
   },
   text: {
-    color: "#fff",
     textTransform: "capitalize",
+    fontSize: 12,
   },
   green: {
-    color: "#10B981",
-    backgroundColor: "#10B981",
+    color: "#10b981",
+    backgroundColor: "#022c22",
   },
   yellow: {
-    color: "#F59E0B",
-    backgroundColor: "#F59E0B",
+    color: "#eab308",
+    backgroundColor: "#422006",
   },
   red: {
-    color: "#EF4444",
-    backgroundColor: "#EF4444",
+    color: "#ef4444",
+    backgroundColor: "#450a0a",
   },
   blue: {
-    color: "#3B82F6",
-    backgroundColor: "#3B82F6",
-  },
-  purple: {
-    color: "#A855F7",
-    backgroundColor: "#A855F7",
+    color: "#6366f1",
+    backgroundColor: "#1e1b4b",
   },
 });
