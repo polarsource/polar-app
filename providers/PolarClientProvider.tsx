@@ -1,6 +1,7 @@
 import { createContext, useContext, type PropsWithChildren } from "react";
 import { Polar } from "@polar-sh/sdk";
 import { useSession } from "./SessionProvider";
+import { HTTPClient } from "@polar-sh/sdk/lib/http.js";
 
 const PolarClientContext = createContext<{
   polar: Polar;

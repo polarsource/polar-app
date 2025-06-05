@@ -1,6 +1,6 @@
-import { OrdersListRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/orderslist";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { usePolarClient } from "@/providers/PolarClientProvider";
+import { OrdersListRequest } from "@polar-sh/sdk/models/operations/orderslist.js";
 
 export const useOrder = (id: string) => {
   const { polar } = usePolarClient();

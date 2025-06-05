@@ -2,7 +2,7 @@ import { useProduct } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Order } from "@polar-sh/sdk/models/components/order.js";
+import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 import { Link } from "expo-router";
 import React, { useContext } from "react";
 import {
@@ -14,21 +14,25 @@ import {
   TextStyle,
   TouchableOpacity,
 } from "react-native";
+import { Pill } from "../Common/Pill";
 
-export interface OrderRowProps {
-  order: Order;
-  showTimestamp?: boolean;
+export interface SubscriptionRowProps {
+  subscription: Subscription;
+  showCustomer?: boolean;
   style?: StyleProp<TextStyle>;
 }
 
-export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
+export const SubscriptionRow = ({
+  subscription,
+  style,
+  showCustomer,
+}: SubscriptionRowProps) => {
   const { colors } = useTheme();
-  const { organization } = useContext(OrganizationContext);
-  const { data: product } = useProduct(organization.id, order.product.id);
+  const product = subscription.product;
 
   return (
     <Link
-      href={`/orders/${order.id}`}
+      href={`/subscriptions/${subscription.id}`}
       style={[styles.container, { backgroundColor: colors.card }, style]}
       asChild
     >
@@ -45,7 +49,7 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
               style={[
                 styles.imageFallback,
                 {
-                  borderColor: colors.border,
+                  backgroundColor: colors.border,
                   borderWidth: 1,
                   borderRadius: 8,
                 },
@@ -56,27 +60,25 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
           )}
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.productName}>{order.product.name}</Text>
+          <Text style={styles.productName}>{subscription.product.name}</Text>
           <View style={styles.metadataContainer}>
-            {showTimestamp && (
+            <Pill color={subscription.status === "active" ? "green" : "red"}>
+              {subscription.status.split("_").join(" ")}
+            </Pill>
+            {showCustomer && (
               <>
-                <Text style={[styles.amount, { color: colors.subtext }]}>
-                  {order.createdAt.toLocaleDateString("en-US", {
-                    dateStyle: "medium",
-                  })}
-                </Text>
                 <Text style={{ color: colors.subtext }}>•</Text>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.email,
+                    { color: colors.subtext, flexWrap: "wrap" },
+                  ]}
+                >
+                  {subscription.customer.email}
+                </Text>
               </>
             )}
-            <Text
-              numberOfLines={1}
-              style={[
-                styles.email,
-                { color: colors.subtext, flexWrap: "wrap" },
-              ]}
-            >
-              {order.customer.email}
-            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -123,8 +125,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#fff",
   },
-  amount: {
+  status: {
     fontSize: 16,
+    textTransform: "capitalize",
   },
   email: {
     fontSize: 16,

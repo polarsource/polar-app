@@ -2,7 +2,7 @@ import { OrderRow } from "@/components/Orders/OrderRow";
 import { useOrders } from "@/hooks/polar/orders";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, Stack } from "expo-router";
-import { use, useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import {
   RefreshControl,
   SafeAreaView,
@@ -22,7 +22,7 @@ import { useCustomers } from "@/hooks/polar/customers";
 import { CustomerCard } from "@/components/Customers/CustomerCard";
 import React from "react";
 import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
-import { isDemoSession } from "@/hooks/auth";
+import { isDemoSession, useLogout } from "@/hooks/auth";
 import { EmptyState } from "@/components/Common/EmptyState";
 import {
   checkForUpdateAsync,
@@ -31,10 +31,14 @@ import {
   useUpdates,
 } from "expo-updates";
 import { Banner } from "@/components/Common/Banner";
+import { useSubscriptions } from "@/hooks/polar/subscriptions";
+import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
+
+  const { isDownloading, isRestarting, isUpdateAvailable } = useUpdates();
 
   const {
     data: orders,
@@ -42,6 +46,16 @@ export default function Index() {
     isRefetching: isRefetchingOrders,
   } = useOrders(organization.id, {
     limit: 5,
+  });
+
+  const {
+    data: subscriptions,
+    refetch: refetchSubscriptions,
+    isRefetching: isRefetchingSubscriptions,
+  } = useSubscriptions(organization.id, {
+    limit: 5,
+    active: true,
+    sorting: ["-started_at"],
   });
 
   const {
@@ -56,17 +70,28 @@ export default function Index() {
     return orders?.pages.flatMap((page) => page.result.items) ?? [];
   }, [orders]);
 
+  const flatSubscriptions = useMemo(() => {
+    return subscriptions?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [subscriptions]);
+
   const flatCustomers = useMemo(() => {
     return customers?.pages.flatMap((page) => page.result.items) ?? [];
   }, [customers]);
 
   const isRefetching = useMemo(() => {
-    return isRefetchingOrders || isRefetchingCustomers;
-  }, [isRefetchingOrders]);
+    return (
+      isRefetchingOrders || isRefetchingSubscriptions || isRefetchingCustomers
+    );
+  }, [isRefetchingOrders, isRefetchingSubscriptions, isRefetchingCustomers]);
 
   const refresh = useCallback(() => {
-    Promise.all([refetchOrders(), refetchCustomers(), checkForUpdateAsync()]);
-  }, [refetchOrders, refetchCustomers]);
+    Promise.all([
+      refetchOrders(),
+      refetchCustomers(),
+      refetchSubscriptions(),
+      checkForUpdateAsync(),
+    ]);
+  }, [refetchOrders, refetchCustomers, refetchSubscriptions]);
 
   const { expoPushToken } = useNotifications();
   const { mutate: createNotificationRecipient } =
@@ -79,8 +104,6 @@ export default function Index() {
       createNotificationRecipient(expoPushToken);
     }
   }, [expoPushToken, createNotificationRecipient, isDemo]);
-
-  const { isDownloading, isRestarting, isUpdateAvailable } = useUpdates();
 
   async function onFetchUpdateAsync() {
     try {
@@ -153,6 +176,56 @@ export default function Index() {
             <OrganizationTile />
             <RevenueTile />
           </View>
+        </View>
+
+        <View style={{ gap: 24, flexDirection: "column", flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 24, color: colors.text }}>
+              Recent Subscriptions
+            </Text>
+            <Link href="/subscriptions" asChild>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={{
+                  width: "auto",
+                  backgroundColor: colors.primary,
+                  borderRadius: 100,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
+                >
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+          {flatSubscriptions.length > 0 ? (
+            <View style={{ gap: 8 }}>
+              {flatSubscriptions.map((subscription) => (
+                <SubscriptionRow
+                  key={subscription.id}
+                  subscription={subscription}
+                  showCustomer
+                />
+              ))}
+            </View>
+          ) : (
+            <EmptyState
+              title="No Subscriptions"
+              description="No active subscriptions found for this organization"
+            />
+          )}
         </View>
 
         <View style={{ gap: 24, flexDirection: "column", flex: 1 }}>

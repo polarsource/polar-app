@@ -3,9 +3,11 @@ import { DetailRow } from "@/components/Common/Details";
 import { Details } from "@/components/Common/Details";
 import { EmptyState } from "@/components/Common/EmptyState";
 import { OrderRow } from "@/components/Orders/OrderRow";
+import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { useCustomer } from "@/hooks/polar/customers";
 import { useMetrics } from "@/hooks/polar/metrics";
 import { useOrders } from "@/hooks/polar/orders";
+import { useSubscriptions } from "@/hooks/polar/subscriptions";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { formatCurrencyAndAmount } from "@/utils/money";
@@ -60,16 +62,33 @@ export default function Index() {
     return orders?.pages.flatMap((page) => page.result.items) ?? [];
   }, [orders]);
 
+  const {
+    data: subscriptions,
+    refetch: refetchSubscriptions,
+    isRefetching: isSubscriptionsRefetching,
+  } = useSubscriptions(organization.id, {
+    customerId: id as string,
+    active: null,
+  });
+
+  const flatSubscriptions = useMemo(() => {
+    return subscriptions?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [subscriptions]);
+
   const isRefetching =
-    isCustomerRefetching || isOrdersRefetching || isMetricsRefetching;
+    isCustomerRefetching ||
+    isSubscriptionsRefetching ||
+    isOrdersRefetching ||
+    isMetricsRefetching;
 
   const refetch = useCallback(() => {
     return Promise.allSettled([
       refetchCustomer(),
       refetchOrders(),
       refetchMetrics(),
+      refetchSubscriptions(),
     ]);
-  }, [refetchCustomer, refetchOrders, refetchMetrics]);
+  }, [refetchCustomer, refetchOrders, refetchMetrics, refetchSubscriptions]);
 
   return (
     <>
@@ -179,6 +198,35 @@ export default function Index() {
             </Details>
           </View>
         )}
+
+        <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 24, color: colors.text }}>
+              Subscriptions
+            </Text>
+          </View>
+          {flatSubscriptions.length > 0 ? (
+            <View style={{ gap: 8 }}>
+              {flatSubscriptions.map((subscription) => (
+                <SubscriptionRow
+                  key={subscription.id}
+                  subscription={subscription}
+                />
+              ))}
+            </View>
+          ) : (
+            <EmptyState
+              title="No Subscriptions"
+              description="No subscriptions found for this customer"
+            />
+          )}
+        </View>
 
         <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
           <View
