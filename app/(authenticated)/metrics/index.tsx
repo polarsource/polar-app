@@ -49,6 +49,6 @@ const MetricsStyles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    fontSize: 54,
+    fontSize: 24,
   },
 });

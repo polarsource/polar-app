@@ -38,6 +38,7 @@ export default function Index() {
             fontSize: 16,
             color: colors.text,
           }}
+          placeholderTextColor={colors.subtext}
         />
       </View>
       <FlatList

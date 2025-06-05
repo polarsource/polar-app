@@ -1,9 +1,17 @@
 import { Avatar } from "@/components/Common/Avatar";
+import { DetailRow } from "@/components/Common/Details";
+import { Details } from "@/components/Common/Details";
+import { EmptyState } from "@/components/Common/EmptyState";
+import { OrderRow } from "@/components/Orders/OrderRow";
 import { useCustomer } from "@/hooks/polar/customers";
+import { useMetrics } from "@/hooks/polar/metrics";
+import { useOrders } from "@/hooks/polar/orders";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { Stack, useLocalSearchParams } from "expo-router";
-import React, { useContext } from "react";
+import { formatCurrencyAndAmount } from "@/utils/money";
+import { TimeInterval } from "@polar-sh/sdk/models/components/timeinterval.js";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useContext, useMemo } from "react";
 import {
   RefreshControl,
   ScrollView,
@@ -15,14 +23,53 @@ import {
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
-
   const { id } = useLocalSearchParams();
+
   const {
     data: customer,
-    isLoading,
-    refetch,
-    isRefetching,
+    refetch: refetchCustomer,
+    isRefetching: isCustomerRefetching,
   } = useCustomer(organization.id, id as string);
+
+  const startDate = useMemo(() => {
+    return new Date(customer?.createdAt ?? new Date());
+  }, [customer]);
+
+  const endDate = useMemo(() => {
+    return new Date();
+  }, []);
+
+  const {
+    data: metrics,
+    refetch: refetchMetrics,
+    isRefetching: isMetricsRefetching,
+  } = useMetrics(organization.id, startDate, endDate, {
+    interval: TimeInterval.Month,
+    customerId: id as string,
+  });
+
+  const {
+    data: orders,
+    refetch: refetchOrders,
+    isRefetching: isOrdersRefetching,
+  } = useOrders(organization.id, {
+    customerId: id as string,
+  });
+
+  const flatOrders = useMemo(() => {
+    return orders?.pages.flatMap((page) => page.result.items) ?? [];
+  }, [orders]);
+
+  const isRefetching =
+    isCustomerRefetching || isOrdersRefetching || isMetricsRefetching;
+
+  const refetch = useCallback(() => {
+    return Promise.allSettled([
+      refetchCustomer(),
+      refetchOrders(),
+      refetchMetrics(),
+    ]);
+  }, [refetchCustomer, refetchOrders, refetchMetrics]);
 
   return (
     <>
@@ -32,11 +79,15 @@ export default function Index() {
         }}
       />
       <ScrollView
-        style={[styles.container, { backgroundColor: colors.background }]}
+        style={[styles.container]}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
         }
-        contentContainerStyle={{ flex: 1, flexDirection: "column", gap: 32 }}
+        contentContainerStyle={{
+          flexDirection: "column",
+          gap: 24,
+        }}
+        contentInset={{ bottom: 48 }}
       >
         <View style={styles.hero}>
           <Avatar
@@ -53,92 +104,105 @@ export default function Index() {
             </Text>
           </View>
         </View>
-        {customer?.billingAddress && (
-          <View style={styles.section}>
-            <View style={[styles.card, { backgroundColor: colors.card }]}>
-              {customer.billingAddress.line1 && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    Address
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.line1}
-                  </Text>
-                </View>
+
+        <View style={{ flexDirection: "row", gap: 12 }}>
+          <View
+            style={{
+              backgroundColor: colors.card,
+              padding: 12,
+              borderRadius: 12,
+              flex: 1,
+              gap: 8,
+            }}
+          >
+            <Text style={[styles.label, { color: colors.subtext }]}>
+              Revenue
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {formatCurrencyAndAmount(
+                metrics?.periods[metrics?.periods.length - 1]
+                  .cumulativeRevenue ?? 0
               )}
-              {customer.billingAddress.line2 && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    Address 2
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.line2}
-                  </Text>
-                </View>
-              )}
-              {customer.billingAddress.city && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    City
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.city}
-                  </Text>
-                </View>
-              )}
-              {customer.billingAddress.state && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    State
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.state}
-                  </Text>
-                </View>
-              )}
-              {customer.billingAddress.postalCode && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    Postal Code
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.postalCode}
-                  </Text>
-                </View>
-              )}
-              {customer.billingAddress.country && (
-                <View style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    Country
-                  </Text>
-                  <Text style={[styles.value]}>
-                    {customer.billingAddress.country}
-                  </Text>
-                </View>
-              )}
-            </View>
+            </Text>
           </View>
-        )}
+          <View
+            style={{
+              backgroundColor: colors.card,
+              padding: 12,
+              borderRadius: 12,
+              flex: 1,
+              gap: 8,
+            }}
+          >
+            <Text style={[styles.label, { color: colors.subtext }]}>
+              First Seen
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {new Date(customer?.createdAt ?? "").toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Details>
+            <DetailRow
+              label="Address"
+              value={customer?.billingAddress?.line1}
+            />
+            <DetailRow
+              label="Address 2"
+              value={customer?.billingAddress?.line2}
+            />
+            <DetailRow label="City" value={customer?.billingAddress?.city} />
+            <DetailRow label="State" value={customer?.billingAddress?.state} />
+            <DetailRow
+              label="Postal Code"
+              value={customer?.billingAddress?.postalCode}
+            />
+            <DetailRow
+              label="Country"
+              value={customer?.billingAddress?.country}
+            />
+          </Details>
+        </View>
 
         {customer?.metadata && Object.keys(customer.metadata).length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Additional Information
-            </Text>
-            <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Details>
               {Object.entries(customer.metadata).map(([key, value]) => (
-                <View key={key} style={styles.row}>
-                  <Text style={[styles.label, { color: colors.text }]}>
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </Text>
-                  <Text style={[styles.value, { color: colors.text }]}>
-                    {String(value)}
-                  </Text>
-                </View>
+                <DetailRow key={key} label={key} value={String(value)} />
               ))}
-            </View>
+            </Details>
           </View>
         )}
+
+        <View style={{ gap: 16, flexDirection: "column", flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 24, color: colors.text }}>Orders</Text>
+          </View>
+          {flatOrders.length > 0 ? (
+            <View style={{ gap: 8 }}>
+              {flatOrders.map((order) => (
+                <OrderRow key={order.id} order={order} showTimestamp />
+              ))}
+            </View>
+          ) : (
+            <EmptyState
+              title="No Orders"
+              description="No orders found for this organization"
+            />
+          )}
+        </View>
       </ScrollView>
     </>
   );

@@ -23,6 +23,7 @@ import { CustomerCard } from "@/components/Customers/CustomerCard";
 import React from "react";
 import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
 import { isDemoSession } from "@/hooks/auth";
+import { EmptyState } from "@/components/Common/EmptyState";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -154,54 +155,60 @@ export default function Index() {
               </TouchableOpacity>
             </Link>
           </View>
-          <View style={{ gap: 8 }}>
-            {flatOrders.map((order) => (
-              <OrderRow key={order.id} order={order} showTimestamp />
-            ))}
-          </View>
+          {flatOrders.length > 0 ? (
+            <View style={{ gap: 8 }}>
+              {flatOrders.map((order) => (
+                <OrderRow key={order.id} order={order} showTimestamp />
+              ))}
+            </View>
+          ) : (
+            <EmptyState
+              title="No Orders"
+              description="No orders found for this organization"
+            />
+          )}
         </View>
       </View>
 
-      {flatCustomers && flatCustomers.length > 0 ? (
+      <View
+        style={{
+          gap: 24,
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
         <View
           style={{
-            gap: 24,
-            flexDirection: "column",
-            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 16,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 16,
-            }}
-          >
-            <Text style={{ fontSize: 24, color: colors.text }}>
-              Recent Customers
-            </Text>
-            <Link href="/customers" asChild>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  width: "auto",
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                }}
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                >
-                  View All
-                </Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
+          <Text style={{ fontSize: 24, color: colors.text }}>
+            Recent Customers
+          </Text>
+          <Link href="/customers" asChild>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{
+                width: "auto",
+                backgroundColor: colors.primary,
+                borderRadius: 100,
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}>
+                View All
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
+        {flatCustomers && flatCustomers.length > 0 ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -213,10 +220,15 @@ export default function Index() {
               <CustomerCard key={customer.id} customer={customer} />
             ))}
           </ScrollView>
-        </View>
-      ) : (
-        <></>
-      )}
+        ) : (
+          <View style={{ flex: 1, paddingHorizontal: 16 }}>
+            <EmptyState
+              title="No Customers"
+              description="No customers found for this organization"
+            />
+          </View>
+        )}
+      </View>
     </ScrollView>
   );
 }

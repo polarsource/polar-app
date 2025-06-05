@@ -26,7 +26,9 @@ export const CustomerRow = ({ customer }: CustomerRowProps) => {
       <TouchableOpacity activeOpacity={0.6}>
         <Avatar image={customer.avatarUrl} name={customer.email} size={36} />
         <View style={styles.contentContainer}>
-          <Text style={styles.name}>{customer.name ?? "—"}</Text>
+          <Text style={[styles.name, { color: colors.text }]}>
+            {customer.name ?? "—"}
+          </Text>
           <View style={styles.metadataContainer}>
             <Text style={[styles.metadata, { color: colors.subtext }]}>
               {customer.email}

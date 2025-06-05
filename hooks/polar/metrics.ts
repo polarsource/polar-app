@@ -1,6 +1,6 @@
 import { usePolarClient } from "@/providers/PolarClientProvider";
-import { MetricsGetRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/metricsget";
-import { RFCDate } from "@polar-sh/sdk/dist/commonjs/types/rfcdate";
+import { MetricsGetRequest } from "@polar-sh/sdk/models/operations/metricsget.js";
+import { RFCDate } from "@polar-sh/sdk/types/rfcdate.js";
 import { useQuery } from "@tanstack/react-query";
 
 export const useMetrics = (
@@ -17,13 +17,22 @@ export const useMetrics = (
       organizationId,
       { ...parameters, startDate, endDate },
     ],
-    queryFn: () =>
-      polar.metrics.get({
+    queryFn: async () => {
+      const metrics = await polar.metrics.get({
         organizationId,
         ...(parameters || {}),
         startDate: new RFCDate(startDate),
         endDate: new RFCDate(endDate),
-      }),
+      });
+
+      return {
+        ...metrics,
+        periods: metrics.periods.map((period) => ({
+          ...period,
+          timestamp: new Date(period.timestamp),
+        })),
+      };
+    },
     enabled: !!organizationId,
   });
 };

@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Tile } from "./Tile";
 import { useMetrics } from "@/hooks/polar/metrics";
-import { TimeInterval } from "@polar-sh/sdk/dist/commonjs/models/components/timeinterval";
+import { TimeInterval } from "@polar-sh/sdk/models/components/timeinterval.js";
 import { useContext, useMemo, useState } from "react";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { useTheme } from "@/hooks/theme";
 import { Path } from "react-native-svg";
 import Svg from "react-native-svg";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-
+import { startOfMonth, endOfMonth } from "date-fns";
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -16,17 +16,14 @@ export const RevenueTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
-  const startOfMonth = useMemo(() => {
-    return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  }, []);
-
-  const endDate = useMemo(() => {
-    return new Date();
-  }, []);
-
-  const metrics = useMetrics(organization.id, startOfMonth, endDate, {
-    interval: TimeInterval.Day,
-  });
+  const metrics = useMetrics(
+    organization.id,
+    startOfMonth(new Date()),
+    endOfMonth(new Date()),
+    {
+      interval: TimeInterval.Day,
+    }
+  );
 
   const cumulativeRevenue = useMemo(() => {
     return (

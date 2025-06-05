@@ -13,6 +13,8 @@ import {
 import { Stack, useLocalSearchParams } from "expo-router";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
 import * as Clipboard from "expo-clipboard";
+import { DetailRow } from "@/components/Common/Details";
+import { Details } from "@/components/Common/Details";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -33,10 +35,11 @@ export default function Index() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={{ flex: 1, flexDirection: "column", gap: 16 }}
+      contentContainerStyle={{ flexDirection: "column", gap: 16 }}
       refreshControl={
         <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
       }
+      contentInset={{ bottom: 48 }}
     >
       <Stack.Screen
         options={{
@@ -157,106 +160,39 @@ export default function Index() {
         </View>
       </View>
 
-      {order.billingAddress && (
-        <View style={styles.section}>
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
-            {order.billingAddress.line1 && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  Address
-                </Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.line1 ?? "—"}
-                </Text>
-              </View>
-            )}
-            {order.billingAddress.line2 && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  Address 2
-                </Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.line2 ?? "—"}
-                </Text>
-              </View>
-            )}
-            {order.billingAddress.city && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>City</Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.city ?? "—"}
-                </Text>
-              </View>
-            )}
-            {order.billingAddress.state && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  State
-                </Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.state ?? "—"}
-                </Text>
-              </View>
-            )}
-            {order.billingAddress.postalCode && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  Postal Code
-                </Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.postalCode ?? "—"}
-                </Text>
-              </View>
-            )}
-            {order.billingAddress.country && (
-              <View style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  Country
-                </Text>
-                <Text
-                  style={[styles.value, { color: colors.text }]}
-                  numberOfLines={1}
-                >
-                  {order.billingAddress.country ?? "—"}
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-      )}
+      <View style={styles.section}>
+        <Details>
+          <DetailRow
+            label="Address"
+            value={order.customer.billingAddress?.line1}
+          />
+          <DetailRow
+            label="Address 2"
+            value={order.customer.billingAddress?.line2}
+          />
+          <DetailRow label="City" value={order.customer.billingAddress?.city} />
+          <DetailRow
+            label="State"
+            value={order.customer.billingAddress?.state}
+          />
+          <DetailRow
+            label="Postal Code"
+            value={order.customer.billingAddress?.postalCode}
+          />
+          <DetailRow
+            label="Country"
+            value={order.customer.billingAddress?.country}
+          />
+        </Details>
+      </View>
 
       {order.metadata && Object.keys(order.metadata).length > 0 && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Additional Information
-          </Text>
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
+          <Details>
             {Object.entries(order.metadata).map(([key, value]) => (
-              <View key={key} style={styles.row}>
-                <Text style={[styles.label, { color: colors.text }]}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
-                  {String(value)}
-                </Text>
-              </View>
+              <DetailRow key={key} label={key} value={String(value)} />
             ))}
-          </View>
+          </Details>
         </View>
       )}
     </ScrollView>
