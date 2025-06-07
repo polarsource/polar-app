@@ -8,6 +8,19 @@ import { FormInput } from "@/components/Form/FormInput";
 import { useForm } from "react-hook-form";
 import { ProductUpdate } from "@polar-sh/sdk/models/components/productupdate.js";
 import { ProductMediaFileRead } from "@polar-sh/sdk/models/components/productmediafileread.js";
+import { Button } from "@/components/Shared/Button";
+import {
+  TabsContent,
+  TabsList,
+  Tabs,
+  TabsTrigger,
+} from "@/components/Shared/Tabs";
+import { ThemedText } from "@/components/Shared/ThemedText";
+import { useMetrics } from "@/hooks/polar/metrics";
+import { Box } from "@/components/Metrics/Box";
+import { formatCurrencyAndAmount } from "@/utils/money";
+import { useOrders } from "@/hooks/polar/orders";
+import { OrderRow } from "@/components/Orders/OrderRow";
 
 export interface ProductFullMediasMixin {
   full_medias: ProductMediaFileRead[];
@@ -28,6 +41,25 @@ export default function Index() {
     refetch,
     isRefetching,
   } = useProduct(organization.id, id as string);
+
+  const { data: metrics } = useMetrics(
+    organization.id,
+    organization.createdAt,
+    new Date(),
+    {
+      productId: id as string,
+      interval: "month",
+    }
+  );
+
+  const { data: latestProductOrders } = useOrders(organization.id, {
+    productId: id as string,
+    limit: 10,
+  });
+
+  const flatLatestProductOrders = latestProductOrders?.pages.flatMap(
+    (page) => page.result.items
+  );
 
   const form = useForm<ProductUpdateForm>({
     defaultValues: {
@@ -56,7 +88,7 @@ export default function Index() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={{ flexDirection: "column", gap: 16 }}
+      contentContainerStyle={{ flexDirection: "column", gap: 32 }}
       refreshControl={
         <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
       }
@@ -64,20 +96,57 @@ export default function Index() {
     >
       <Stack.Screen
         options={{
-          title: "Product",
+          title: product.name,
         }}
       />
-      <View style={{ flexDirection: "column", gap: 16 }}>
-        <FormInput control={control} name="name" label="Name" />
-        <FormInput
-          multiline
-          control={control}
-          name="description"
-          style={{ height: 120 }}
-          label="Description"
-        />
-        <FormInput control={control} name="prices" label="Prices" />
-      </View>
+
+      <Tabs defaultValue="overview">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="edit">Edit</TabsTrigger>
+        </TabsList>
+        <TabsContent
+          value="overview"
+          style={{ flexDirection: "column", gap: 32 }}
+        >
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <Box
+              label="Orders"
+              value={(
+                metrics?.periods.reduce(
+                  (acc, period) => acc + (period.orders ?? 0),
+                  0
+                ) ?? 0
+              ).toString()}
+            />
+            <Box
+              label="Revenue"
+              value={formatCurrencyAndAmount(
+                metrics?.periods[metrics?.periods.length - 1]
+                  .cumulativeRevenue ?? 0
+              )}
+            />
+          </View>
+          <View style={{ flexDirection: "column", gap: 8 }}>
+            {flatLatestProductOrders?.map((order) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
+          </View>
+        </TabsContent>
+        <TabsContent value="edit" style={{ flexDirection: "column", gap: 32 }}>
+          <View style={{ flexDirection: "column", gap: 16 }}>
+            <FormInput control={control} name="name" label="Name" />
+            <FormInput
+              multiline
+              control={control}
+              name="description"
+              style={{ height: 120 }}
+              label="Description"
+            />
+          </View>
+          <Button>Save</Button>
+        </TabsContent>
+      </Tabs>
     </ScrollView>
   );
 }
