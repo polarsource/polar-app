@@ -16,13 +16,14 @@ import {
 import { useCallback } from "react";
 import React from "react";
 import { SubscriptionCancel } from "@polar-sh/sdk/models/components/subscriptioncancel.js";
-import { Button } from "@/components/Common/Button";
+import { Button } from "@/components/Shared/Button";
 import { useForm } from "react-hook-form";
 import { SubscriptionRevoke } from "@polar-sh/sdk/models/components/subscriptionrevoke.js";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { useQueryClient } from "@tanstack/react-query";
 import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 const CANCELLATION_REASONS = {
   unused: "Unused",
@@ -189,15 +190,15 @@ export default function Index() {
                 );
               }}
             >
-              <Text style={{ color: colors.text }}>{option}</Text>
+              <ThemedText>{option}</ThemedText>
             </TouchableOpacity>
           ))}
         </View>
 
         <View style={{ flex: 1, gap: 12 }}>
-          <Text style={{ color: colors.text, fontSize: 16 }}>
+          <ThemedText style={{ fontSize: 16 }}>
             Customer Cancellation Reason
-          </Text>
+          </ThemedText>
           <View style={{ flex: 1, gap: 4 }}>
             {reasons.map((reason) => (
               <TouchableOpacity
@@ -216,9 +217,7 @@ export default function Index() {
                   setValue("customerCancellationReason", reason);
                 }}
               >
-                <Text style={{ color: colors.text }}>
-                  {getHumanCancellationReason(reason)}
-                </Text>
+                <ThemedText>{getHumanCancellationReason(reason)}</ThemedText>
                 {cancellationReason === reason && (
                   <View>
                     <MaterialIcons name="check" size={20} color={colors.text} />

@@ -13,7 +13,7 @@ import { ErrorFallback } from "@/components/Errors/Fallback";
 import { useQueryClient } from "@tanstack/react-query";
 
 const RootLayout = () => {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const { session } = useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -33,7 +33,9 @@ const RootLayout = () => {
       )}
     >
       <>
-        <StatusBar barStyle="light-content" />
+        <StatusBar
+          barStyle={theme === "dark" ? "light-content" : "dark-content"}
+        />
         <Stack
           screenOptions={{
             headerStyle: {
@@ -41,7 +43,7 @@ const RootLayout = () => {
               borderBottomWidth: 0,
             },
             headerTitleStyle: {
-              color: DarkTheme.colors.text,
+              color: colors.text,
               fontSize: 18,
             },
             contentStyle: { backgroundColor: colors.background },

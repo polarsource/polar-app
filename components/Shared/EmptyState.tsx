@@ -1,6 +1,7 @@
 import { useTheme } from "@/hooks/theme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Text, View, StyleSheet } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 export interface EmptyStateProps {
   title: string;
@@ -12,10 +13,10 @@ export const EmptyState = ({ title, description }: EmptyStateProps) => {
 
   return (
     <View style={[styles.container, { borderColor: colors.border }]}>
-      <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-      <Text style={[styles.description, { color: colors.subtext }]}>
+      <ThemedText style={[styles.title]}>{title}</ThemedText>
+      <ThemedText style={[styles.description]} secondary>
         {description}
-      </Text>
+      </ThemedText>
     </View>
   );
 };

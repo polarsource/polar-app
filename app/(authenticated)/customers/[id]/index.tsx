@@ -1,7 +1,7 @@
-import { Avatar } from "@/components/Common/Avatar";
-import { DetailRow } from "@/components/Common/Details";
-import { Details } from "@/components/Common/Details";
-import { EmptyState } from "@/components/Common/EmptyState";
+import { Avatar } from "@/components/Shared/Avatar";
+import { DetailRow } from "@/components/Shared/Details";
+import { Details } from "@/components/Shared/Details";
+import { EmptyState } from "@/components/Shared/EmptyState";
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { useCustomer } from "@/hooks/polar/customers";
@@ -21,6 +21,7 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -115,12 +116,12 @@ export default function Index() {
             size={120}
           />
           <View style={styles.heroInfo}>
-            <Text style={[styles.customerName, { color: "#fff" }]}>
+            <ThemedText style={styles.customerName}>
               {customer?.name ?? "—"}
-            </Text>
-            <Text style={[styles.customerEmail, { color: colors.subtext }]}>
+            </ThemedText>
+            <ThemedText style={styles.customerEmail} secondary>
               {customer?.email}
-            </Text>
+            </ThemedText>
           </View>
         </View>
 
@@ -134,15 +135,15 @@ export default function Index() {
               gap: 8,
             }}
           >
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={styles.label} secondary>
               Revenue
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            </ThemedText>
+            <ThemedText style={styles.value}>
               {formatCurrencyAndAmount(
                 metrics?.periods[metrics?.periods.length - 1]
                   .cumulativeRevenue ?? 0
               )}
-            </Text>
+            </ThemedText>
           </View>
           <View
             style={{
@@ -153,16 +154,16 @@ export default function Index() {
               gap: 8,
             }}
           >
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={styles.label} secondary>
               First Seen
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            </ThemedText>
+            <ThemedText style={styles.value}>
               {new Date(customer?.createdAt ?? "").toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
               })}
-            </Text>
+            </ThemedText>
           </View>
         </View>
 
@@ -207,9 +208,7 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 24, color: colors.text }}>
-              Subscriptions
-            </Text>
+            <ThemedText style={{ fontSize: 24 }}>Subscriptions</ThemedText>
           </View>
           {flatSubscriptions.length > 0 ? (
             <View style={{ gap: 8 }}>
@@ -236,7 +235,7 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 24, color: colors.text }}>Orders</Text>
+            <ThemedText style={{ fontSize: 24 }}>Orders</ThemedText>
           </View>
           {flatOrders.length > 0 ? (
             <View style={{ gap: 8 }}>
@@ -279,7 +278,6 @@ const styles = StyleSheet.create({
   },
   customerEmail: {
     fontSize: 16,
-    color: "#666",
   },
   header: {
     flexDirection: "row",
@@ -327,7 +325,6 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "#fff",
   },
   customerContainer: {
     flexDirection: "row",

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Button, ButtonProps } from "./Button";
 import { useTheme } from "@/hooks/theme";
+import { ThemedText } from "./ThemedText";
 
 export interface BannerProps {
   title: string;
@@ -14,10 +15,10 @@ export const Banner = ({ title, description, button }: BannerProps) => {
   return (
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-        <Text style={[styles.description, { color: colors.subtext }]}>
+        <ThemedText style={[styles.title]}>{title}</ThemedText>
+        <ThemedText style={[styles.description]} secondary>
           {description}
-        </Text>
+        </ThemedText>
       </View>
       {button && (
         <Button

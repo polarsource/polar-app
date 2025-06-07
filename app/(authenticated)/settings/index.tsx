@@ -12,12 +12,13 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTheme } from "@/hooks/theme";
 import { useOrganizations } from "@/hooks/polar/organizations";
-import { Avatar } from "@/components/Common/Avatar";
-import { Button } from "@/components/Common/Button";
+import { Avatar } from "@/components/Shared/Avatar";
+import { Button } from "@/components/Shared/Button";
 import { useLogout } from "@/hooks/auth";
-import { DetailRow, Details } from "@/components/Common/Details";
+import { DetailRow, Details } from "@/components/Shared/Details";
 import { useUpdates } from "expo-updates";
 import { useNotifications } from "@/providers/NotificationsProvider";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
@@ -40,9 +41,7 @@ export default function Index() {
       <Stack.Screen options={{ title: "Settings" }} />
       <View style={SettingsStyle.container}>
         <View style={{ flex: 1, gap: 16 }}>
-          <Text style={[SettingsStyle.title, { color: colors.text }]}>
-            Organizations
-          </Text>
+          <ThemedText style={[SettingsStyle.title]}>Organizations</ThemedText>
           <View style={SettingsStyle.organizationsContainer}>
             {organizationData?.result.items.map((organization) => (
               <TouchableOpacity
@@ -60,15 +59,14 @@ export default function Index() {
                 activeOpacity={0.6}
               >
                 <View style={SettingsStyle.organizationContent}>
-                  <Avatar size={32} image={organization.avatarUrl} />
-                  <Text
-                    style={[
-                      SettingsStyle.organizationName,
-                      { color: colors.text },
-                    ]}
-                  >
+                  <Avatar
+                    size={32}
+                    image={organization.avatarUrl}
+                    name={organization.name}
+                  />
+                  <ThemedText style={[SettingsStyle.organizationName]}>
                     {organization.name}
-                  </Text>
+                  </ThemedText>
                 </View>
                 <MaterialIcons
                   name="check"

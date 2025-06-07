@@ -1,20 +1,18 @@
-import { useProduct } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
-import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 import { Link } from "expo-router";
-import React, { useContext } from "react";
+import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   StyleProp,
   TextStyle,
   TouchableOpacity,
 } from "react-native";
-import { Pill } from "../Common/Pill";
+import { Pill } from "../Shared/Pill";
+import { ThemedText } from "../Shared/ThemedText";
 
 export interface SubscriptionRowProps {
   subscription: Subscription;
@@ -60,27 +58,25 @@ export const SubscriptionRow = ({
           )}
         </View>
         <View style={styles.contentContainer}>
-          <Text
+          <ThemedText
             style={styles.productName}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
             {subscription.product.name}
-          </Text>
+          </ThemedText>
           <View style={styles.metadataContainer}>
             <Pill color={subscription.status === "active" ? "green" : "red"}>
               {subscription.status.split("_").join(" ")}
             </Pill>
             {showCustomer && (
-              <Text
+              <ThemedText
                 numberOfLines={1}
-                style={[
-                  styles.email,
-                  { color: colors.subtext, flexWrap: "wrap" },
-                ]}
+                style={[styles.email, { flexWrap: "wrap" }]}
+                secondary
               >
                 {subscription.customer.email}
-              </Text>
+              </ThemedText>
             )}
           </View>
         </View>
@@ -113,11 +109,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  fallbackText: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "600",
-  },
   contentContainer: {
     flex: 1,
     flexDirection: "column",
@@ -126,7 +117,6 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#fff",
   },
   status: {
     fontSize: 16,

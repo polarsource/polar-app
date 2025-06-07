@@ -8,8 +8,9 @@ import {
 import { Redirect } from "expo-router";
 import { useSession } from "@/providers/SessionProvider";
 import { useTheme } from "@/hooks/theme";
-import LogoIcon from "@/components/Common/PolarLogo";
+import LogoIcon from "@/components/Shared/PolarLogo";
 import { useOAuth } from "@/hooks/oauth";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function App() {
   const { session, setSession } = useSession();
@@ -26,9 +27,9 @@ export default function App() {
     >
       <StatusBar barStyle="light-content" />
       <LogoIcon size={80} />
-      <Text style={[LoginStyle.title, { color: colors.text }]}>
+      <ThemedText style={LoginStyle.title}>
         Payment infrastructure for the 21st century
-      </Text>
+      </ThemedText>
       <TouchableOpacity
         activeOpacity={0.6}
         disabled={!authRequest}
@@ -41,7 +42,7 @@ export default function App() {
           setSession(process.env.EXPO_PUBLIC_POLAR_DEMO_TOKEN ?? null);
         }}
       >
-        <Text style={[LoginStyle.buttonText, { color: "#000" }]}>
+        <Text style={[LoginStyle.buttonText, { color: colors.monochrome }]}>
           Get Started
         </Text>
       </TouchableOpacity>

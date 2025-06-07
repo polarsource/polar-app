@@ -14,7 +14,7 @@ import {
 import { RevenueTile } from "@/components/Home/RevenueTile";
 import { OrganizationTile } from "@/components/Home/OrganizationTile";
 import { useTheme } from "@/hooks/theme";
-import PolarLogo from "@/components/Common/PolarLogo";
+import PolarLogo from "@/components/Shared/PolarLogo";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { useCreateNotificationRecipient } from "@/hooks/polar/notifications";
 import { useNotifications } from "@/providers/NotificationsProvider";
@@ -23,16 +23,17 @@ import { CustomerCard } from "@/components/Customers/CustomerCard";
 import React from "react";
 import { NotificationBadge } from "@/components/Notifications/NotificationBadge";
 import { isDemoSession, useLogout } from "@/hooks/auth";
-import { EmptyState } from "@/components/Common/EmptyState";
+import { EmptyState } from "@/components/Shared/EmptyState";
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
   reloadAsync,
   useUpdates,
 } from "expo-updates";
-import { Banner } from "@/components/Common/Banner";
+import { Banner } from "@/components/Shared/Banner";
 import { useSubscriptions } from "@/hooks/polar/subscriptions";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -186,9 +187,9 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20, color: colors.text }}>
+            <ThemedText style={{ fontSize: 20 }}>
               Recent Subscriptions
-            </Text>
+            </ThemedText>
             <Link href="/subscriptions" asChild>
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -236,9 +237,7 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20, color: colors.text }}>
-              Recent Orders
-            </Text>
+            <ThemedText style={{ fontSize: 20 }}>Recent Orders</ThemedText>
             <Link href="/orders" asChild>
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -290,9 +289,7 @@ export default function Index() {
             paddingHorizontal: 16,
           }}
         >
-          <Text style={{ fontSize: 20, color: colors.text }}>
-            Recent Customers
-          </Text>
+          <ThemedText style={{ fontSize: 20 }}>Recent Customers</ThemedText>
           <Link href="/customers" asChild>
             <TouchableOpacity
               activeOpacity={0.6}

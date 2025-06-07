@@ -4,6 +4,7 @@ import { CheckoutProduct } from "@polar-sh/sdk/models/components/checkoutproduct
 import { Product } from "@polar-sh/sdk/models/components/product.js";
 import AmountLabel from "./AmountLabel";
 import { Text } from "react-native";
+import { ThemedText } from "../Shared/ThemedText";
 
 interface ProductPriceLabelProps {
   product: Product | CheckoutProduct;
@@ -33,8 +34,8 @@ export const ProductPriceLabel = ({ product }: ProductPriceLabelProps) => {
       />
     );
   } else if (staticPrice.amountType === "custom") {
-    return <Text style={{ color: colors.text }}>Pay what you want</Text>;
+    return <ThemedText>Pay what you want</ThemedText>;
   } else {
-    return <Text style={{ color: colors.text }}>Free</Text>;
+    return <ThemedText>Free</ThemedText>;
   }
 };

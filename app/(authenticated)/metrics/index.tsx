@@ -7,6 +7,7 @@ import { useMetrics } from "@/hooks/polar/metrics";
 import { TimeInterval } from "@polar-sh/sdk/dist/commonjs/models/components/timeinterval";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { Stack } from "expo-router";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -35,9 +36,7 @@ export default function Index() {
   return (
     <ScrollView style={MetricsStyles.container}>
       <Stack.Screen options={{ title: "Metrics" }} />
-      <Text style={[MetricsStyles.title, { color: colors.text }]}>
-        Not implemented
-      </Text>
+      <ThemedText style={MetricsStyles.title}>Not implemented</ThemedText>
     </ScrollView>
   );
 }

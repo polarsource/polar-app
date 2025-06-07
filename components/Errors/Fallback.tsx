@@ -2,11 +2,12 @@ import React, { useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import { SDKError } from "@polar-sh/sdk/models/errors/sdkerror.js";
-import PolarLogo from "@/components/Common/PolarLogo";
+import PolarLogo from "@/components/Shared/PolarLogo";
 import { useLogout } from "@/hooks/auth";
 import { useTheme } from "@/hooks/theme";
 import { useOAuth } from "@/hooks/oauth";
 import { useRouter } from "expo-router";
+import { ThemedText } from "../Shared/ThemedText";
 
 export interface ErrorFallbackProps {
   error: Error;
@@ -62,24 +63,23 @@ export const ErrorFallback = ({
     >
       <PolarLogo size={80} />
       <View style={{ gap: 12 }}>
-        <Text
+        <ThemedText
           style={{
             fontSize: 24,
             textAlign: "center",
-            color: colors.text,
           }}
         >
           {title}
-        </Text>
-        <Text
+        </ThemedText>
+        <ThemedText
           style={{
             fontSize: 16,
             textAlign: "center",
-            color: colors.subtext,
           }}
+          secondary
         >
           {message}
-        </Text>
+        </ThemedText>
       </View>
       <TouchableOpacity
         activeOpacity={0.6}
@@ -97,9 +97,9 @@ export const ErrorFallback = ({
           resetErrorBoundary();
         }}
       >
-        <Text style={{ color: "#000", fontSize: 16, fontWeight: "500" }}>
+        <ThemedText style={{ color: "#000", fontSize: 16, fontWeight: "500" }}>
           {actionText}
-        </Text>
+        </ThemedText>
       </TouchableOpacity>
     </View>
   );

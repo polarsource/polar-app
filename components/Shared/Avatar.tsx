@@ -1,5 +1,6 @@
 import { useTheme } from "@/hooks/theme";
 import { View, Text, Image } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 const getInitials = (fullName: string) => {
   const allNames = fullName.trim().split(" ");
@@ -61,7 +62,7 @@ export const Avatar = ({
             inset: 0,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: size / 3 }}>{initials}</Text>
+          <ThemedText style={{ fontSize: size / 3 }}>{initials}</ThemedText>
         </View>
       )}
       {image && (

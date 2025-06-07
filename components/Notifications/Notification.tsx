@@ -10,6 +10,7 @@ import { formatCurrencyAndAmount } from "@/utils/money";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useMemo } from "react";
 import { View, Text, StyleSheet, ViewStyle, StyleProp } from "react-native";
+import { ThemedText } from "../Shared/ThemedText";
 
 export interface NotificationProps {
   style?: StyleProp<ViewStyle>;
@@ -107,21 +108,19 @@ export const Notification = ({
   return (
     <View style={[styles.container, style]}>
       <View style={[styles.icon, { backgroundColor: colors.card }]}>
-        <Text style={{ color: colors.text }}>{icon}</Text>
+        <ThemedText>{icon}</ThemedText>
       </View>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={{ color: colors.text }}>{title}</Text>
-          <Text style={{ color: colors.subtext }}>
+          <ThemedText>{title}</ThemedText>
+          <ThemedText secondary>
             {new Date(createdAt).toLocaleTimeString("en-US", {
               hour: "numeric",
               minute: "numeric",
             })}
-          </Text>
+          </ThemedText>
         </View>
-        <Text style={{ lineHeight: 20, color: colors.subtext }}>
-          {description}
-        </Text>
+        <ThemedText secondary>{description}</ThemedText>
       </View>
     </View>
   );

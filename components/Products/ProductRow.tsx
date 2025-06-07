@@ -3,6 +3,7 @@ import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Order } from "@polar-sh/sdk/models/components/order.js";
+import { Product } from "@polar-sh/sdk/models/components/product.js";
 import { Link } from "expo-router";
 import React, { useContext } from "react";
 import {
@@ -14,22 +15,22 @@ import {
   TextStyle,
   TouchableOpacity,
 } from "react-native";
+import AmountLabel from "./AmountLabel";
+import { ProductPriceLabel } from "./ProductPriceLabel";
 import { ThemedText } from "../Shared/ThemedText";
 
-export interface OrderRowProps {
-  order: Order;
-  showTimestamp?: boolean;
+export interface ProductRowProps {
+  product: Product;
   style?: StyleProp<TextStyle>;
 }
 
-export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
+export const ProductRow = ({ product, style }: ProductRowProps) => {
   const { colors } = useTheme();
   const { organization } = useContext(OrganizationContext);
-  const { data: product } = useProduct(organization.id, order.product.id);
 
   return (
     <Link
-      href={`/orders/${order.id}`}
+      href={`/products/${product.id}`}
       style={[styles.container, { backgroundColor: colors.card }, style]}
       asChild
     >
@@ -57,28 +58,8 @@ export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
           )}
         </View>
         <View style={styles.contentContainer}>
-          <ThemedText style={styles.productName}>
-            {order.product.name}
-          </ThemedText>
-          <View style={styles.metadataContainer}>
-            {showTimestamp && (
-              <>
-                <ThemedText style={[styles.amount]} secondary>
-                  {order.createdAt.toLocaleDateString("en-US", {
-                    dateStyle: "medium",
-                  })}
-                </ThemedText>
-                <ThemedText secondary>•</ThemedText>
-              </>
-            )}
-            <ThemedText
-              numberOfLines={1}
-              style={[styles.email, { flexWrap: "wrap" }]}
-              secondary
-            >
-              {order.customer.email}
-            </ThemedText>
-          </View>
+          <ThemedText style={styles.productName}>{product.name}</ThemedText>
+          <ProductPriceLabel product={product} />
         </View>
       </TouchableOpacity>
     </Link>
@@ -108,6 +89,10 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  fallbackText: {
+    fontSize: 20,
+    fontWeight: "600",
   },
   contentContainer: {
     flex: 1,

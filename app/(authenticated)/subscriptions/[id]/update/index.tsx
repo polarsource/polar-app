@@ -16,7 +16,7 @@ import {
 import { useCallback, useContext, useEffect, useMemo } from "react";
 import React from "react";
 import { SubscriptionCancel } from "@polar-sh/sdk/models/components/subscriptioncancel.js";
-import { Button } from "@/components/Common/Button";
+import { Button } from "@/components/Shared/Button";
 import {
   useForm,
   useFormContext,
@@ -35,7 +35,8 @@ import { useProducts } from "@/hooks/polar/products";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { SubscriptionProrationBehavior } from "@polar-sh/sdk/models/components/subscriptionprorationbehavior.js";
 import { ProductPriceLabel } from "@/components/Products/ProductPriceLabel";
-import { EmptyState } from "@/components/Common/EmptyState";
+import { EmptyState } from "@/components/Shared/EmptyState";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -169,7 +170,7 @@ export default function Index() {
                   setValue("productId", product.id, { shouldDirty: true });
                 }}
               >
-                <Text style={{ color: colors.text }}>{product.name}</Text>
+                <ThemedText>{product.name}</ThemedText>
                 <View
                   style={{
                     flexDirection: "row",
@@ -205,10 +206,10 @@ export default function Index() {
             borderRadius: 8,
           }}
         >
-          <Text style={{ color: colors.text }}>
+          <ThemedText>
             The customer will get access to {selectedProduct.name} benefits, and
             lose access to {subscription.product.name} benefits.
-          </Text>
+          </ThemedText>
         </View>
       )}
       <Button
@@ -283,13 +284,13 @@ const ProrationBehaviorSelector = ({
             );
           }}
         >
-          <Text
+          <ThemedText
             numberOfLines={1}
             ellipsizeMode="tail"
-            style={{ color: colors.text, width: "100%", textAlign: "center" }}
+            style={{ width: "100%", textAlign: "center" }}
           >
             {label}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
       ))}
     </View>

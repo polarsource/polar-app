@@ -1,9 +1,10 @@
 import { View, Text } from "react-native";
-import { Avatar } from "../Common/Avatar";
+import { Avatar } from "../Shared/Avatar";
 import { Tile } from "./Tile";
 import { useContext } from "react";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import { ThemedText } from "../Shared/ThemedText";
 
 export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);
@@ -24,22 +25,18 @@ export const OrganizationTile = () => {
           backgroundColor={colors.primary}
         />
         <View style={{ flexDirection: "column", gap: 4 }}>
-          <Text
+          <ThemedText
             style={{
-              color: colors.text,
               fontSize: 18,
               fontWeight: "600",
               marginTop: 4,
             }}
           >
             {organization.name}
-          </Text>
-          <Text
-            style={{ color: colors.subtext, fontSize: 16 }}
-            numberOfLines={1}
-          >
+          </ThemedText>
+          <ThemedText style={{ fontSize: 16 }} numberOfLines={1} secondary>
             {organization.slug}
-          </Text>
+          </ThemedText>
         </View>
       </View>
     </Tile>

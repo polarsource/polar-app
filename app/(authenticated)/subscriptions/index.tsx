@@ -1,4 +1,5 @@
 import { OrderRow } from "@/components/Orders/OrderRow";
+import { ThemedText } from "@/components/Shared/ThemedText";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { useOrders } from "@/hooks/polar/orders";
 import { useSubscriptions } from "@/hooks/polar/subscriptions";
@@ -56,15 +57,14 @@ export default function Index() {
         renderItem={({ item }: { item: Subscription | string }) => {
           if (typeof item === "string") {
             return (
-              <Text
+              <ThemedText
                 style={{
-                  color: colors.text,
                   paddingVertical: 12,
                   fontSize: 18,
                 }}
               >
                 {item}
-              </Text>
+              </ThemedText>
             );
           }
 

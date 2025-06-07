@@ -13,8 +13,9 @@ import {
 import { Stack, useLocalSearchParams } from "expo-router";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
 import * as Clipboard from "expo-clipboard";
-import { DetailRow } from "@/components/Common/Details";
-import { Details } from "@/components/Common/Details";
+import { DetailRow } from "@/components/Shared/Details";
+import { Details } from "@/components/Shared/Details";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -58,18 +59,15 @@ export default function Index() {
           }}
           activeOpacity={0.6}
         >
-          <Text style={[styles.label, { color: colors.subtext, fontSize: 18 }]}>
+          <ThemedText style={[styles.label, { fontSize: 18 }]} secondary>
             #
-          </Text>
-          <Text
-            style={[
-              styles.value,
-              { color: colors.text, textTransform: "uppercase", fontSize: 18 },
-            ]}
+          </ThemedText>
+          <ThemedText
+            style={[styles.value, { textTransform: "uppercase", fontSize: 18 }]}
             numberOfLines={1}
           >
             {order.id.split("-").pop()?.slice(-6, -1)}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
         <View
           style={[
@@ -77,12 +75,14 @@ export default function Index() {
             { backgroundColor: colors.card, flex: 1, gap: 4, width: "50%" },
           ]}
         >
-          <Text style={[styles.label, { color: colors.subtext }]}>Date</Text>
-          <Text style={[styles.value, { color: colors.text }]}>
+          <ThemedText style={[styles.label]} secondary>
+            Date
+          </ThemedText>
+          <ThemedText style={[styles.value]}>
             {order.createdAt.toLocaleDateString("en-US", {
               dateStyle: "medium",
             })}
-          </Text>
+          </ThemedText>
         </View>
       </View>
 
@@ -105,15 +105,12 @@ export default function Index() {
                 paddingVertical: 16,
               }}
             >
-              <Text
-                style={[styles.label, { color: colors.text }]}
-                numberOfLines={1}
-              >
+              <ThemedText style={[styles.label]} numberOfLines={1}>
                 {item.label}
-              </Text>
-              <Text style={[styles.value, { color: colors.text }]}>
+              </ThemedText>
+              <ThemedText style={[styles.value]}>
                 {formatCurrencyAndAmount(item.amount)}
-              </Text>
+              </ThemedText>
             </View>
           ))}
         </View>
@@ -122,66 +119,58 @@ export default function Index() {
       <View style={styles.section}>
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={[styles.label]} secondary>
               Status
-            </Text>
-            <Text
-              style={[
-                styles.value,
-                { color: colors.text, textTransform: "capitalize" },
-              ]}
-            >
+            </ThemedText>
+            <ThemedText style={[styles.value, { textTransform: "capitalize" }]}>
               {order.status.split("_").join(" ")}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={[styles.label]} secondary>
               Billing Reason
-            </Text>
-            <Text
-              style={[
-                styles.value,
-                { color: colors.text, textTransform: "capitalize" },
-              ]}
-            >
+            </ThemedText>
+            <ThemedText style={[styles.value, { textTransform: "capitalize" }]}>
               {order.billingReason.split("_").join(" ")}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={[styles.label]} secondary>
               Subtotal
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            </ThemedText>
+            <ThemedText style={[styles.value]}>
               {formatCurrencyAndAmount(order.subtotalAmount)}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={[styles.label]} secondary>
               Discount
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            </ThemedText>
+            <ThemedText style={[styles.value]}>
               -{formatCurrencyAndAmount(order.discountAmount)}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>
+            <ThemedText style={[styles.label]} secondary>
               Net amount
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            </ThemedText>
+            <ThemedText style={[styles.value]}>
               {formatCurrencyAndAmount(order.netAmount)}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.subtext }]}>Tax</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            <ThemedText style={[styles.label]} secondary>
+              Tax
+            </ThemedText>
+            <ThemedText style={[styles.value]}>
               {formatCurrencyAndAmount(order.taxAmount)}
-            </Text>
+            </ThemedText>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.text }]}>Total</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            <ThemedText style={[styles.label]}>Total</ThemedText>
+            <ThemedText style={[styles.value]}>
               {formatCurrencyAndAmount(order.totalAmount)}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </View>
@@ -281,11 +270,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  customerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
   avatarContainer: {
     width: 40,
     height: 40,
@@ -295,28 +279,5 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-  },
-  avatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarFallbackText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  customerInfo: {
-    flexDirection: "column",
-    gap: 4,
-  },
-  customerName: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  customerEmail: {
-    fontSize: 14,
-    color: "#666",
   },
 });

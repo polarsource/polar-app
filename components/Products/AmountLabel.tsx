@@ -3,6 +3,7 @@ import { formatCurrencyAndAmount } from "@/utils/money";
 import { SubscriptionRecurringInterval } from "@polar-sh/sdk/models/components/subscriptionrecurringinterval.js";
 import { useMemo } from "react";
 import { View, Text } from "react-native";
+import { ThemedText } from "../Shared/ThemedText";
 
 interface AmountLabelProps {
   amount: number;
@@ -35,10 +36,10 @@ const AmountLabel = ({
 
   return (
     <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-      <Text style={{ fontSize: 14, color: colors.text }}>
+      <ThemedText style={{ fontSize: 14 }}>
         {formatCurrencyAndAmount(amount, currency, minimumFractionDigits)}
-      </Text>
-      <Text style={{ fontSize: 8, color: colors.text }}>{intervalDisplay}</Text>
+      </ThemedText>
+      <ThemedText style={{ fontSize: 8 }}>{intervalDisplay}</ThemedText>
     </View>
   );
 };

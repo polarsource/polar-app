@@ -1,5 +1,5 @@
 import { useTheme } from "@/hooks/theme";
-import { Customer } from "@polar-sh/sdk/dist/commonjs/models/components/customer";
+import { Customer } from "@polar-sh/sdk/models/components/customer";
 import { Link } from "expo-router";
 import {
   View,
@@ -8,7 +8,8 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import { Avatar } from "../Common/Avatar";
+import { Avatar } from "../Shared/Avatar";
+import { ThemedText } from "../Shared/ThemedText";
 
 export interface CustomerRowProps {
   customer: Customer;
@@ -26,13 +27,11 @@ export const CustomerRow = ({ customer }: CustomerRowProps) => {
       <TouchableOpacity activeOpacity={0.6}>
         <Avatar image={customer.avatarUrl} name={customer.email} size={40} />
         <View style={styles.contentContainer}>
-          <Text style={[styles.name, { color: colors.text }]}>
-            {customer.name ?? "—"}
-          </Text>
+          <ThemedText style={[styles.name]}>{customer.name ?? "—"}</ThemedText>
           <View style={styles.metadataContainer}>
-            <Text style={[styles.metadata, { color: colors.subtext }]}>
+            <ThemedText style={[styles.metadata]} secondary>
               {customer.email}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </TouchableOpacity>
@@ -48,24 +47,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 12,
   },
-  imageContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  imageFallback: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#2d2d2d",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  fallbackText: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "600",
-  },
   contentContainer: {
     flex: 1,
     flexDirection: "column",
@@ -74,18 +55,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#fff",
   },
   email: {
     fontSize: 16,
-    color: "#fff",
   },
   metadata: {
     fontSize: 16,
-  },
-  dot: {
-    fontSize: 16,
-    color: "#999",
   },
   metadataContainer: {
     flexDirection: "row",

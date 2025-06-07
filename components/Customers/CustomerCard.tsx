@@ -7,9 +7,10 @@ import {
 } from "react-native";
 import React from "react";
 import { Customer } from "@polar-sh/sdk/models/components/customer";
-import { Avatar } from "../Common/Avatar";
+import { Avatar } from "../Shared/Avatar";
 import { Link } from "expo-router";
 import { useTheme } from "@/hooks/theme";
+import { ThemedText } from "../Shared/ThemedText";
 
 export interface CustomerCardProps {
   customer: Customer;
@@ -31,16 +32,15 @@ export const CustomerCard = ({ customer }: CustomerCardProps) => {
           image={customer.avatarUrl ?? undefined}
         />
         <View style={styles.content}>
-          <Text style={[styles.name, { color: colors.text }]}>
-            {customer.name ?? "—"}
-          </Text>
-          <Text
-            style={[styles.email, { color: colors.subtext }]}
+          <ThemedText style={[styles.name]}>{customer.name ?? "—"}</ThemedText>
+          <ThemedText
+            style={[styles.email]}
             numberOfLines={1}
             ellipsizeMode="tail"
+            secondary
           >
             {customer.email}
-          </Text>
+          </ThemedText>
         </View>
       </TouchableOpacity>
     </Link>
@@ -65,12 +65,10 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
     textAlign: "center",
   },
   email: {
     fontSize: 14,
-    color: "#999",
     textAlign: "center",
   },
 });

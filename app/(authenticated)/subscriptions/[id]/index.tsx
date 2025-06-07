@@ -13,15 +13,17 @@ import {
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
 import * as Clipboard from "expo-clipboard";
-import { DetailRow } from "@/components/Common/Details";
-import { Details } from "@/components/Common/Details";
+import { DetailRow } from "@/components/Shared/Details";
+import { Details } from "@/components/Shared/Details";
 import { useSubscription } from "@/hooks/polar/subscriptions";
 import { OrderRow } from "@/components/Orders/OrderRow";
 import { useContext, useMemo } from "react";
 import React from "react";
-import { EmptyState } from "@/components/Common/EmptyState";
+import { EmptyState } from "@/components/Shared/EmptyState";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { Button } from "@/components/Common/Button";
+import { Button } from "@/components/Shared/Button";
+import { ProductRow } from "@/components/Products/ProductRow";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -79,18 +81,15 @@ export default function Index() {
           }}
           activeOpacity={0.6}
         >
-          <Text style={[styles.label, { color: colors.subtext, fontSize: 18 }]}>
+          <ThemedText style={[styles.label, { fontSize: 18 }]} secondary>
             #
-          </Text>
-          <Text
-            style={[
-              styles.value,
-              { color: colors.text, textTransform: "uppercase", fontSize: 18 },
-            ]}
+          </ThemedText>
+          <ThemedText
+            style={[styles.value, { textTransform: "uppercase", fontSize: 18 }]}
             numberOfLines={1}
           >
             {subscription.id.split("-").pop()?.slice(-6, -1)}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
         <View
           style={[
@@ -98,42 +97,20 @@ export default function Index() {
             { backgroundColor: colors.card, flex: 1, gap: 4, width: "50%" },
           ]}
         >
-          <Text style={[styles.label, { color: colors.subtext }]}>Date</Text>
-          <Text style={[styles.value, { color: colors.text }]}>
+          <ThemedText style={[styles.label, { fontSize: 18 }]} secondary>
+            Date
+          </ThemedText>
+          <ThemedText style={[styles.value, { fontSize: 18 }]}>
             {subscription.createdAt.toLocaleDateString("en-US", {
               dateStyle: "medium",
             })}
-          </Text>
+          </ThemedText>
         </View>
       </View>
 
       <CustomerRow customer={subscription.customer} />
 
-      <View style={styles.section}>
-        <View
-          style={[
-            styles.card,
-            { backgroundColor: colors.card, gap: 0, paddingVertical: 0 },
-          ]}
-        >
-          <View
-            style={{
-              gap: 4,
-              paddingVertical: 16,
-            }}
-          >
-            <Text
-              style={[styles.label, { color: colors.text }]}
-              numberOfLines={1}
-            >
-              {subscription.product.name}
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {formatCurrencyAndAmount(subscription.amount)}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <ProductRow product={subscription.product} />
 
       <View style={styles.section}>
         <Details>
@@ -219,12 +196,12 @@ export default function Index() {
             justifyContent: "space-between",
           }}
         >
-          <Text style={[styles.label, { color: colors.text, fontSize: 20 }]}>
+          <ThemedText style={[styles.label, { fontSize: 20 }]}>
             Subscription Orders
-          </Text>
-          <Text style={[styles.label, { color: colors.subtext, fontSize: 20 }]}>
+          </ThemedText>
+          <ThemedText style={[styles.label, { fontSize: 20 }]} secondary>
             {flatSubscriptionOrders.length}
-          </Text>
+          </ThemedText>
         </View>
 
         {flatSubscriptionOrders.length > 0 ? (
@@ -251,32 +228,7 @@ const styles = StyleSheet.create({
     gap: 12,
     flexDirection: "column",
   },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-  },
-  imageFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  fallbackText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
   section: {},
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
   box: {
     flexDirection: "column",
     gap: 4,
@@ -299,43 +251,5 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: "500",
-  },
-  customerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  avatarContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-  },
-  avatarFallback: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarFallbackText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  customerInfo: {
-    flexDirection: "column",
-    gap: 4,
-  },
-  customerName: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  customerEmail: {
-    fontSize: 14,
-    color: "#666",
   },
 });

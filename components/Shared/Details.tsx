@@ -1,5 +1,6 @@
 import { useTheme } from "@/hooks/theme";
 import { StyleSheet, Text, View } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 export const Details = ({ children }: { children: React.ReactNode }) => {
   const { colors } = useTheme();
@@ -22,7 +23,9 @@ export const DetailRow = ({
 
   return (
     <View style={styles.row}>
-      <Text style={[styles.label, { color: colors.subtext }]}>{label}</Text>
+      <ThemedText style={[styles.label]} secondary>
+        {label}
+      </ThemedText>
       <Text
         numberOfLines={1}
         ellipsizeMode="tail"
@@ -50,7 +53,6 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "#fff",
     flex: 1,
     width: "auto",
     textAlign: "right",

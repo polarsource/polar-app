@@ -1,4 +1,5 @@
 import { CustomerRow } from "@/components/Customers/CustomerRow";
+import { Input } from "@/components/Shared/Input";
 import { useCustomers } from "@/hooks/polar/customers";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
@@ -27,16 +28,9 @@ export default function Index() {
         }}
       />
       <View style={{ padding: 16, backgroundColor: colors.background }}>
-        <TextInput
+        <Input
           placeholder="Search Customers"
           onChangeText={setSearch}
-          style={{
-            backgroundColor: colors.card,
-            borderRadius: 12,
-            padding: 16,
-            fontSize: 16,
-            color: colors.text,
-          }}
           placeholderTextColor={colors.subtext}
         />
       </View>

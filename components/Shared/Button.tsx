@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 export interface ButtonProps {
   children: React.ReactNode;
@@ -50,9 +51,7 @@ export const Button = ({
         style,
       ]}
     >
-      <Text style={[styles.text, { color: colors.text }, textStyle]}>
-        {children}
-      </Text>
+      <ThemedText style={[styles.text, textStyle]}>{children}</ThemedText>
     </TouchableOpacity>
   );
 };

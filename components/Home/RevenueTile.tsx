@@ -9,6 +9,7 @@ import { Path } from "react-native-svg";
 import Svg from "react-native-svg";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { startOfMonth, endOfMonth } from "date-fns";
+import { ThemedText } from "../Shared/ThemedText";
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -52,10 +53,10 @@ export const RevenueTile = () => {
     <Tile href="/metrics">
       <View style={styles.container}>
         <View style={{ flexDirection: "column", gap: 4 }}>
-          <Text style={[styles.title, { color: colors.text }]}>Revenue</Text>
-          <Text style={[styles.subtitle, { color: colors.subtext }]}>
+          <ThemedText style={[styles.title]}>Revenue</ThemedText>
+          <ThemedText style={[styles.subtitle]} secondary>
             This Month
-          </Text>
+          </ThemedText>
         </View>
         {cumulativeRevenueData && (
           <View
@@ -96,9 +97,9 @@ export const RevenueTile = () => {
             </Svg>
           </View>
         )}
-        <Text style={[styles.revenueValue, { color: colors.text }]}>
+        <ThemedText style={[styles.revenueValue]}>
           {formatCurrencyAndAmount(cumulativeRevenue, "usd", 0, "compact")}
-        </Text>
+        </ThemedText>
       </View>
     </Tile>
   );

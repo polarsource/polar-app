@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { setBadgeCountAsync } from "expo-notifications";
+import { ThemedText } from "@/components/Shared/ThemedText";
 
 const groupNotificationsByDate = (notifications: PolarNotification[]) => {
   if (!notifications?.length) return [];
@@ -66,16 +67,15 @@ export default function Notifications() {
         renderItem={({ item }: { item: PolarNotification | string }) => {
           if (typeof item === "string") {
             return (
-              <Text
+              <ThemedText
                 style={{
-                  color: colors.text,
                   paddingTop: 12,
                   paddingBottom: 24,
                   fontSize: 16,
                 }}
               >
                 {item}
-              </Text>
+              </ThemedText>
             );
           }
 
