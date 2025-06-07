@@ -1,17 +1,16 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { usePolarClient } from "@/providers/PolarClientProvider";
 import { SubscriptionsListRequest } from "@polar-sh/sdk/models/operations/subscriptionslist";
-import { SDKError } from "@polar-sh/sdk/models/errors/sdkerror.js";
-import { Alert } from "react-native";
-import { useLogout } from "../auth";
-import { useOAuth } from "../oauth";
+import { SubscriptionRevoke } from "@polar-sh/sdk/models/components/subscriptionrevoke.js";
+import { SubscriptionCancel } from "@polar-sh/sdk/models/components/subscriptioncancel.js";
 import { queryClient } from "@/utils/query";
+import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 
 export const useSubscription = (id: string) => {
   const { polar } = usePolarClient();
 
   return useQuery({
-    queryKey: ["subscriptions", { id }],
+    queryKey: ["subscription", id],
     queryFn: () => polar.subscriptions.get({ id }),
   });
 };
@@ -35,6 +34,22 @@ export const useSubscriptions = (
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.result.items.length === 0) return undefined;
       return pages.length + 1;
+    },
+  });
+};
+
+export const useUpdateSubscription = (id: string) => {
+  const { polar } = usePolarClient();
+
+  return useMutation({
+    mutationFn: (body: SubscriptionRevoke | SubscriptionCancel) =>
+      polar.subscriptions.update({ id, subscriptionUpdate: body }),
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(["subscription", id], data);
+
+      queryClient.invalidateQueries({
+        queryKey: ["subscriptions"],
+      });
     },
   });
 };

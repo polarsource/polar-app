@@ -10,7 +10,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { CustomerRow } from "@/components/Customers/CustomerRow";
 import * as Clipboard from "expo-clipboard";
 import { DetailRow } from "@/components/Common/Details";
@@ -21,6 +21,7 @@ import { useContext, useMemo } from "react";
 import React from "react";
 import { EmptyState } from "@/components/Common/EmptyState";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import { Button } from "@/components/Common/Button";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -140,6 +141,26 @@ export default function Index() {
             label="Status"
             value={subscription.status.split("_").join(" ")}
           />
+          {subscription.status === "canceled" && (
+            <DetailRow
+              label="Cancellation Reason"
+              value={subscription.customerCancellationReason}
+            />
+          )}
+          {subscription.status === "canceled" && (
+            <DetailRow
+              label="Cancels At"
+              value={
+                subscription.cancelAtPeriodEnd
+                  ? subscription.currentPeriodEnd?.toLocaleDateString("en-US", {
+                      dateStyle: "medium",
+                    })
+                  : subscription.canceledAt?.toLocaleDateString("en-US", {
+                      dateStyle: "medium",
+                    })
+              }
+            />
+          )}
           <DetailRow
             label="Recurring Interval"
             value={subscription.recurringInterval.split("_").join(" ")}
@@ -177,6 +198,12 @@ export default function Index() {
             </Details>
           </View>
         )}
+
+      {subscription.status === "active" && (
+        <Link href={`/subscriptions/${id}/cancel`} asChild>
+          <Button>Cancel Subscription</Button>
+        </Link>
+      )}
 
       <View style={[styles.section, { gap: 16, paddingVertical: 12 }]}>
         <View

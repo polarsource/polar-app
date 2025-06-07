@@ -10,7 +10,7 @@ import {
 
 export interface ButtonProps {
   children: React.ReactNode;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
