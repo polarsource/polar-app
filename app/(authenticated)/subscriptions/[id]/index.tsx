@@ -17,11 +17,13 @@ import { DetailRow } from "@/components/Common/Details";
 import { Details } from "@/components/Common/Details";
 import { useSubscription } from "@/hooks/polar/subscriptions";
 import { OrderRow } from "@/components/Orders/OrderRow";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import React from "react";
 import { EmptyState } from "@/components/Common/EmptyState";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 export default function Index() {
+  const { organization } = useContext(OrganizationContext);
   const { id } = useLocalSearchParams();
   const { colors } = useTheme();
 
@@ -31,7 +33,7 @@ export default function Index() {
     isRefetching,
   } = useSubscription(id as string);
 
-  const { data: subscriptionOrders } = useOrders(subscription?.customer.id, {
+  const { data: subscriptionOrders } = useOrders(organization?.id, {
     customerId: subscription?.customer.id,
     productId: subscription?.product.id,
   });
@@ -177,13 +179,26 @@ export default function Index() {
         )}
 
       <View style={[styles.section, { gap: 16, paddingVertical: 12 }]}>
-        <Text style={[styles.label, { color: colors.text, fontSize: 20 }]}>
-          Subscription Orders
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={[styles.label, { color: colors.text, fontSize: 20 }]}>
+            Subscription Orders
+          </Text>
+          <Text style={[styles.label, { color: colors.subtext, fontSize: 20 }]}>
+            {flatSubscriptionOrders.length}
+          </Text>
+        </View>
+
         {flatSubscriptionOrders.length > 0 ? (
           <>
             {flatSubscriptionOrders.map((order) => (
-              <OrderRow key={order.id} order={order} />
+              <OrderRow key={order.id} order={order} showTimestamp />
             ))}
           </>
         ) : (
