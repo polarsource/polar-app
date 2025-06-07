@@ -52,7 +52,6 @@ export default function Index() {
   const { id } = useLocalSearchParams();
   const { colors } = useTheme();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const {
     data: subscription,

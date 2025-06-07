@@ -10,6 +10,7 @@ import {
 
 export interface ButtonProps {
   children: React.ReactNode;
+  variant?: "primary" | "secondary";
   onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -17,8 +18,15 @@ export interface ButtonProps {
   textStyle?: StyleProp<TextStyle>;
 }
 
-export const Button = (props: ButtonProps) => {
-  const { children, onPress, disabled, loading, style, textStyle } = props;
+export const Button = ({
+  children,
+  onPress,
+  disabled,
+  loading,
+  style,
+  textStyle,
+  variant = "primary",
+}: ButtonProps) => {
   const { colors } = useTheme();
 
   return (
@@ -26,7 +34,21 @@ export const Button = (props: ButtonProps) => {
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.6}
-      style={[styles.button, { backgroundColor: colors.primary }, style]}
+      style={[
+        styles.button,
+        {
+          backgroundColor:
+            disabled || loading
+              ? colors.card
+              : variant === "primary"
+              ? colors.primary
+              : colors.card,
+        },
+        {
+          opacity: disabled || loading ? 0.5 : 1,
+        },
+        style,
+      ]}
     >
       <Text style={[styles.text, { color: colors.text }, textStyle]}>
         {children}
@@ -38,7 +60,7 @@ export const Button = (props: ButtonProps) => {
 const styles = StyleSheet.create({
   button: {
     padding: 10,
-    borderRadius: 16,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     height: 50,

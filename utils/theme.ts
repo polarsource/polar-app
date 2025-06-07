@@ -7,6 +7,7 @@ export const themes = {
     secondary: "#5856D6",
     border: "#E5E5EA",
     card: "#F2F2F7",
+    monochrome: "#ffffff",
   },
   dark: {
     background: "#0D0E10",
@@ -16,5 +17,6 @@ export const themes = {
     secondary: "#00bc7d",
     border: "#222328",
     card: "#141518",
+    monochrome: "#000000",
   },
 };

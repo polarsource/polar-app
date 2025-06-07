@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Organization } from "@polar-sh/sdk/dist/commonjs/models/components/organization";
+import { Organization } from "@polar-sh/sdk/models/components/organization.js";
 import { useStorageState } from "@/hooks/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

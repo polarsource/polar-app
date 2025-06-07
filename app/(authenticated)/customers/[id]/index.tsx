@@ -111,7 +111,7 @@ export default function Index() {
         <View style={styles.hero}>
           <Avatar
             image={customer?.avatarUrl}
-            name={customer?.name ?? ""}
+            name={customer?.name ?? customer?.email ?? ""}
             size={120}
           />
           <View style={styles.heroInfo}>

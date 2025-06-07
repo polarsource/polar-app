@@ -1,4 +1,5 @@
 import { useTheme } from "@/hooks/theme";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Text, View, StyleSheet } from "react-native";
 
 export interface EmptyStateProps {

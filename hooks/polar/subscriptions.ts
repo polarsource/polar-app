@@ -4,7 +4,7 @@ import { SubscriptionsListRequest } from "@polar-sh/sdk/models/operations/subscr
 import { SubscriptionRevoke } from "@polar-sh/sdk/models/components/subscriptionrevoke.js";
 import { SubscriptionCancel } from "@polar-sh/sdk/models/components/subscriptioncancel.js";
 import { queryClient } from "@/utils/query";
-import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
+import { SubscriptionUpdateProduct } from "@polar-sh/sdk/models/components/subscriptionupdateproduct.js";
 
 export const useSubscription = (id: string) => {
   const { polar } = usePolarClient();
@@ -42,8 +42,9 @@ export const useUpdateSubscription = (id: string) => {
   const { polar } = usePolarClient();
 
   return useMutation({
-    mutationFn: (body: SubscriptionRevoke | SubscriptionCancel) =>
-      polar.subscriptions.update({ id, subscriptionUpdate: body }),
+    mutationFn: (
+      body: SubscriptionRevoke | SubscriptionCancel | SubscriptionUpdateProduct
+    ) => polar.subscriptions.update({ id, subscriptionUpdate: body }),
     onSuccess: (data, variables) => {
       queryClient.setQueryData(["subscription", id], data);
 

@@ -1,6 +1,17 @@
 import { useTheme } from "@/hooks/theme";
 import { View, Text, Image } from "react-native";
 
+const getInitials = (fullName: string) => {
+  const allNames = fullName.trim().split(" ");
+  const initials = allNames.reduce((acc, curr, index) => {
+    if (index === 0 || index === allNames.length - 1) {
+      acc = `${acc}${curr.charAt(0).toUpperCase()}`;
+    }
+    return acc;
+  }, "");
+  return initials;
+};
+
 interface AvatarProps {
   name?: string;
   size?: number;
@@ -16,14 +27,25 @@ export const Avatar = ({
 }: AvatarProps) => {
   const { colors } = useTheme();
 
+  const initials = getInitials(name ?? "");
+
+  let showInitials = true;
   if (image) {
+    // Skip rendering initials in case of `avatar_url`
+    // Unless from Gravatar since they offer a transparent image in case of no avatar
+    // Also have to check for `http` first to avoid running `new URL` on internal NextJS asset paths
+    const avatarHost = image.startsWith("http") ? new URL(image).host : null;
+    showInitials = avatarHost === "www.gravatar.com";
+  }
+
+  if (!showInitials && image) {
     return (
       <Image
         height={size}
         width={size}
         style={{
           borderRadius: size / 2,
-          backgroundColor: backgroundColor ?? colors.subtext,
+          backgroundColor: backgroundColor ?? colors.monochrome,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -32,20 +54,18 @@ export const Avatar = ({
     );
   }
 
-  const firstChar = name?.[0]?.toUpperCase() || "?";
-
   return (
     <View
       style={{
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: backgroundColor ?? "#2d2d2d",
+        backgroundColor: backgroundColor ?? colors.monochrome,
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "#fff", fontSize: size / 2 }}>{firstChar}</Text>
+      <Text style={{ color: "#fff", fontSize: size / 3 }}>{initials}</Text>
     </View>
   );
 };

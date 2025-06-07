@@ -200,9 +200,14 @@ export default function Index() {
         )}
 
       {subscription.status === "active" && (
-        <Link href={`/subscriptions/${id}/cancel`} asChild>
-          <Button>Cancel Subscription</Button>
-        </Link>
+        <View style={{ flexDirection: "column", gap: 8 }}>
+          <Link key={"update"} href={`/subscriptions/${id}/update`} asChild>
+            <Button>Update Subscription</Button>
+          </Link>
+          <Link key={"cancel"} href={`/subscriptions/${id}/cancel`} asChild>
+            <Button variant="secondary">Cancel Subscription</Button>
+          </Link>
+        </View>
       )}
 
       <View style={[styles.section, { gap: 16, paddingVertical: 12 }]}>
