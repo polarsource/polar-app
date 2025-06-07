@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { Customer } from "@polar-sh/sdk/dist/commonjs/models/components/customer";
+import { Customer } from "@polar-sh/sdk/models/components/customer";
 import { Avatar } from "../Common/Avatar";
 import { Link } from "expo-router";
 import { useTheme } from "@/hooks/theme";
@@ -27,7 +27,7 @@ export const CustomerCard = ({ customer }: CustomerCardProps) => {
       <TouchableOpacity activeOpacity={0.6}>
         <Avatar
           size={64}
-          name={customer.name ?? undefined}
+          name={customer.name ?? customer.email}
           image={customer.avatarUrl ?? undefined}
         />
         <View style={styles.content}>

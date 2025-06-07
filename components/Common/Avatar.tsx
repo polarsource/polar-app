@@ -13,7 +13,7 @@ const getInitials = (fullName: string) => {
 };
 
 interface AvatarProps {
-  name?: string;
+  name: string;
   size?: number;
   image?: string | null;
   backgroundColor?: string;
@@ -38,22 +38,6 @@ export const Avatar = ({
     showInitials = avatarHost === "www.gravatar.com";
   }
 
-  if (!showInitials && image) {
-    return (
-      <Image
-        height={size}
-        width={size}
-        style={{
-          borderRadius: size / 2,
-          backgroundColor: backgroundColor ?? colors.monochrome,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        source={{ uri: image }}
-      />
-    );
-  }
-
   return (
     <View
       style={{
@@ -65,7 +49,36 @@ export const Avatar = ({
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "#fff", fontSize: size / 3 }}>{initials}</Text>
+      {showInitials && (
+        <View
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            inset: 0,
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: size / 3 }}>{initials}</Text>
+        </View>
+      )}
+      {image && (
+        <Image
+          height={size}
+          width={size}
+          style={{
+            borderRadius: size / 2,
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            inset: 0,
+            zIndex: 1,
+          }}
+          source={{ uri: image }}
+        />
+      )}
     </View>
   );
 };
