@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { Pill } from "../Shared/Pill";
 import { ThemedText } from "../Shared/ThemedText";
+import { ProductPriceLabel } from "../Products/ProductPriceLabel";
 
 export interface SubscriptionRowProps {
   subscription: Subscription;
@@ -58,25 +59,39 @@ export const SubscriptionRow = ({
           )}
         </View>
         <View style={styles.contentContainer}>
-          <ThemedText
-            style={styles.productName}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
           >
-            {subscription.product.name}
-          </ThemedText>
-          <View style={styles.metadataContainer}>
+            <ThemedText
+              style={styles.productName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {subscription.product.name}
+            </ThemedText>
             <Pill color={subscription.status === "active" ? "green" : "red"}>
               {subscription.status.split("_").join(" ")}
             </Pill>
+          </View>
+          <View style={styles.metadataContainer}>
+            <ProductPriceLabel product={subscription.product} />
             {showCustomer && (
-              <ThemedText
-                numberOfLines={1}
-                style={[styles.email, { flexWrap: "wrap" }]}
-                secondary
-              >
-                {subscription.customer.email}
-              </ThemedText>
+              <>
+                <ThemedText style={styles.meta} secondary>
+                  •
+                </ThemedText>
+                <ThemedText
+                  numberOfLines={1}
+                  style={[styles.meta, { flexWrap: "wrap" }]}
+                  secondary
+                >
+                  {subscription.customer.email}
+                </ThemedText>
+              </>
             )}
           </View>
         </View>
@@ -122,14 +137,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textTransform: "capitalize",
   },
-  email: {
-    fontSize: 16,
-    flexShrink: 1,
-  },
   metadataContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+  },
+  meta: {
+    fontSize: 16,
+    flexShrink: 1,
   },
 });

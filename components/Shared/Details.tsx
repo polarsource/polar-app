@@ -1,12 +1,25 @@
 import { useTheme } from "@/hooks/theme";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 
-export const Details = ({ children }: { children: React.ReactNode }) => {
+export const Details = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card }]}>
+    <View style={[styles.card, { backgroundColor: colors.card }, style]}>
       {children}
     </View>
   );
@@ -14,24 +27,32 @@ export const Details = ({ children }: { children: React.ReactNode }) => {
 
 export const DetailRow = ({
   label,
+  labelStyle,
   value,
+  valueStyle,
 }: {
   label: string;
-  value?: string | null;
+  labelStyle?: StyleProp<TextStyle>;
+  value?: React.ReactNode;
+  valueStyle?: StyleProp<TextStyle>;
 }) => {
   const { colors } = useTheme();
 
   return (
     <View style={styles.row}>
-      <ThemedText style={[styles.label]} secondary>
+      <ThemedText style={[styles.label, labelStyle]} secondary>
         {label}
       </ThemedText>
       <Text
         numberOfLines={1}
         ellipsizeMode="tail"
-        style={[styles.value, { color: value ? colors.text : colors.subtext }]}
+        style={[
+          styles.value,
+          { color: value ? colors.text : colors.subtext },
+          valueStyle,
+        ]}
       >
-        {value && value?.length > 0 ? value : "—"}
+        {value ? value : "—"}
       </Text>
     </View>
   );
@@ -53,9 +74,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    flex: 1,
     width: "auto",
     textAlign: "right",
-    textTransform: "capitalize",
   },
 });

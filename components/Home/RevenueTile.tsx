@@ -10,6 +10,7 @@ import Svg from "react-native-svg";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { ThemedText } from "../Shared/ThemedText";
+
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);

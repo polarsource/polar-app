@@ -16,6 +16,14 @@ import * as Clipboard from "expo-clipboard";
 import { DetailRow } from "@/components/Shared/Details";
 import { Details } from "@/components/Shared/Details";
 import { ThemedText } from "@/components/Shared/ThemedText";
+import { Pill } from "@/components/Shared/Pill";
+
+const statusColors = {
+  pending: "yellow",
+  paid: "green",
+  refunded: "blue",
+  partially_refunded: "blue",
+} as const;
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -117,89 +125,68 @@ export default function Index() {
       </View>
 
       <View style={styles.section}>
-        <View style={[styles.card, { backgroundColor: colors.card }]}>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Status
-            </ThemedText>
-            <ThemedText style={[styles.value, { textTransform: "capitalize" }]}>
-              {order.status.split("_").join(" ")}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Billing Reason
-            </ThemedText>
-            <ThemedText style={[styles.value, { textTransform: "capitalize" }]}>
-              {order.billingReason.split("_").join(" ")}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Subtotal
-            </ThemedText>
-            <ThemedText style={[styles.value]}>
-              {formatCurrencyAndAmount(order.subtotalAmount)}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Discount
-            </ThemedText>
-            <ThemedText style={[styles.value]}>
-              -{formatCurrencyAndAmount(order.discountAmount)}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Net amount
-            </ThemedText>
-            <ThemedText style={[styles.value]}>
-              {formatCurrencyAndAmount(order.netAmount)}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]} secondary>
-              Tax
-            </ThemedText>
-            <ThemedText style={[styles.value]}>
-              {formatCurrencyAndAmount(order.taxAmount)}
-            </ThemedText>
-          </View>
-          <View style={styles.row}>
-            <ThemedText style={[styles.label]}>Total</ThemedText>
-            <ThemedText style={[styles.value]}>
-              {formatCurrencyAndAmount(order.totalAmount)}
-            </ThemedText>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <Details>
+        <Details style={{ backgroundColor: colors.card }}>
           <DetailRow
-            label="Address"
-            value={order.customer.billingAddress?.line1}
+            label="Status"
+            value={
+              <Pill
+                color={statusColors[order.status]}
+                textStyle={{ fontSize: 14 }}
+              >
+                {order.status.split("_").join(" ")}
+              </Pill>
+            }
+            valueStyle={{ textTransform: "capitalize" }}
           />
           <DetailRow
-            label="Address 2"
-            value={order.customer.billingAddress?.line2}
-          />
-          <DetailRow label="City" value={order.customer.billingAddress?.city} />
-          <DetailRow
-            label="State"
-            value={order.customer.billingAddress?.state}
+            label="Billing Reason"
+            value={order.billingReason.split("_").join(" ")}
+            valueStyle={{ textTransform: "capitalize" }}
           />
           <DetailRow
-            label="Postal Code"
-            value={order.customer.billingAddress?.postalCode}
+            label="Subtotal"
+            value={formatCurrencyAndAmount(order.subtotalAmount)}
           />
           <DetailRow
-            label="Country"
-            value={order.customer.billingAddress?.country}
+            label="Discount"
+            value={`-${formatCurrencyAndAmount(order.discountAmount)}`}
+          />
+          <DetailRow
+            label="Net"
+            value={formatCurrencyAndAmount(order.netAmount)}
+          />
+          <DetailRow
+            label="Tax"
+            value={formatCurrencyAndAmount(order.taxAmount)}
+          />
+          <DetailRow
+            labelStyle={{ color: colors.text }}
+            label="Total"
+            value={formatCurrencyAndAmount(order.totalAmount)}
           />
         </Details>
       </View>
+
+      <Details style={{ backgroundColor: colors.card }}>
+        <DetailRow
+          label="Address"
+          value={order.customer.billingAddress?.line1}
+        />
+        <DetailRow
+          label="Address 2"
+          value={order.customer.billingAddress?.line2}
+        />
+        <DetailRow label="City" value={order.customer.billingAddress?.city} />
+        <DetailRow label="State" value={order.customer.billingAddress?.state} />
+        <DetailRow
+          label="Postal Code"
+          value={order.customer.billingAddress?.postalCode}
+        />
+        <DetailRow
+          label="Country"
+          value={order.customer.billingAddress?.country}
+        />
+      </Details>
 
       {order.metadata && Object.keys(order.metadata).length > 0 && (
         <View style={styles.section}>

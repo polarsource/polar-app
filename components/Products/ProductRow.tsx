@@ -18,6 +18,7 @@ import {
 import AmountLabel from "./AmountLabel";
 import { ProductPriceLabel } from "./ProductPriceLabel";
 import { ThemedText } from "../Shared/ThemedText";
+import { Pill } from "../Shared/Pill";
 
 export interface ProductRowProps {
   product: Product;
@@ -58,7 +59,16 @@ export const ProductRow = ({ product, style }: ProductRowProps) => {
           )}
         </View>
         <View style={styles.contentContainer}>
-          <ThemedText style={styles.productName}>{product.name}</ThemedText>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 4,
+              justifyContent: "space-between",
+            }}
+          >
+            <ThemedText style={styles.productName}>{product.name}</ThemedText>
+            {product.isArchived && <Pill color="red">Archived</Pill>}
+          </View>
           <ProductPriceLabel product={product} />
         </View>
       </TouchableOpacity>

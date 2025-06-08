@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
   },
   description: {
     fontSize: 14,

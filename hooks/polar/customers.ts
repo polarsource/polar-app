@@ -1,5 +1,5 @@
 import { usePolarClient } from "@/providers/PolarClientProvider";
-import { CustomersListRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/customerslist";
+import { CustomersListRequest } from "@polar-sh/sdk/models/operations/customerslist";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useCustomer = (organizationId: string, id: string) => {

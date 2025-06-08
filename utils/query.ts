@@ -1,5 +1,6 @@
 export { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SDKError } from "@polar-sh/sdk/models/errors/sdkerror.js";
+import { SDKValidationError } from "@polar-sh/sdk/models/errors/sdkvalidationerror.js";
 import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient({
@@ -18,6 +19,10 @@ export const queryClient = new QueryClient({
           error.statusCode > 400 &&
           error.statusCode < 500
         ) {
+          return false;
+        }
+
+        if (error instanceof SDKValidationError) {
           return false;
         }
 

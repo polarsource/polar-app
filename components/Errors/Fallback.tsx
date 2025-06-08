@@ -6,8 +6,8 @@ import PolarLogo from "@/components/Shared/PolarLogo";
 import { useLogout } from "@/hooks/auth";
 import { useTheme } from "@/hooks/theme";
 import { useOAuth } from "@/hooks/oauth";
-import { useRouter } from "expo-router";
 import { ThemedText } from "../Shared/ThemedText";
+import { SDKValidationError } from "@polar-sh/sdk/models/errors/sdkvalidationerror.js";
 
 export interface ErrorFallbackProps {
   error: Error;
@@ -21,7 +21,10 @@ export const ErrorFallback = ({
   const { colors } = useTheme();
   const logout = useLogout();
   const { authenticate } = useOAuth();
-  const permissionError = error instanceof SDKError && error.statusCode === 403;
+  const permissionError =
+    (error instanceof SDKError && error.statusCode === 403) ||
+    (error instanceof SDKValidationError &&
+      error.message.includes("insufficient_scope"));
 
   const title = useMemo(() => {
     switch (true) {
@@ -74,6 +77,7 @@ export const ErrorFallback = ({
         <ThemedText
           style={{
             fontSize: 16,
+            lineHeight: 24,
             textAlign: "center",
           }}
           secondary

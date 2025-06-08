@@ -1,8 +1,8 @@
-import { useProduct } from "@/hooks/polar/products";
+import { useProduct, useProductUpdate } from "@/hooks/polar/products";
 import { useTheme } from "@/hooks/theme";
 import { StyleSheet, ScrollView, RefreshControl, View } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { useContext } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { FormInput } from "@/components/Form/FormInput";
 import { useForm } from "react-hook-form";
@@ -21,6 +21,9 @@ import { Box } from "@/components/Metrics/Box";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { useOrders } from "@/hooks/polar/orders";
 import { OrderRow } from "@/components/Orders/OrderRow";
+import { EmptyState } from "@/components/Shared/EmptyState";
+import { SDKError } from "@polar-sh/sdk/models/errors/sdkerror.js";
+import { Banner } from "@/components/Shared/Banner";
 
 export interface ProductFullMediasMixin {
   full_medias: ProductMediaFileRead[];
@@ -42,10 +45,12 @@ export default function Index() {
     isRefetching,
   } = useProduct(organization.id, id as string);
 
+  const now = useMemo(() => new Date(), []);
+
   const { data: metrics } = useMetrics(
     organization.id,
     organization.createdAt,
-    new Date(),
+    now,
     {
       productId: id as string,
       interval: "month",
@@ -54,7 +59,7 @@ export default function Index() {
 
   const { data: latestProductOrders } = useOrders(organization.id, {
     productId: id as string,
-    limit: 10,
+    limit: 3,
   });
 
   const flatLatestProductOrders = latestProductOrders?.pages.flatMap(
@@ -73,7 +78,37 @@ export default function Index() {
     },
   });
 
-  const { control } = form;
+  const { control, handleSubmit, formState, reset } = form;
+
+  const updateProduct = useProductUpdate(organization.id, id as string);
+
+  const { error: mutationError } = updateProduct;
+
+  if (mutationError) {
+    throw mutationError;
+  }
+
+  const saveProduct = useCallback(
+    async (data: ProductUpdateForm) => {
+      const result = await updateProduct.mutateAsync({
+        ...data,
+        metadata: Object.fromEntries(
+          data.metadata.map(({ key, value }) => [key, value])
+        ),
+      });
+
+      reset({
+        ...result,
+        medias: result.medias.map((media) => media.id),
+        full_medias: result.medias,
+        metadata: Object.entries(result.metadata).map(([key, value]) => ({
+          key,
+          value,
+        })),
+      });
+    },
+    [updateProduct]
+  );
 
   if (!product) {
     return (
@@ -101,10 +136,17 @@ export default function Index() {
       />
 
       <Tabs defaultValue="overview">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="edit">Edit</TabsTrigger>
-        </TabsList>
+        {product.isArchived ? (
+          <Banner
+            title="This product is archived"
+            description="Archived products cannot be edited, nor can they be unarchived."
+          />
+        ) : (
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="edit">Edit</TabsTrigger>
+          </TabsList>
+        )}
         <TabsContent
           value="overview"
           style={{ flexDirection: "column", gap: 32 }}
@@ -127,10 +169,21 @@ export default function Index() {
               )}
             />
           </View>
-          <View style={{ flexDirection: "column", gap: 8 }}>
-            {flatLatestProductOrders?.map((order) => (
-              <OrderRow key={order.id} order={order} />
-            ))}
+
+          <View style={{ flexDirection: "column", gap: 16 }}>
+            <ThemedText style={{ fontSize: 20 }}>Latest orders</ThemedText>
+            <View style={{ flexDirection: "column", gap: 8 }}>
+              {(flatLatestProductOrders?.length ?? 0) > 0 ? (
+                flatLatestProductOrders?.map((order) => (
+                  <OrderRow key={order.id} order={order} />
+                ))
+              ) : (
+                <EmptyState
+                  title="No orders found"
+                  description="No orders found for this product"
+                />
+              )}
+            </View>
           </View>
         </TabsContent>
         <TabsContent value="edit" style={{ flexDirection: "column", gap: 32 }}>
@@ -142,9 +195,16 @@ export default function Index() {
               name="description"
               style={{ height: 120 }}
               label="Description"
+              secondaryLabel="Markdown"
             />
           </View>
-          <Button>Save</Button>
+          <Button
+            onPress={handleSubmit(saveProduct)}
+            loading={updateProduct.isPending}
+            disabled={!formState.isDirty}
+          >
+            Save
+          </Button>
         </TabsContent>
       </Tabs>
     </ScrollView>

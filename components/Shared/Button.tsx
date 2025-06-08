@@ -1,5 +1,6 @@
 import { useTheme } from "@/hooks/theme";
 import {
+  ActivityIndicator,
   StyleProp,
   StyleSheet,
   Text,
@@ -51,7 +52,9 @@ export const Button = ({
         style,
       ]}
     >
-      <ThemedText style={[styles.text, textStyle]}>{children}</ThemedText>
+      <ThemedText style={[styles.text, textStyle]}>
+        {loading ? <ActivityIndicator size="small" color="#fff" /> : children}
+      </ThemedText>
     </TouchableOpacity>
   );
 };

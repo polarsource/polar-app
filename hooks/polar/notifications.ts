@@ -40,10 +40,6 @@ export const useCreateNotificationRecipient = (): UseMutationResult<
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to register notification");
-      }
-
       return response.json();
     },
   });
@@ -116,10 +112,6 @@ export const useDeleteNotificationRecipient = (): UseMutationResult<
           },
         }
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete notification recipient");
-      }
 
       return response.json();
     },

@@ -24,6 +24,17 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { Button } from "@/components/Shared/Button";
 import { ProductRow } from "@/components/Products/ProductRow";
 import { ThemedText } from "@/components/Shared/ThemedText";
+import { Pill } from "@/components/Shared/Pill";
+
+const statusColors = {
+  active: "green",
+  canceled: "red",
+  incomplete: "yellow",
+  incomplete_expired: "red",
+  past_due: "red",
+  trialing: "blue",
+  unpaid: "yellow",
+} as const;
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -81,11 +92,11 @@ export default function Index() {
           }}
           activeOpacity={0.6}
         >
-          <ThemedText style={[styles.label, { fontSize: 18 }]} secondary>
+          <ThemedText style={[styles.label, { fontSize: 16 }]} secondary>
             #
           </ThemedText>
           <ThemedText
-            style={[styles.value, { textTransform: "uppercase", fontSize: 18 }]}
+            style={[styles.value, { textTransform: "uppercase", fontSize: 16 }]}
             numberOfLines={1}
           >
             {subscription.id.split("-").pop()?.slice(-6, -1)}
@@ -97,10 +108,10 @@ export default function Index() {
             { backgroundColor: colors.card, flex: 1, gap: 4, width: "50%" },
           ]}
         >
-          <ThemedText style={[styles.label, { fontSize: 18 }]} secondary>
+          <ThemedText style={[styles.label, { fontSize: 16 }]} secondary>
             Date
           </ThemedText>
-          <ThemedText style={[styles.value, { fontSize: 18 }]}>
+          <ThemedText style={[styles.value, { fontSize: 16 }]}>
             {subscription.createdAt.toLocaleDateString("en-US", {
               dateStyle: "medium",
             })}
@@ -116,7 +127,15 @@ export default function Index() {
         <Details>
           <DetailRow
             label="Status"
-            value={subscription.status.split("_").join(" ")}
+            value={
+              <Pill
+                color={statusColors[subscription.status]}
+                textStyle={{ fontSize: 14 }}
+              >
+                {subscription.status.split("_").join(" ")}
+              </Pill>
+            }
+            valueStyle={{ textTransform: "capitalize" }}
           />
           {subscription.status === "canceled" && (
             <DetailRow
@@ -141,6 +160,7 @@ export default function Index() {
           <DetailRow
             label="Recurring Interval"
             value={subscription.recurringInterval.split("_").join(" ")}
+            valueStyle={{ textTransform: "capitalize" }}
           />
           <DetailRow
             label="Start Date"

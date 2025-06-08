@@ -20,7 +20,7 @@ export const getCentsInDollarString = (
 export const formatCurrencyAndAmount = (
   cents: number,
   currency: string = "usd",
-  minimumFractionDigits?: number,
+  minimumFractionDigits: number = 0,
   notation?: "standard" | "scientific" | "engineering" | "compact"
 ): string => {
   const currencyNumberFormat = new Intl.NumberFormat("en-US", {

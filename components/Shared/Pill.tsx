@@ -1,15 +1,26 @@
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  StyleProp,
+  TextStyle,
+} from "react-native";
 
 export const Pill = ({
   color,
   children,
+  style,
+  textStyle,
 }: {
   color: "green" | "yellow" | "red" | "blue";
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }) => {
   return (
-    <View style={[styles.pill, styles[color]]}>
-      <Text style={[styles.text, styles[color]]}>{children}</Text>
+    <View style={[styles.pill, styles[color], style]}>
+      <Text style={[styles.text, styles[color], textStyle]}>{children}</Text>
     </View>
   );
 };
