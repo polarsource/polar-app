@@ -7,7 +7,6 @@ import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -34,6 +33,7 @@ import { Banner } from "@/components/Shared/Banner";
 import { useSubscriptions } from "@/hooks/polar/subscriptions";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { ThemedText } from "@/components/Shared/ThemedText";
+import { MiniButton } from "@/components/Shared/MiniButton";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -172,7 +172,7 @@ export default function Index() {
             }}
           />
         )}
-        <View style={{ gap: 8 }}>
+        <View style={{ gap: 16 }}>
           <View style={{ flexDirection: "row", gap: 16 }}>
             <OrganizationTile />
             <RevenueTile />
@@ -191,24 +191,7 @@ export default function Index() {
               Recent Subscriptions
             </ThemedText>
             <Link href="/subscriptions" asChild>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  width: "auto",
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                }}
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                >
-                  View All
-                </Text>
-              </TouchableOpacity>
+              <MiniButton>View All</MiniButton>
             </Link>
           </View>
           {flatSubscriptions.length > 0 ? (
@@ -239,24 +222,7 @@ export default function Index() {
           >
             <ThemedText style={{ fontSize: 20 }}>Recent Orders</ThemedText>
             <Link href="/orders" asChild>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{
-                  width: "auto",
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                }}
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}
-                >
-                  View All
-                </Text>
-              </TouchableOpacity>
+              <MiniButton>View All</MiniButton>
             </Link>
           </View>
           {flatOrders.length > 0 ? (
@@ -291,22 +257,7 @@ export default function Index() {
         >
           <ThemedText style={{ fontSize: 20 }}>Recent Customers</ThemedText>
           <Link href="/customers" asChild>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={{
-                width: "auto",
-                backgroundColor: colors.primary,
-                borderRadius: 100,
-                justifyContent: "center",
-                alignItems: "center",
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-              }}
-            >
-              <Text style={{ color: "#fff", fontSize: 14, fontWeight: "500" }}>
-                View All
-              </Text>
-            </TouchableOpacity>
+            <MiniButton>View All</MiniButton>
           </Link>
         </View>
 

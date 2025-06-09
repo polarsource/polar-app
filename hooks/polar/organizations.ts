@@ -1,8 +1,14 @@
 import { usePolarClient } from "@/providers/PolarClientProvider";
-import { OrganizationsGetRequest } from "@polar-sh/sdk/dist/commonjs/models/operations/organizationsget";
+import { OrganizationsGetRequest } from "@polar-sh/sdk/models/operations/organizationsget";
 import { useQuery } from "@tanstack/react-query";
 
-export const useOrganizations = () => {
+export const useOrganizations = (
+  {
+    enabled = true,
+  }: {
+    enabled?: boolean;
+  } = { enabled: true }
+) => {
   const { polar } = usePolarClient();
 
   return useQuery({
@@ -11,6 +17,7 @@ export const useOrganizations = () => {
       polar.organizations.list({
         limit: 100,
       }),
+    enabled,
   });
 };
 

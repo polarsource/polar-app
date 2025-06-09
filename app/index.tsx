@@ -11,6 +11,7 @@ import { useTheme } from "@/hooks/theme";
 import LogoIcon from "@/components/Shared/PolarLogo";
 import { useOAuth } from "@/hooks/oauth";
 import { ThemedText } from "@/components/Shared/ThemedText";
+import { Image } from "expo-image";
 
 export default function App() {
   const { session, setSession } = useSession();
@@ -26,6 +27,10 @@ export default function App() {
       style={[LoginStyle.container, { backgroundColor: colors.background }]}
     >
       <StatusBar barStyle="light-content" />
+      <Image
+        source={require("@/assets/images/login-background.jpg")}
+        style={LoginStyle.background}
+      />
       <LogoIcon size={80} />
       <ThemedText style={LoginStyle.title}>
         Payment infrastructure for the 21st century
@@ -57,11 +62,18 @@ const LoginStyle = StyleSheet.create({
     alignItems: "center",
     gap: 54,
   },
+  background: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   title: {
-    fontSize: 36,
+    fontSize: 42,
     textAlign: "center",
     fontWeight: "500",
-    lineHeight: 52,
+    lineHeight: 54,
     marginHorizontal: 32,
   },
   button: {

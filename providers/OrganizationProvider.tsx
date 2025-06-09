@@ -1,14 +1,9 @@
 import { useOrganizations } from "@/hooks/polar/organizations";
-import {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useEffect, useMemo } from "react";
 import { Organization } from "@polar-sh/sdk/models/components/organization.js";
 import { useStorageState } from "@/hooks/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSession } from "./SessionProvider";
 
 export interface OrganizationContextValue {
   organization: Organization;
@@ -30,7 +25,11 @@ export function PolarOrganizationProvider({ children }: PropsWithChildren) {
   const [[isLoading, organizationId], setOrganizationId] =
     useStorageState("organizationId");
 
-  const { data: organizationData } = useOrganizations();
+  const { session } = useSession();
+
+  const { data: organizationData } = useOrganizations({
+    enabled: !!session,
+  });
 
   useEffect(() => {
     AsyncStorage.getItem("organizationId").then((organizationId) => {

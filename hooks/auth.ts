@@ -6,10 +6,12 @@ import { useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 
 export const useLogout = () => {
   const { setSession } = useSession();
   const { expoPushToken } = useNotifications();
+  const router = useRouter();
 
   const deleteNotificationRecipient = useDeleteNotificationRecipient();
   const { data: notificationRecipient } =
@@ -19,7 +21,7 @@ export const useLogout = () => {
 
   const signOut = useCallback(async () => {
     if (notificationRecipient) {
-      deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
+      await deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
     }
 
     Notifications.unregisterForNotificationsAsync();
@@ -27,8 +29,10 @@ export const useLogout = () => {
     queryClient.clear();
 
     setSession(null);
-    AsyncStorage.removeItem("organizationId");
-  }, [setSession, deleteNotificationRecipient, expoPushToken]);
+    await AsyncStorage.removeItem("organizationId");
+
+    router.replace("/");
+  }, [setSession, deleteNotificationRecipient, expoPushToken, router]);
 
   return signOut;
 };

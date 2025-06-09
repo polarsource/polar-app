@@ -15,9 +15,6 @@ import { useOrganizations } from "@/hooks/polar/organizations";
 import { Avatar } from "@/components/Shared/Avatar";
 import { Button } from "@/components/Shared/Button";
 import { useLogout } from "@/hooks/auth";
-import { DetailRow, Details } from "@/components/Shared/Details";
-import { useUpdates } from "expo-updates";
-import { useNotifications } from "@/providers/NotificationsProvider";
 import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
@@ -28,9 +25,6 @@ export default function Index() {
   const { data: organizationData, refetch, isRefetching } = useOrganizations();
 
   const logout = useLogout();
-
-  const updates = useUpdates();
-  const { expoPushToken } = useNotifications();
 
   return (
     <ScrollView

@@ -54,10 +54,10 @@ export const RevenueTile = () => {
     <Tile href="/metrics">
       <View style={styles.container}>
         <View style={{ flexDirection: "column", gap: 4 }}>
-          <ThemedText style={[styles.title]}>Revenue</ThemedText>
           <ThemedText style={[styles.subtitle]} secondary>
-            This Month
+            Revenue
           </ThemedText>
+          <ThemedText style={[styles.title]}>This Month</ThemedText>
         </View>
         {cumulativeRevenueData && (
           <View

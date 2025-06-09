@@ -46,7 +46,13 @@
       ],
       "expo-secure-store",
       "expo-font",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/images/login-background.jpg"]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
