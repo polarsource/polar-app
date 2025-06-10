@@ -21,7 +21,7 @@ export const useLogout = () => {
 
   const signOut = useCallback(async () => {
     if (notificationRecipient) {
-      await deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
+      deleteNotificationRecipient.mutateAsync(notificationRecipient.id);
     }
 
     Notifications.unregisterForNotificationsAsync();
@@ -32,7 +32,13 @@ export const useLogout = () => {
     await AsyncStorage.removeItem("organizationId");
 
     router.replace("/");
-  }, [setSession, deleteNotificationRecipient, expoPushToken, router]);
+  }, [
+    setSession,
+    deleteNotificationRecipient,
+    expoPushToken,
+    router,
+    queryClient,
+  ]);
 
   return signOut;
 };
