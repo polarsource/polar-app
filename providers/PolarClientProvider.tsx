@@ -5,9 +5,7 @@ import { useSession } from "./SessionProvider";
 const PolarClientContext = createContext<{
   polar: Polar;
 }>({
-  polar: new Polar({
-    serverURL: process.env.EXPO_PUBLIC_POLAR_SERVER_URL,
-  }),
+  polar: new Polar(),
 });
 
 export function usePolarClient() {
@@ -27,7 +25,6 @@ export function PolarClientProvider({ children }: PropsWithChildren) {
 
   const polar = new Polar({
     accessToken: session ?? "",
-    serverURL: process.env.EXPO_PUBLIC_POLAR_SERVER_URL,
   });
 
   return (
