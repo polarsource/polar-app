@@ -1,8 +1,8 @@
-import { Redirect, router, Stack, useRouter } from "expo-router";
+import { Redirect, Stack, useRouter } from "expo-router";
 import React from "react";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useTheme } from "@/hooks/theme";
-import { StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { StatusBar } from "react-native";
 import { PolarQueryClientProvider } from "@/providers/PolarQueryClientProvider";
 import { PolarOrganizationProvider } from "@/providers/OrganizationProvider";
 import { useSession } from "@/providers/SessionProvider";

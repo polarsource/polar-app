@@ -25,7 +25,7 @@ export interface OrderRowProps {
 export const OrderRow = ({ order, style, showTimestamp }: OrderRowProps) => {
   const { colors } = useTheme();
   const { organization } = useContext(OrganizationContext);
-  const { data: product } = useProduct(organization.id, order.product.id);
+  const { data: product } = useProduct(organization?.id, order.product.id);
 
   return (
     <Link

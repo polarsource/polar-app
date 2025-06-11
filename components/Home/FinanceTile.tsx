@@ -1,7 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { Tile } from "./Tile";
 import { useContext } from "react";
-import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { ThemedText } from "../Shared/ThemedText";
 import { MiniButton } from "../Shared/MiniButton";
@@ -13,7 +12,7 @@ import { formatCurrencyAndAmount } from "@/utils/money";
 
 export const FinanceTile = () => {
   const { organization } = useContext(OrganizationContext);
-  const { data: account } = useOrganizationAccount(organization.id);
+  const { data: account } = useOrganizationAccount(organization?.id);
   const { data: summary } = useTransactionsSummary(account?.id);
 
   return (

@@ -14,7 +14,7 @@ export default function Index() {
   const [search, setSearch] = useState("");
 
   const { data, refetch, isRefetching, fetchNextPage, hasNextPage } =
-    useCustomers(organization.id, { query: search });
+    useCustomers(organization?.id, { query: search });
 
   const customersData = useMemo(() => {
     return data?.pages.flatMap((page) => page.result.items) ?? [];

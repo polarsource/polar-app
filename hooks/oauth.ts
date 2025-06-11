@@ -23,7 +23,7 @@ export const useOAuthConfig = () => {
   };
 
   const development = {
-    CLIENT_ID: "polar_ci_RW5LDNLrEjeOzCovwUf7pp9dwe3PKUCut3CwO135uvX",
+    CLIENT_ID: "polar_ci_VoDM10HGgcetzWmJnQ9QDDdQHX1kXoX96L7aD4eMVmK",
     discovery: {
       authorizationEndpoint: `http://127.0.0.1:3000/oauth2/authorize`,
       tokenEndpoint: `${process.env.EXPO_PUBLIC_POLAR_SERVER_URL}/v1/oauth2/token`,
@@ -68,7 +68,7 @@ export const useOAuthConfig = () => {
 
   return {
     scopes,
-    ...production,
+    ...development,
   };
 };
 
@@ -122,7 +122,6 @@ export const useOAuth = () => {
     );
 
     setSession(token.accessToken);
-    navigate("/(authenticated)/home");
   };
 
   return { authRequest, authenticate };

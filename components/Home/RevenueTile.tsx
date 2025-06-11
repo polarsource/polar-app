@@ -19,7 +19,7 @@ export const RevenueTile = () => {
   const { colors } = useTheme();
 
   const metrics = useMetrics(
-    organization.id,
+    organization?.id,
     startOfMonth(new Date()),
     endOfMonth(new Date()),
     {

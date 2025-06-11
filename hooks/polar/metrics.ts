@@ -4,7 +4,7 @@ import { RFCDate } from "@polar-sh/sdk/types/rfcdate.js";
 import { useQuery } from "@tanstack/react-query";
 
 export const useMetrics = (
-  organizationId: string,
+  organizationId: string | undefined,
   startDate: Date,
   endDate: Date,
   parameters: Omit<MetricsGetRequest, "startDate" | "endDate">

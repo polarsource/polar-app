@@ -12,7 +12,7 @@ export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
   const { data, refetch, isRefetching, fetchNextPage, hasNextPage } =
-    useInfiniteProducts(organization.id);
+    useInfiniteProducts(organization?.id);
 
   const flatData = useMemo(() => {
     return data?.pages.flatMap((page) => page.result.items) ?? [];

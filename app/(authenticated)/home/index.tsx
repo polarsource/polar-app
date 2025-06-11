@@ -45,7 +45,7 @@ export default function Index() {
     data: orders,
     refetch: refetchOrders,
     isRefetching: isRefetchingOrders,
-  } = useOrders(organization.id, {
+  } = useOrders(organization?.id, {
     limit: 3,
   });
 
@@ -53,7 +53,7 @@ export default function Index() {
     data: subscriptions,
     refetch: refetchSubscriptions,
     isRefetching: isRefetchingSubscriptions,
-  } = useSubscriptions(organization.id, {
+  } = useSubscriptions(organization?.id, {
     limit: 3,
     active: true,
     sorting: ["-started_at"],
@@ -63,7 +63,7 @@ export default function Index() {
     data: customers,
     refetch: refetchCustomers,
     isRefetching: isRefetchingCustomers,
-  } = useCustomers(organization.id, {
+  } = useCustomers(organization?.id, {
     limit: 5,
   });
 

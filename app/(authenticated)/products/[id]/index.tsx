@@ -43,13 +43,13 @@ export default function Index() {
     data: product,
     refetch,
     isRefetching,
-  } = useProduct(organization.id, id as string);
+  } = useProduct(organization?.id, id as string);
 
   const now = useMemo(() => new Date(), []);
 
   const { data: metrics } = useMetrics(
-    organization.id,
-    organization.createdAt,
+    organization?.id,
+    organization?.createdAt ?? new Date(),
     now,
     {
       productId: id as string,
@@ -57,7 +57,7 @@ export default function Index() {
     }
   );
 
-  const { data: latestProductOrders } = useOrders(organization.id, {
+  const { data: latestProductOrders } = useOrders(organization?.id, {
     productId: id as string,
     limit: 3,
   });
@@ -80,7 +80,7 @@ export default function Index() {
 
   const { control, handleSubmit, formState, reset } = form;
 
-  const updateProduct = useProductUpdate(organization.id, id as string);
+  const updateProduct = useProductUpdate(organization?.id, id as string);
 
   const { error: mutationError } = updateProduct;
 

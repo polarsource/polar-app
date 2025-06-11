@@ -21,7 +21,7 @@ export const Box = ({ label, value }: BoxProps) => {
   );
 };
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     padding: 12,
     borderRadius: 12,

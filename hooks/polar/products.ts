@@ -4,7 +4,7 @@ import { ProductUpdate } from "@polar-sh/sdk/models/components/productupdate.js"
 import { ProductsListRequest } from "@polar-sh/sdk/models/operations/productslist.js";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
-export const useProduct = (organizationId: string, id: string) => {
+export const useProduct = (organizationId: string | undefined, id: string) => {
   const { polar } = usePolarClient();
 
   return useQuery({
@@ -15,7 +15,7 @@ export const useProduct = (organizationId: string, id: string) => {
 };
 
 export const useProducts = (
-  organizationId: string,
+  organizationId: string | undefined,
   options: Omit<ProductsListRequest, "organizationId">
 ) => {
   const { polar } = usePolarClient();
@@ -27,7 +27,7 @@ export const useProducts = (
 };
 
 export const useInfiniteProducts = (
-  organizationId: string,
+  organizationId: string | undefined,
   options?: Omit<ProductsListRequest, "organizationId">
 ) => {
   const { polar } = usePolarClient();
@@ -44,7 +44,10 @@ export const useInfiniteProducts = (
   });
 };
 
-export const useProductUpdate = (organizationId: string, id: string) => {
+export const useProductUpdate = (
+  organizationId: string | undefined,
+  id: string
+) => {
   const { polar } = usePolarClient();
 
   return useMutation({

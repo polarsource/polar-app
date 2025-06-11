@@ -12,15 +12,9 @@ import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { TimeInterval } from "@polar-sh/sdk/models/components/timeinterval.js";
-import { Link, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useContext, useMemo } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { RefreshControl, ScrollView, View, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/Shared/ThemedText";
 
 export default function Index() {
@@ -32,7 +26,7 @@ export default function Index() {
     data: customer,
     refetch: refetchCustomer,
     isRefetching: isCustomerRefetching,
-  } = useCustomer(organization.id, id as string);
+  } = useCustomer(organization?.id, id as string);
 
   const startDate = useMemo(() => {
     return new Date(customer?.createdAt ?? new Date());
@@ -46,7 +40,7 @@ export default function Index() {
     data: metrics,
     refetch: refetchMetrics,
     isRefetching: isMetricsRefetching,
-  } = useMetrics(organization.id, startDate, endDate, {
+  } = useMetrics(organization?.id, startDate, endDate, {
     interval: TimeInterval.Month,
     customerId: id as string,
   });
@@ -55,7 +49,7 @@ export default function Index() {
     data: orders,
     refetch: refetchOrders,
     isRefetching: isOrdersRefetching,
-  } = useOrders(organization.id, {
+  } = useOrders(organization?.id, {
     customerId: id as string,
   });
 
@@ -67,7 +61,7 @@ export default function Index() {
     data: subscriptions,
     refetch: refetchSubscriptions,
     isRefetching: isSubscriptionsRefetching,
-  } = useSubscriptions(organization.id, {
+  } = useSubscriptions(organization?.id, {
     customerId: id as string,
     active: null,
   });

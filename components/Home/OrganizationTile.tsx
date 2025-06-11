@@ -10,6 +10,10 @@ export const OrganizationTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
+  if (!organization) {
+    return null;
+  }
+
   return (
     <Tile href="/settings">
       <View

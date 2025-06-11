@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Text, ScrollView, StyleSheet } from "react-native";
 import { useTheme } from "@/hooks/theme";
 import { useMetrics } from "@/hooks/polar/metrics";
-import { TimeInterval } from "@polar-sh/sdk/dist/commonjs/models/components/timeinterval";
+import { TimeInterval } from "@polar-sh/sdk/models/components/timeinterval";
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { Stack } from "expo-router";
 import { ThemedText } from "@/components/Shared/ThemedText";
@@ -21,7 +21,7 @@ export default function Index() {
     return new Date();
   }, []);
 
-  const metrics = useMetrics(organization.id, startOfMonth, endDate, {
+  const metrics = useMetrics(organization?.id, startOfMonth, endDate, {
     interval: TimeInterval.Day,
   });
 

@@ -4,9 +4,12 @@ import { Organization } from "@polar-sh/sdk/models/components/organization.js";
 import { useStorageState } from "@/hooks/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSession } from "./SessionProvider";
+import { Redirect, usePathname } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 
 export interface OrganizationContextValue {
-  organization: Organization;
+  isLoading: boolean;
+  organization: Organization | undefined;
   organizations: Organization[];
   setOrganization: (organization: Organization) => void;
 }
@@ -22,14 +25,17 @@ export const OrganizationContext =
   createContext<OrganizationContextValue>(stub);
 
 export function PolarOrganizationProvider({ children }: PropsWithChildren) {
-  const [[isLoading, organizationId], setOrganizationId] =
+  const [[isStorageLoading, organizationId], setOrganizationId] =
     useStorageState("organizationId");
 
   const { session } = useSession();
 
-  const { data: organizationData } = useOrganizations({
-    enabled: !!session,
-  });
+  const pathname = usePathname();
+
+  const { data: organizationData, isFetching: isFetchingOrganizations } =
+    useOrganizations({
+      enabled: !!session,
+    });
 
   useEffect(() => {
     AsyncStorage.getItem("organizationId").then((organizationId) => {
@@ -39,9 +45,11 @@ export function PolarOrganizationProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!organizationId) {
-      setOrganizationId(organizationData?.result.items[0].id ?? null);
+      if (organizationData && organizationData.result.items.length > 0) {
+        setOrganizationId(organizationData.result.items[0].id ?? null);
+      }
     }
-  }, [organizationData]);
+  }, [organizationData, organizationId, setOrganizationId]);
 
   const organization = useMemo(() => {
     return organizationData?.result.items.find(
@@ -49,15 +57,28 @@ export function PolarOrganizationProvider({ children }: PropsWithChildren) {
     );
   }, [organizationData, organizationId]);
 
-  if (!organization) {
-    return null;
+  const isLoading = isStorageLoading || isFetchingOrganizations;
+
+  const organizations = organizationData?.result.items ?? [];
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (organizations.length === 0 && pathname !== "/onboarding") {
+    return <Redirect href="/onboarding" />;
   }
 
   return (
     <OrganizationContext.Provider
       value={{
+        isLoading,
         organization,
-        organizations: organizationData?.result.items ?? [],
+        organizations,
         setOrganization: (organization: Organization) => {
           setOrganizationId(organization.id);
 

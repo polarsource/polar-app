@@ -43,7 +43,7 @@ export const Button = ({
             disabled || loading
               ? colors.card
               : variant === "primary"
-              ? colors.primary
+              ? colors.monochromeInverted
               : colors.card,
         },
         {
@@ -52,8 +52,23 @@ export const Button = ({
         style,
       ]}
     >
-      <ThemedText style={[styles.text, textStyle]}>
-        {loading ? <ActivityIndicator size="small" color="#fff" /> : children}
+      <ThemedText
+        style={[
+          styles.text,
+          {
+            color:
+              variant === "primary" && !disabled
+                ? colors.monochrome
+                : colors.text,
+          },
+          textStyle,
+        ]}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color={colors.monochrome} />
+        ) : (
+          children
+        )}
       </ThemedText>
     </TouchableOpacity>
   );
@@ -62,13 +77,13 @@ export const Button = ({
 const styles = StyleSheet.create({
   button: {
     padding: 10,
-    borderRadius: 14,
+    borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
     height: 50,
   },
   text: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
   },
 });

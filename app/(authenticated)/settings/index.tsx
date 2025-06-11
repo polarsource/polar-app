@@ -1,11 +1,11 @@
-import { router, Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   RefreshControl,
+  SafeAreaView,
 } from "react-native";
 import React, { useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
@@ -16,10 +16,12 @@ import { Avatar } from "@/components/Shared/Avatar";
 import { Button } from "@/components/Shared/Button";
 import { useLogout } from "@/hooks/auth";
 import { ThemedText } from "@/components/Shared/ThemedText";
+import { MiniButton } from "@/components/Shared/MiniButton";
 
 export default function Index() {
   const { setOrganization, organization: selectedOrganization } =
     useContext(OrganizationContext);
+  const router = useRouter();
 
   const { colors } = useTheme();
   const { data: organizationData, refetch, isRefetching } = useOrganizations();
@@ -31,15 +33,33 @@ export default function Index() {
       refreshControl={
         <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
       }
+      contentInset={{ bottom: 16 }}
+      contentContainerStyle={{ flex: 1 }}
     >
       <Stack.Screen options={{ title: "Settings" }} />
-      <View style={SettingsStyle.container}>
+      <SafeAreaView style={SettingsStyle.container}>
         <View style={{ flex: 1, gap: 16 }}>
-          <ThemedText style={[SettingsStyle.title]}>Organizations</ThemedText>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <ThemedText style={[SettingsStyle.title]}>Organizations</ThemedText>
+            <MiniButton
+              onPress={() => router.push("/onboarding")}
+              icon={
+                <MaterialIcons
+                  name="add"
+                  size={16}
+                  color={colors.monochromeInverted}
+                />
+              }
+            >
+              New
+            </MiniButton>
+          </View>
           <View style={SettingsStyle.organizationsContainer}>
             {organizationData?.result.items.map((organization) => (
               <TouchableOpacity
-                key={organization.id}
+                key={organization?.id}
                 style={[
                   SettingsStyle.organization,
                   {
@@ -55,18 +75,18 @@ export default function Index() {
                 <View style={SettingsStyle.organizationContent}>
                   <Avatar
                     size={32}
-                    image={organization.avatarUrl}
-                    name={organization.name}
+                    image={organization?.avatarUrl}
+                    name={organization?.name}
                   />
                   <ThemedText style={[SettingsStyle.organizationName]}>
-                    {organization.name}
+                    {organization?.name}
                   </ThemedText>
                 </View>
                 <MaterialIcons
                   name="check"
                   size={20}
                   color={
-                    selectedOrganization?.id === organization.id
+                    selectedOrganization?.id === organization?.id
                       ? colors.secondary
                       : "transparent"
                   }
@@ -77,7 +97,7 @@ export default function Index() {
         </View>
 
         <Button onPress={logout}>Logout</Button>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 }
@@ -85,8 +105,9 @@ export default function Index() {
 const SettingsStyle = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    margin: 16,
     gap: 24,
+    justifyContent: "space-between",
   },
   organizationsContainer: {
     flexDirection: "column",
@@ -98,7 +119,6 @@ const SettingsStyle = StyleSheet.create({
     flex: 1,
   },
   organization: {
-    flex: 1,
     paddingVertical: 16,
     paddingLeft: 16,
     paddingRight: 24,

@@ -2,17 +2,18 @@ import { usePolarClient } from "@/providers/PolarClientProvider";
 import { CustomersListRequest } from "@polar-sh/sdk/models/operations/customerslist";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-export const useCustomer = (organizationId: string, id: string) => {
+export const useCustomer = (organizationId: string | undefined, id: string) => {
   const { polar } = usePolarClient();
 
   return useQuery({
     queryKey: ["customers", organizationId, { id }],
     queryFn: () => polar.customers.get({ id }),
+    enabled: !!organizationId,
   });
 };
 
 export const useCustomers = (
-  organizationId?: string,
+  organizationId: string | undefined,
   parameters?: Omit<CustomersListRequest, "organizationId">
 ) => {
   const { polar } = usePolarClient();

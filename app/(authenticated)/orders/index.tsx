@@ -3,11 +3,10 @@ import { ThemedText } from "@/components/Shared/ThemedText";
 import { useOrders } from "@/hooks/polar/orders";
 import { useTheme } from "@/hooks/theme";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { Order } from "@polar-sh/sdk/dist/commonjs/models/components/order";
-import { FlashList } from "@shopify/flash-list";
+import { Order } from "@polar-sh/sdk/models/components/order";
 import { Stack } from "expo-router";
 import React, { useContext, useMemo } from "react";
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, View } from "react-native";
 
 const groupOrdersByDate = (orders: Order[]) => {
   if (!orders?.length) return [];
@@ -39,7 +38,7 @@ export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
   const { data, refetch, isRefetching, fetchNextPage, hasNextPage } = useOrders(
-    organization.id
+    organization?.id
   );
 
   const flatData = useMemo(() => {

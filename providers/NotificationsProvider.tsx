@@ -114,7 +114,7 @@ export default function NotificationsProvider({
       notificationListener.current && notificationListener.current.remove();
       responseListener.current && responseListener.current.remove();
     };
-  }, [isDemo]);
+  }, [isDemo, session]);
 
   return (
     <NotificationsContext.Provider value={{ expoPushToken, notification }}>

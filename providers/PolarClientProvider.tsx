@@ -1,12 +1,13 @@
 import { createContext, useContext, type PropsWithChildren } from "react";
 import { Polar } from "@polar-sh/sdk";
 import { useSession } from "./SessionProvider";
-import { HTTPClient } from "@polar-sh/sdk/lib/http.js";
 
 const PolarClientContext = createContext<{
   polar: Polar;
 }>({
-  polar: new Polar(),
+  polar: new Polar({
+    serverURL: process.env.EXPO_PUBLIC_POLAR_SERVER_URL,
+  }),
 });
 
 export function usePolarClient() {
@@ -26,6 +27,7 @@ export function PolarClientProvider({ children }: PropsWithChildren) {
 
   const polar = new Polar({
     accessToken: session ?? "",
+    serverURL: process.env.EXPO_PUBLIC_POLAR_SERVER_URL,
   });
 
   return (

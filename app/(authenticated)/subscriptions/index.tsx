@@ -41,7 +41,7 @@ export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
   const { data, refetch, isRefetching, fetchNextPage, hasNextPage } =
-    useSubscriptions(organization.id, {
+    useSubscriptions(organization?.id, {
       sorting: ["-started_at"],
     });
 

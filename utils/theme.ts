@@ -8,6 +8,8 @@ export const themes = {
     border: "#E5E5EA",
     card: "#F2F2F7",
     monochrome: "#ffffff",
+    monochromeInverted: "#000000",
+    error: "#FF3B30",
   },
   dark: {
     background: "#0D0E10",
@@ -18,5 +20,7 @@ export const themes = {
     border: "#222328",
     card: "#141518",
     monochrome: "#000000",
+    monochromeInverted: "#ffffff",
+    error: "#FF3B30",
   },
 };
