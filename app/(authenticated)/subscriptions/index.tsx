@@ -40,7 +40,7 @@ const groupSubscriptionsByDate = (subscriptions: Subscription[]) => {
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
-  const { data, refetch, isRefetching, fetchNextPage, hasNextPage } =
+  const { data, refetch, isRefetching, fetchNextPage, hasNextPage, isLoading } =
     useSubscriptions(organization?.id, {
       sorting: ["-started_at"],
     });
@@ -79,7 +79,23 @@ export default function Index() {
         contentContainerStyle={{
           padding: 16,
           backgroundColor: colors.background,
+          flexGrow: 1,
         }}
+        ListEmptyComponent={
+          isLoading ? null : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText style={{ fontSize: 16 }} secondary>
+                No Subscriptions
+              </ThemedText>
+            </View>
+          )
+        }
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         refreshControl={

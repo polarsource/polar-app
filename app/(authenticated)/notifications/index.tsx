@@ -46,6 +46,7 @@ export default function Notifications() {
     data: notifications,
     refetch: refetchNotifications,
     isRefetching,
+    isLoading,
   } = useListNotifications();
   const markNotificationAsRead = useNotificationsMarkRead();
 
@@ -64,6 +65,21 @@ export default function Notifications() {
       <Stack.Screen options={{ title: "Notifications" }} />
       <FlatList
         data={groupNotificationsByDate(notifications?.notifications ?? [])}
+        ListEmptyComponent={
+          isLoading ? null : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText style={{ fontSize: 16 }} secondary>
+                No Notifications
+              </ThemedText>
+            </View>
+          )
+        }
         renderItem={({ item }: { item: PolarNotification | string }) => {
           if (typeof item === "string") {
             return (
@@ -92,6 +108,7 @@ export default function Notifications() {
         contentContainerStyle={{
           padding: 16,
           backgroundColor: colors.background,
+          flexGrow: 1,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}

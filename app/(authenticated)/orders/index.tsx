@@ -37,9 +37,8 @@ const groupOrdersByDate = (orders: Order[]) => {
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
-  const { data, refetch, isRefetching, fetchNextPage, hasNextPage } = useOrders(
-    organization?.id
-  );
+  const { data, refetch, isRefetching, fetchNextPage, hasNextPage, isLoading } =
+    useOrders(organization?.id);
 
   const flatData = useMemo(() => {
     return data?.pages.flatMap((page) => page.result.items) ?? [];
@@ -66,9 +65,25 @@ export default function Index() {
 
           return <OrderRow order={item} style={{ marginBottom: 8 }} />;
         }}
+        ListEmptyComponent={
+          isLoading ? null : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText style={{ fontSize: 16 }} secondary>
+                No Orders
+              </ThemedText>
+            </View>
+          )
+        }
         contentContainerStyle={{
           padding: 16,
           backgroundColor: colors.background,
+          flexGrow: 1,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}

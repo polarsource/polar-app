@@ -8,8 +8,11 @@ import { useTheme } from "@/hooks/theme";
 import { Path } from "react-native-svg";
 import Svg from "react-native-svg";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { subMonths } from "date-fns";
 import { ThemedText } from "../Shared/ThemedText";
+import { MetricsGetRequest } from "@polar-sh/sdk/models/operations/metricsget.js";
+import { useRevenueTrend } from "@/hooks/trend";
+import { Pill } from "../Shared/Pill";
 
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);
@@ -18,22 +21,36 @@ export const RevenueTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
 
+  const metricParameters = useMemo(
+    () => ({
+      currentInterval: [subMonths(new Date(), 1), new Date()] as [Date, Date],
+      previousInterval: [
+        subMonths(new Date(), 2),
+        subMonths(new Date(), 1),
+      ] as [Date, Date],
+      interval: TimeInterval.Day,
+    }),
+    []
+  );
+
   const metrics = useMetrics(
     organization?.id,
-    startOfMonth(new Date()),
-    endOfMonth(new Date()),
+    metricParameters.currentInterval[0],
+    metricParameters.currentInterval[1],
     {
-      interval: TimeInterval.Day,
+      interval: metricParameters.interval,
     }
   );
 
-  const cumulativeRevenue = useMemo(() => {
-    return (
-      metrics.data?.periods.reduce((acc, period) => {
-        return acc + period.revenue;
-      }, 0) ?? 0
-    );
-  }, [metrics]);
+  const revenueTrend = useRevenueTrend(
+    metricParameters.currentInterval,
+    metricParameters.previousInterval,
+    {
+      interval: metricParameters.interval,
+    }
+  );
+
+  const cumulativeRevenue = revenueTrend.currentCumulativeRevenue;
 
   const cumulativeRevenueData = useMemo(() => {
     return (
@@ -54,10 +71,30 @@ export const RevenueTile = () => {
     <Tile href="/metrics">
       <View style={styles.container}>
         <View style={{ flexDirection: "column", gap: 4 }}>
-          <ThemedText style={[styles.subtitle]} secondary>
-            Revenue
-          </ThemedText>
-          <ThemedText style={[styles.title]}>This Month</ThemedText>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 4,
+            }}
+          >
+            <ThemedText style={[styles.subtitle]} secondary>
+              Revenue
+            </ThemedText>
+            <Pill
+              color={
+                revenueTrend.trend > 0
+                  ? "green"
+                  : revenueTrend.trend < 0
+                  ? "red"
+                  : "blue"
+              }
+            >
+              {revenueTrend.trend > 0 ? "+" : ""}
+              {(revenueTrend.trend * 100).toFixed(1)}%
+            </Pill>
+          </View>
+          <ThemedText style={[styles.title]}>30 Days</ThemedText>
         </View>
         {cumulativeRevenueData && (
           <View
@@ -113,7 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
   },
   subtitle: {
     fontSize: 16,

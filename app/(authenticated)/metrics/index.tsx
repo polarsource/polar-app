@@ -25,14 +25,6 @@ export default function Index() {
     interval: TimeInterval.Day,
   });
 
-  const cumulativeRevenue = useMemo(() => {
-    return (
-      metrics.data?.periods.reduce((acc, period) => {
-        return acc + period.revenue;
-      }, 0) ?? 0
-    );
-  }, [metrics]);
-
   return (
     <ScrollView style={MetricsStyles.container}>
       <Stack.Screen options={{ title: "Metrics" }} />

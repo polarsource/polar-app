@@ -34,7 +34,8 @@ export const useInfiniteProducts = (
 
   return useInfiniteQuery({
     queryKey: ["infinite", "products", organizationId, { ...options }],
-    queryFn: () => polar.products.list({ organizationId, ...options }),
+    queryFn: ({ pageParam = 1 }) =>
+      polar.products.list({ organizationId, ...options, page: pageParam }),
     enabled: !!organizationId,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {

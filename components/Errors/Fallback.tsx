@@ -24,7 +24,10 @@ export const ErrorFallback = ({
   const permissionError =
     (error instanceof SDKError && error.statusCode === 403) ||
     (error instanceof SDKValidationError &&
-      error.message.includes("insufficient_scope"));
+      error.message.includes("insufficient_scope")) ||
+    (error instanceof Error && error.message.includes("privileges"));
+
+  console.log(error);
 
   const title = useMemo(() => {
     switch (true) {

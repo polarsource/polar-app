@@ -87,7 +87,7 @@ export default function Index() {
                   size={20}
                   color={
                     selectedOrganization?.id === organization?.id
-                      ? colors.secondary
+                      ? colors.monochromeInverted
                       : "transparent"
                   }
                 />

@@ -66,7 +66,13 @@ export const ProductRow = ({ product, style }: ProductRowProps) => {
               justifyContent: "space-between",
             }}
           >
-            <ThemedText style={styles.productName}>{product.name}</ThemedText>
+            <ThemedText
+              style={styles.productName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {product.name}
+            </ThemedText>
             {product.isArchived && <Pill color="red">Archived</Pill>}
           </View>
           <ProductPriceLabel product={product} />
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 16,
     fontWeight: "500",
+    flexShrink: 1,
   },
   amount: {
     fontSize: 16,

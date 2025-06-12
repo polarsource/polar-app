@@ -9,11 +9,17 @@ import {
   useTransactionsSummary,
 } from "@/hooks/polar/finance";
 import { formatCurrencyAndAmount } from "@/utils/money";
+import { Link } from "expo-router";
 
 export const FinanceTile = () => {
   const { organization } = useContext(OrganizationContext);
   const { data: account } = useOrganizationAccount(organization?.id);
   const { data: summary } = useTransactionsSummary(account?.id);
+
+  const canWithdraw =
+    account?.status === "active" &&
+    summary?.balance?.amount &&
+    summary.balance.amount >= 1000;
 
   return (
     <Tile href="/finance">
@@ -26,14 +32,21 @@ export const FinanceTile = () => {
       >
         <View style={{ flexDirection: "column", gap: 4 }}>
           <ThemedText style={[styles.subtitle]} secondary>
-            Finance
+            Account Balance
           </ThemedText>
           <ThemedText style={[styles.title]}>
             {formatCurrencyAndAmount(summary?.balance.amount ?? 0, "USD")}
           </ThemedText>
         </View>
         <View style={{ flexDirection: "column", gap: 4 }}>
-          <MiniButton style={{ alignSelf: "flex-start" }}>Withdraw</MiniButton>
+          <Link href="/finance/withdraw" asChild>
+            <MiniButton
+              style={{ alignSelf: "flex-start" }}
+              disabled={!canWithdraw}
+            >
+              Withdraw
+            </MiniButton>
+          </Link>
         </View>
       </View>
     </Tile>

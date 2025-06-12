@@ -34,6 +34,9 @@ import { useSubscriptions } from "@/hooks/polar/subscriptions";
 import { SubscriptionRow } from "@/components/Subscriptions/SubscriptionRow";
 import { ThemedText } from "@/components/Shared/ThemedText";
 import { MiniButton } from "@/components/Shared/MiniButton";
+import { CatalogueTile } from "@/components/Home/CatalogueTile";
+import { FinanceTile } from "@/components/Home/FinanceTile";
+import { MotiView } from "moti";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -118,6 +121,17 @@ export default function Index() {
     }
   }
 
+  const tileAnimationProps = useCallback((delay: number) => {
+    return {
+      style: {
+        flex: 1,
+      },
+      from: { opacity: 0 },
+      animate: { opacity: 1 },
+      transition: { type: "timing", duration: 500, delay },
+    } as const;
+  }, []);
+
   return (
     <ScrollView
       contentContainerStyle={{ backgroundColor: colors.background, gap: 32 }}
@@ -174,8 +188,20 @@ export default function Index() {
         )}
         <View style={{ gap: 16 }}>
           <View style={{ flexDirection: "row", gap: 16 }}>
-            <OrganizationTile />
-            <RevenueTile />
+            <MotiView {...tileAnimationProps(0)}>
+              <OrganizationTile />
+            </MotiView>
+            <MotiView {...tileAnimationProps(100)}>
+              <RevenueTile />
+            </MotiView>
+          </View>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <MotiView {...tileAnimationProps(200)}>
+              <CatalogueTile />
+            </MotiView>
+            <MotiView {...tileAnimationProps(300)}>
+              <FinanceTile />
+            </MotiView>
           </View>
         </View>
 
@@ -191,7 +217,7 @@ export default function Index() {
               Recent Subscriptions
             </ThemedText>
             <Link href="/subscriptions" asChild>
-              <MiniButton>View All</MiniButton>
+              <MiniButton secondary>View All</MiniButton>
             </Link>
           </View>
           {flatSubscriptions.length > 0 ? (
@@ -222,7 +248,7 @@ export default function Index() {
           >
             <ThemedText style={{ fontSize: 20 }}>Recent Orders</ThemedText>
             <Link href="/orders" asChild>
-              <MiniButton>View All</MiniButton>
+              <MiniButton secondary>View All</MiniButton>
             </Link>
           </View>
           {flatOrders.length > 0 ? (
@@ -257,7 +283,7 @@ export default function Index() {
         >
           <ThemedText style={{ fontSize: 20 }}>Recent Customers</ThemedText>
           <Link href="/customers" asChild>
-            <MiniButton>View All</MiniButton>
+            <MiniButton secondary>View All</MiniButton>
           </Link>
         </View>
 

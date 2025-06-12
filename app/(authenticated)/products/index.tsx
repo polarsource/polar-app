@@ -11,11 +11,15 @@ import { FlatList, RefreshControl, Text, View } from "react-native";
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
   const { colors } = useTheme();
-  const { data, refetch, isRefetching, fetchNextPage, hasNextPage } =
+  const { data, refetch, isRefetching, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteProducts(organization?.id);
 
   const flatData = useMemo(() => {
-    return data?.pages.flatMap((page) => page.result.items) ?? [];
+    return (
+      data?.pages
+        .flatMap((page) => page.result.items)
+        .sort((a, b) => (a.isArchived ? 1 : -1) - (b.isArchived ? 1 : -1)) ?? []
+    );
   }, [data]);
 
   return (
@@ -23,28 +27,32 @@ export default function Index() {
       <Stack.Screen options={{ title: "Products" }} />
       <FlatList
         data={flatData}
-        renderItem={({ item }: { item: Product | string }) => {
-          if (typeof item === "string") {
-            return (
-              <ThemedText
-                style={{
-                  paddingVertical: 12,
-                  fontSize: 18,
-                }}
-              >
-                {item}
-              </ThemedText>
-            );
-          }
-
-          return <ProductRow product={item} style={{ marginBottom: 8 }} />;
-        }}
+        renderItem={({ item }: { item: Product }) => (
+          <ProductRow product={item} />
+        )}
         contentContainerStyle={{
           padding: 16,
           backgroundColor: colors.background,
+          gap: 4,
+          flexGrow: 1,
         }}
+        ListEmptyComponent={
+          isLoading ? null : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText style={{ fontSize: 16 }} secondary>
+                No Products
+              </ThemedText>
+            </View>
+          )
+        }
         ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-        keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
+        keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isRefetching} />
         }
@@ -53,6 +61,7 @@ export default function Index() {
             fetchNextPage();
           }
         }}
+        contentInset={{ bottom: 32 }}
         onEndReachedThreshold={0.8}
       />
     </>
