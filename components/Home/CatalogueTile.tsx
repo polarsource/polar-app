@@ -57,7 +57,7 @@ export const CatalogueTile = () => {
             }}
           >
             <ThemedText style={[styles.subtitle]} secondary>
-              7 Days Trend
+              Order Streak
             </ThemedText>
           </View>
           <View
