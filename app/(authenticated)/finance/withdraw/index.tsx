@@ -70,7 +70,7 @@ export default function Index() {
           />
         </Details>
         <SlideToAction
-          isLoading={true} // isPending
+          isLoading={isPending}
           text="Slide To Withdraw"
           onSlideStart={() => {
             scrollRef.current?.setNativeProps({ isEnabled: false });
