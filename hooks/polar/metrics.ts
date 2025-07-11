@@ -9,7 +9,8 @@ export const useMetrics = (
   organizationId: string | undefined,
   startDate: Date,
   endDate: Date,
-  parameters: Omit<MetricsGetRequest, "startDate" | "endDate">
+  parameters: Omit<MetricsGetRequest, "startDate" | "endDate">,
+  enabled = true
 ) => {
   const { polar } = usePolarClient();
 
@@ -35,7 +36,7 @@ export const useMetrics = (
         })),
       };
     },
-    enabled: !!organizationId,
+    enabled: !!organizationId && enabled,
   });
 };
 

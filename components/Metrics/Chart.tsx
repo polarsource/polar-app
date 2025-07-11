@@ -11,6 +11,7 @@ import { MetricsTotals } from "@polar-sh/sdk/models/components/metricstotals.js"
 import { Pill } from "../Shared/Pill";
 import { ChartPath } from "./ChartPath";
 import { MetricPeriod } from "@polar-sh/sdk/models/components/metricperiod.js";
+import { format } from "date-fns";
 
 interface ChartProps {
   currentPeriodData: ReturnType<typeof useMetrics>["data"];
@@ -57,12 +58,11 @@ export const Chart = ({
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <View style={styles.header}>
         {title && <ThemedText style={styles.title}>{title}</ThemedText>}
-        {trend && (
+        {trend ? (
           <Pill color={trend > 0 ? "green" : trend < 0 ? "red" : "blue"}>
-            {trend > 0 ? "+" : ""}
-            {(trend * 100).toFixed(1)}%
+            {`${trend > 0 ? "+" : ""}${trend * 100}%`}
           </Pill>
-        )}
+        ) : null}
       </View>
 
       <ThemedText style={styles.totalValue}>{formattedTotal}</ThemedText>
@@ -91,6 +91,20 @@ export const Chart = ({
           />
         </Svg>
       </View>
+      <View style={styles.chartTimeline}>
+        <ThemedText style={styles.chartTimelineText} secondary>
+          {format(currentPeriodDataPoints[0].date, "MMM d")}
+        </ThemedText>
+        <ThemedText
+          style={[styles.chartTimelineText, { textAlign: "right" }]}
+          secondary
+        >
+          {format(
+            currentPeriodDataPoints[currentPeriodDataPoints.length - 1].date,
+            "MMM d"
+          )}
+        </ThemedText>
+      </View>
     </View>
   );
 };
@@ -116,5 +130,12 @@ const styles = StyleSheet.create({
   },
   chartView: {
     width: "100%",
+  },
+  chartTimeline: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  chartTimelineText: {
+    fontSize: 12,
   },
 });

@@ -1,5 +1,6 @@
 import { formatCurrencyAndAmount } from "@/utils/money";
 import { Metric } from "@polar-sh/sdk/models/components/metric.js";
+import { Organization } from "@polar-sh/sdk/models/components/organization.js";
 import {
   differenceInDays,
   differenceInMonths,
@@ -7,6 +8,7 @@ import {
   differenceInYears,
   subDays,
   subHours,
+  subMonths,
 } from "date-fns";
 
 const scalarFormatter = Intl.NumberFormat("en-US", {});
@@ -47,34 +49,37 @@ export const dateRangeToInterval = (startDate: Date, endDate: Date) => {
   }
 };
 
-export const timeRange = {
-  "24h": {
-    startDate: subHours(new Date(), 24),
-    endDate: new Date(),
-    title: "24h",
-    description: "Last 24 hours",
-  },
-  "30d": {
-    startDate: subDays(new Date(), 30),
-    endDate: new Date(),
-    title: "30d",
-    description: "Last 30 days",
-  },
-  "3m": {
-    startDate: subDays(new Date(), 30),
-    endDate: new Date(),
-    title: "3m",
-    description: "Last 3 months",
-  },
-  all_time: {
-    startDate: subDays(new Date(), 365),
-    endDate: new Date(),
-    title: "All Time",
-    description: "All time",
-  },
-} as const;
+export const timeRange = (organization: Organization) =>
+  ({
+    "24h": {
+      startDate: subDays(new Date(), 1),
+      endDate: new Date(),
+      title: "24h",
+      description: "Last 24 hours",
+    },
+    "30d": {
+      startDate: subDays(new Date(), 30),
+      endDate: new Date(),
+      title: "30d",
+      description: "Last 30 days",
+    },
+    "3m": {
+      startDate: subMonths(new Date(), 3),
+      endDate: new Date(),
+      title: "3m",
+      description: "Last 3 months",
+    },
+    all_time: {
+      startDate: organization.createdAt,
+      endDate: new Date(),
+      title: "All Time",
+      description: "All time",
+    },
+  } as const);
 
-export const getPreviousParams = (startDate: Date): typeof timeRange => {
+export const getPreviousParams = (
+  startDate: Date
+): Omit<ReturnType<typeof timeRange>, "all_time"> => {
   return {
     "24h": {
       startDate: subHours(startDate, 24),
@@ -93,12 +98,6 @@ export const getPreviousParams = (startDate: Date): typeof timeRange => {
       endDate: startDate,
       title: "3m",
       description: "Last 3 months",
-    },
-    all_time: {
-      startDate: subDays(startDate, 365),
-      endDate: startDate,
-      title: "All Time",
-      description: "All time",
     },
   };
 };

@@ -1,125 +1,147 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import {
-	FlatList,
-	RefreshControl,
-	SafeAreaView,
-	StyleSheet,
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import { useMetrics } from "@/hooks/polar/metrics";
 import { Stack } from "expo-router";
 import { Chart } from "@/components/Metrics/Chart";
-import { subDays, subHours } from "date-fns";
 import { Tabs, TabsList, TabsTrigger } from "@/components/Shared/Tabs";
 import {
-	dateRangeToInterval,
-	getPreviousParams,
-	timeRange,
+  dateRangeToInterval,
+  getPreviousParams,
+  timeRange,
 } from "@/components/Metrics/utils";
 import React from "react";
+import { MetricsTotals } from "@polar-sh/sdk/models/components/metricstotals.js";
 
 export default function Index() {
-	const { organization } = useContext(OrganizationContext);
-	const [selectedTimeInterval, setSelectedTimeInterval] =
-		useState<keyof typeof timeRange>("30d");
+  const { organization } = useContext(OrganizationContext);
+  const [selectedTimeInterval, setSelectedTimeInterval] =
+    useState<keyof ReturnType<typeof timeRange>>("30d");
 
-	const { startDate, endDate } = {
-		startDate: timeRange[selectedTimeInterval].startDate,
-		endDate: timeRange[selectedTimeInterval].endDate,
-	};
+  if (!organization) {
+    return null;
+  }
 
-	const { startDate: previousPeriodStartDate, endDate: previousPeriodEndDate } =
-		{
-			startDate: getPreviousParams(startDate)[selectedTimeInterval].startDate,
-			endDate: getPreviousParams(startDate)[selectedTimeInterval].endDate,
-		};
+  const { startDate, endDate } = useMemo(() => {
+    return {
+      startDate: timeRange(organization)[selectedTimeInterval].startDate,
+      endDate: timeRange(organization)[selectedTimeInterval].endDate,
+    };
+  }, [selectedTimeInterval]);
 
-	const metrics = useMetrics(organization?.id, startDate, endDate, {
-		interval: dateRangeToInterval(startDate, endDate),
-	});
+  const previousPeriod = useMemo(() => {
+    const previousParams = getPreviousParams(startDate);
 
-	const previousMetrics = useMetrics(
-		organization?.id,
-		previousPeriodStartDate,
-		previousPeriodEndDate,
-		{
-			interval: dateRangeToInterval(
-				previousPeriodStartDate,
-				previousPeriodEndDate,
-			),
-		},
-	);
+    if (selectedTimeInterval === "all_time") {
+      return null;
+    }
 
-	return (
-		<>
-			<Stack.Screen
-				options={{
-					title: "Metrics",
-				}}
-			/>
-			<SafeAreaView style={MetricsStyles.tabsStyle}>
-				<Tabs
-					defaultValue={selectedTimeInterval}
-					onValueChange={(value) =>
-						setSelectedTimeInterval(value as keyof typeof timeRange)
-					}
-				>
-					<TabsList>
-						{Object.entries(timeRange).map(([key, value]) => {
-							return (
-								<TabsTrigger key={key} value={key}>
-									{value.title}
-								</TabsTrigger>
-							);
-						})}
-					</TabsList>
-				</Tabs>
-			</SafeAreaView>
-			<FlatList
-				style={MetricsStyles.container}
-				contentContainerStyle={MetricsStyles.contentContainer}
-				contentInset={{ bottom: 48 }}
-				data={Object.entries(metrics.data?.metrics ?? {}).map(
-					([metric, value]) => {
-						return {
-							metric,
-							value,
-						};
-					},
-				)}
-				renderItem={({ item }) => {
-					return (
-						<Chart
-							key={item.metric}
-							currentPeriodData={metrics.data}
-							previousPeriodData={previousMetrics.data}
-							title={item.value.displayName}
-							metric={item.value}
-						/>
-					);
-				}}
-				keyExtractor={(item) => item.metric}
-				refreshControl={
-					<RefreshControl
-						refreshing={metrics.isRefetching}
-						onRefresh={metrics.refetch}
-					/>
-				}
-			/>
-		</>
-	);
+    return {
+      startDate: previousParams[selectedTimeInterval].startDate,
+      endDate: previousParams[selectedTimeInterval].endDate,
+    };
+  }, [selectedTimeInterval, startDate]);
+
+  const metrics = useMetrics(organization?.id, startDate, endDate, {
+    interval: dateRangeToInterval(startDate, endDate),
+  });
+
+  const previousMetrics = useMetrics(
+    organization?.id,
+    previousPeriod?.startDate ?? startDate,
+    previousPeriod?.endDate ?? endDate,
+    {
+      interval: dateRangeToInterval(
+        previousPeriod?.startDate ?? startDate,
+        previousPeriod?.endDate ?? endDate
+      ),
+    },
+    !!previousPeriod
+  );
+
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: "Metrics",
+        }}
+      />
+      <SafeAreaView style={MetricsStyles.tabsStyle}>
+        <Tabs
+          defaultValue={selectedTimeInterval}
+          onValueChange={(value) =>
+            setSelectedTimeInterval(value as keyof ReturnType<typeof timeRange>)
+          }
+        >
+          <TabsList>
+            {Object.entries(timeRange(organization)).map(([key, value]) => {
+              return (
+                <TabsTrigger key={key} value={key}>
+                  {value.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </Tabs>
+      </SafeAreaView>
+      <FlatList
+        style={MetricsStyles.container}
+        contentContainerStyle={MetricsStyles.contentContainer}
+        contentInset={{ bottom: 48 }}
+        data={Object.entries(metrics.data?.metrics ?? {}).map(
+          ([metric, value]) => {
+            return {
+              metric,
+              value,
+            };
+          }
+        )}
+        renderItem={({ item }) => {
+          const trend =
+            (metrics.data?.totals[item.value.slug as keyof MetricsTotals] ??
+              0) -
+            (previousMetrics.data?.totals[
+              item.value.slug as keyof MetricsTotals
+            ] ?? 0);
+
+          return (
+            <Chart
+              key={item.metric}
+              currentPeriodData={metrics.data}
+              previousPeriodData={previousMetrics.data}
+              title={item.value.displayName}
+              metric={item.value}
+              trend={trend}
+            />
+          );
+        }}
+        keyExtractor={(item) => item.metric}
+        refreshControl={
+          <RefreshControl
+            refreshing={metrics.isRefetching}
+            onRefresh={metrics.refetch}
+          />
+        }
+      />
+    </>
+  );
 }
 
 const MetricsStyles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	tabsStyle: {
-		margin: 16,
-	},
-	contentContainer: {
-		flexDirection: "column",
-		padding: 16,
-		gap: 16,
-	},
+  container: {
+    flex: 1,
+  },
+  tabsStyle: {
+    margin: 16,
+  },
+  contentContainer: {
+    flexDirection: "column",
+    padding: 16,
+    gap: 16,
+  },
 });
