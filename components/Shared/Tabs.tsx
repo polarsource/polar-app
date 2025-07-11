@@ -7,7 +7,13 @@ import {
   ViewProps,
   ViewStyle,
 } from "react-native";
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 const TabsContext = createContext({
   activeValue: "",
@@ -16,15 +22,33 @@ const TabsContext = createContext({
 
 export const Tabs = ({
   defaultValue,
+  onValueChange,
   children,
 }: {
   defaultValue: string;
+  onValueChange?: (value: string) => void;
   children: React.ReactNode;
 }) => {
   const [activeValue, setActiveValue] = useState(defaultValue);
 
+  const handleValueChange = useCallback(
+    (value: string) => {
+      setActiveValue(value);
+      onValueChange?.(value);
+    },
+    [onValueChange]
+  );
+
   return (
-    <TabsContext.Provider value={{ activeValue, setActiveValue }}>
+    <TabsContext.Provider
+      value={{
+        activeValue,
+        setActiveValue: (value) => {
+          setActiveValue(value);
+          handleValueChange(value);
+        },
+      }}
+    >
       {children}
     </TabsContext.Provider>
   );
@@ -56,7 +80,7 @@ export const TabsList = ({ children }: PropsWithChildren) => {
         gap: 8,
         backgroundColor: colors.card,
         padding: 4,
-        borderRadius: 12,
+        borderRadius: 16,
       }}
     >
       {children}
@@ -83,7 +107,7 @@ export const TabsTrigger = ({ value, children }: TabsTriggerProps) => {
           alignItems: "center",
           paddingVertical: 10,
           paddingHorizontal: 8,
-          borderRadius: 8,
+          borderRadius: 12,
           flex: 1,
         },
         activeValue === value && {

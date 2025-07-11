@@ -19,6 +19,7 @@
     "@dev-plugins/react-query": "^0.1.0",
     "@expo-google-fonts/instrument-serif": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
+    "@expo/ui": "~0.1.1-alpha.10",
     "@expo/vector-icons": "^14.0.2",
     "@polar-sh/sdk": "^0.32.15",
     "@react-native-async-storage/async-storage": "2.1.2",

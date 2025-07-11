@@ -1,7 +1,9 @@
 import { usePolarClient } from "@/providers/PolarClientProvider";
+import { MetricPeriod } from "@polar-sh/sdk/models/components/metricperiod.js";
 import { MetricsGetRequest } from "@polar-sh/sdk/models/operations/metricsget.js";
 import { RFCDate } from "@polar-sh/sdk/types/rfcdate.js";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const useMetrics = (
   organizationId: string | undefined,
@@ -35,4 +37,16 @@ export const useMetrics = (
     },
     enabled: !!organizationId,
   });
+};
+
+export const toValueDataPoints = (
+  metrics: ReturnType<typeof useMetrics>["data"] | undefined,
+  key: Exclude<keyof MetricPeriod, "timestamp">
+) => {
+  if (!metrics) return [];
+
+  return metrics.periods.map((period) => ({
+    value: period[key] ?? 0,
+    date: period.timestamp,
+  }));
 };

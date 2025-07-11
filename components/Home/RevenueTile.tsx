@@ -10,7 +10,6 @@ import Svg from "react-native-svg";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { subMonths } from "date-fns";
 import { ThemedText } from "../Shared/ThemedText";
-import { MetricsGetRequest } from "@polar-sh/sdk/models/operations/metricsget.js";
 import { useRevenueTrend } from "@/hooks/trend";
 import { Pill } from "../Shared/Pill";
 

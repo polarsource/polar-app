@@ -81,7 +81,7 @@ export default function Index() {
           onSlideComplete={async () => {
             await withdrawFunds({ accountId: account?.id });
 
-            router.replace(`/home`);
+            router.replace(`/finance`);
           }}
         />
       </SafeAreaView>
