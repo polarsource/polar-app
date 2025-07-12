@@ -80,9 +80,6 @@
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
-  "resolutions": {
-    "tslib": "2.8.1"
-  },
   "private": true,
   "expo": {
     "doctor": {
