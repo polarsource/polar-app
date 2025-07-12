@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     gap: 32,
   },
   title: {
-    fontSize: 48,
+    fontSize: 56,
     lineHeight: 56,
     paddingVertical: 32,
     fontFamily: "InstrumentSerif_400Regular",

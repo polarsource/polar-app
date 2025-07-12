@@ -1,10 +1,12 @@
-import { useContext, useMemo, useState } from "react";
+import { Suspense, useContext, useMemo, useState } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import {
+  ActivityIndicator,
   FlatList,
   RefreshControl,
   SafeAreaView,
   StyleSheet,
+  View,
 } from "react-native";
 import { useMetrics } from "@/hooks/polar/metrics";
 import { Stack } from "expo-router";
@@ -17,6 +19,7 @@ import {
 } from "@/components/Metrics/utils";
 import React from "react";
 import { MetricsTotals } from "@polar-sh/sdk/models/components/metricstotals.js";
+import { Metric } from "@polar-sh/sdk/models/components/metric.js";
 
 export default function Index() {
   const { organization } = useContext(OrganizationContext);
@@ -89,47 +92,53 @@ export default function Index() {
           </TabsList>
         </Tabs>
       </SafeAreaView>
-      <FlatList
-        style={MetricsStyles.container}
-        contentContainerStyle={MetricsStyles.contentContainer}
-        contentInset={{ bottom: 48 }}
-        data={Object.entries(metrics.data?.metrics ?? {}).map(
-          ([metric, value]) => ({
-            metric,
-            value,
-          })
-        )}
-        renderItem={({ item }) => {
-          const trend =
-            (metrics.data?.totals[item.value.slug as keyof MetricsTotals] ??
-              0) -
-            (previousMetrics.data?.totals[
-              item.value.slug as keyof MetricsTotals
-            ] ?? 0);
-
-          return (
-            <Chart
-              key={item.metric}
-              currentPeriodData={metrics.data}
-              previousPeriodData={previousMetrics.data}
-              title={item.value.displayName}
-              metric={item.value}
-              trend={trend}
-              currentPeriod={{
-                startDate,
-                endDate,
-              }}
+      {metrics.isLoading ? (
+        <View style={MetricsStyles.emptyContainer}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <FlatList
+          style={MetricsStyles.container}
+          contentContainerStyle={MetricsStyles.contentContainer}
+          contentInset={{ bottom: 48 }}
+          data={
+            Object.entries(metrics.data?.metrics ?? {}).map(
+              ([metric, value]) => ({
+                metric,
+                value,
+              })
+            ) as Array<{
+              metric: keyof MetricsTotals;
+              value: Metric;
+            }>
+          }
+          renderItem={({ item }) => {
+            return (
+              <Chart
+                key={item.metric}
+                currentPeriodData={metrics.data}
+                previousPeriodData={previousMetrics.data}
+                title={item.value.displayName}
+                metric={{
+                  key: item.metric,
+                  ...item.value,
+                }}
+                currentPeriod={{
+                  startDate,
+                  endDate,
+                }}
+              />
+            );
+          }}
+          keyExtractor={(item) => item.metric}
+          refreshControl={
+            <RefreshControl
+              refreshing={metrics.isRefetching}
+              onRefresh={metrics.refetch}
             />
-          );
-        }}
-        keyExtractor={(item) => item.metric}
-        refreshControl={
-          <RefreshControl
-            refreshing={metrics.isRefetching}
-            onRefresh={metrics.refetch}
-          />
-        }
-      />
+          }
+        />
+      )}
     </>
   );
 }
@@ -145,5 +154,10 @@ const MetricsStyles = StyleSheet.create({
     flexDirection: "column",
     padding: 16,
     gap: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

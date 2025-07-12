@@ -21,7 +21,9 @@ interface ChartProps {
   height?: number;
   showTotal?: boolean;
   strokeWidth?: number;
-  metric: Metric;
+  metric: Metric & {
+    key: keyof MetricsTotals;
+  };
   currentPeriod: {
     startDate: Date;
     endDate: Date;
@@ -32,7 +34,6 @@ export const Chart = ({
   currentPeriodData,
   previousPeriodData,
   title,
-  trend,
   height = 80,
   strokeWidth = 2,
   metric,
@@ -43,7 +44,7 @@ export const Chart = ({
   const [chartHeight, setChartHeight] = useState(0);
 
   const totalValue = useMemo(() => {
-    return currentPeriodData?.totals[metric.slug as keyof MetricsTotals] ?? 0;
+    return currentPeriodData?.totals[metric.key] ?? 0;
   }, [currentPeriodData]);
 
   const formattedTotal = useMemo(() => {
@@ -52,22 +53,17 @@ export const Chart = ({
 
   const currentPeriodDataPoints = toValueDataPoints(
     currentPeriodData,
-    metric.slug as Exclude<keyof MetricPeriod, "timestamp">
+    metric.key
   );
   const previousPeriodDataPoints = toValueDataPoints(
     previousPeriodData,
-    metric.slug as Exclude<keyof MetricPeriod, "timestamp">
+    metric.key
   );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <View style={styles.header}>
         {title && <ThemedText style={styles.title}>{title}</ThemedText>}
-        {/*  {trend ? (
-          <Pill color={trend > 0 ? "green" : trend < 0 ? "red" : "blue"}>
-            {`${trend > 0 ? "+" : ""}${trend * 100}%`}
-          </Pill>
-        ) : null} */}
       </View>
 
       <ThemedText style={styles.totalValue}>{formattedTotal}</ThemedText>
