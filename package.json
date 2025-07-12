@@ -54,7 +54,6 @@
     "expo-system-ui": "~5.0.7",
     "expo-updates": "~0.28.13",
     "expo-web-browser": "~14.1.6",
-    "framer-motion": "^12.23.3",
     "moti": "^0.30.0",
     "nativewind": "^4.1.23",
     "react": "19.0.0",
