@@ -63,11 +63,11 @@ export const Chart = ({
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <View style={styles.header}>
         {title && <ThemedText style={styles.title}>{title}</ThemedText>}
-        {trend ? (
+        {/*  {trend ? (
           <Pill color={trend > 0 ? "green" : trend < 0 ? "red" : "blue"}>
             {`${trend > 0 ? "+" : ""}${trend * 100}%`}
           </Pill>
-        ) : null}
+        ) : null} */}
       </View>
 
       <ThemedText style={styles.totalValue}>{formattedTotal}</ThemedText>
