@@ -22,6 +22,10 @@ interface ChartProps {
   showTotal?: boolean;
   strokeWidth?: number;
   metric: Metric;
+  currentPeriod: {
+    startDate: Date;
+    endDate: Date;
+  };
 }
 
 export const Chart = ({
@@ -32,6 +36,7 @@ export const Chart = ({
   height = 80,
   strokeWidth = 2,
   metric,
+  currentPeriod,
 }: ChartProps) => {
   const { colors } = useTheme();
   const [width, setWidth] = useState(0);
@@ -93,16 +98,13 @@ export const Chart = ({
       </View>
       <View style={styles.chartTimeline}>
         <ThemedText style={styles.chartTimelineText} secondary>
-          {format(currentPeriodDataPoints[0].date, "MMM d")}
+          {format(currentPeriod.startDate, "MMM d")}
         </ThemedText>
         <ThemedText
           style={[styles.chartTimelineText, { textAlign: "right" }]}
           secondary
         >
-          {format(
-            currentPeriodDataPoints[currentPeriodDataPoints.length - 1].date,
-            "MMM d"
-          )}
+          {format(currentPeriod.endDate, "MMM d")}
         </ThemedText>
       </View>
     </View>

@@ -94,7 +94,7 @@ export const getPreviousParams = (
       description: "Last 30 days",
     },
     "3m": {
-      startDate: subDays(startDate, 30),
+      startDate: subMonths(startDate, 3),
       endDate: startDate,
       title: "3m",
       description: "Last 3 months",

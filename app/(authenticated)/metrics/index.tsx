@@ -45,7 +45,7 @@ export default function Index() {
       startDate: previousParams[selectedTimeInterval].startDate,
       endDate: previousParams[selectedTimeInterval].endDate,
     };
-  }, [selectedTimeInterval, startDate]);
+  }, [selectedTimeInterval, startDate, endDate]);
 
   const metrics = useMetrics(organization?.id, startDate, endDate, {
     interval: dateRangeToInterval(startDate, endDate),
@@ -94,12 +94,10 @@ export default function Index() {
         contentContainerStyle={MetricsStyles.contentContainer}
         contentInset={{ bottom: 48 }}
         data={Object.entries(metrics.data?.metrics ?? {}).map(
-          ([metric, value]) => {
-            return {
-              metric,
-              value,
-            };
-          }
+          ([metric, value]) => ({
+            metric,
+            value,
+          })
         )}
         renderItem={({ item }) => {
           const trend =
@@ -117,6 +115,10 @@ export default function Index() {
               title={item.value.displayName}
               metric={item.value}
               trend={trend}
+              currentPeriod={{
+                startDate,
+                endDate,
+              }}
             />
           );
         }}
