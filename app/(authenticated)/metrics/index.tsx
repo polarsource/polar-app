@@ -127,6 +127,7 @@ export default function Index() {
                   startDate,
                   endDate,
                 }}
+                showPreviousPeriodTotal={selectedTimeInterval !== "all_time"}
               />
             );
           }}

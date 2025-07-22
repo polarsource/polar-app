@@ -9,6 +9,8 @@ export interface ChartPathProps {
   chartHeight: number;
   strokeWidth: number;
   strokeColor: string;
+  minValue: number;
+  maxValue: number;
 }
 
 export const ChartPath = ({
@@ -17,15 +19,14 @@ export const ChartPath = ({
   chartHeight,
   strokeWidth,
   strokeColor,
+  minValue,
+  maxValue,
 }: ChartPathProps) => {
   const pathString = dataPoints
     .map((point, index) => {
       const x =
         index === 0 ? 1 : (index / (dataPoints.length - 1)) * (width - 2);
 
-      const values = dataPoints.map((d) => d.value);
-      const maxValue = Math.max(...values);
-      const minValue = Math.min(...values);
       const valueRange = Math.abs(maxValue - minValue) || 1;
 
       const y =

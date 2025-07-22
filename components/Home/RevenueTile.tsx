@@ -11,7 +11,6 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { subMonths } from "date-fns";
 import { ThemedText } from "../Shared/ThemedText";
 import { useRevenueTrend } from "@/hooks/trend";
-import { Pill } from "../Shared/Pill";
 
 export const RevenueTile = () => {
   const [width, setWidth] = useState(0);
@@ -80,18 +79,6 @@ export const RevenueTile = () => {
             <ThemedText style={[styles.subtitle]} secondary>
               Revenue
             </ThemedText>
-            <Pill
-              color={
-                revenueTrend.trend > 0
-                  ? "green"
-                  : revenueTrend.trend < 0
-                  ? "red"
-                  : "blue"
-              }
-            >
-              {revenueTrend.trend > 0 ? "+" : ""}
-              {(revenueTrend.trend * 100).toFixed(1)}%
-            </Pill>
           </View>
           <ThemedText style={[styles.title]}>30 Days</ThemedText>
         </View>
