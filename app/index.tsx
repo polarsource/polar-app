@@ -97,7 +97,7 @@ const LoginStyle = StyleSheet.create({
     bottom: 0,
   },
   title: {
-    fontSize: 56,
+    fontSize: 58,
     textAlign: "center",
     fontWeight: "500",
     lineHeight: 64,
