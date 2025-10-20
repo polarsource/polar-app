@@ -50,9 +50,12 @@
       [
         "expo-asset",
         {
-          "assets": ["./assets/images/login-background.jpg"]
+          "assets": [
+            "./assets/images/login-background.jpg"
+          ]
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
