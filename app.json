@@ -15,11 +15,7 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "icon": {
-        "dark": "./assets/images/ios-dark.png",
-        "light": "./assets/images/ios-light.png",
-        "tinted": "./assets/images/ios-tinted.png"
-      }
+      "icon": "./assets/images/ios-dark.png"
     },
     "android": {
       "adaptiveIcon": {
@@ -50,9 +46,7 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "./assets/images/login-background.jpg"
-          ]
+          "assets": ["./assets/images/login-background.jpg"]
         }
       ],
       "expo-web-browser"
