@@ -53,7 +53,7 @@ export default function App() {
             },
           ]}
         >
-          Payment infrastructure for the 21st century
+          Monetize your software
         </ThemedText>
       </MotiView>
       <MotiView
