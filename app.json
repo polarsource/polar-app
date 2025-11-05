@@ -46,10 +46,20 @@
       [
         "expo-asset",
         {
-          "assets": ["./assets/images/login-background.jpg"]
+          "assets": [
+            "./assets/images/login-background.jpg"
+          ]
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "polar-app",
+          "organization": "polar-sh"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
