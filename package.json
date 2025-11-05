@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@sentry/cli": "^2.57.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-test-renderer": "^18.3.0",

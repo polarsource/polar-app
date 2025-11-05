@@ -180,6 +180,9 @@ importers:
       '@babel/core':
         specifier: ^7.25.2
         version: 7.27.4
+      '@sentry/cli':
+        specifier: ^2.57.0
+        version: 2.57.0
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
