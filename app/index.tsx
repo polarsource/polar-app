@@ -14,6 +14,7 @@ import { useOAuth } from "@/hooks/oauth";
 import { ThemedText } from "@/components/Shared/ThemedText";
 import { Image } from "expo-image";
 import { MotiView } from "moti";
+import * as Sentry from "@sentry/react-native";
 
 export default function App() {
   const { session, setSession } = useSession();
