@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "polar",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "owner": "polar-sh",
     "ios": {
@@ -46,9 +46,7 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "./assets/images/login-background.jpg"
-          ]
+          "assets": ["./assets/images/login-background.jpg"]
         }
       ],
       "expo-web-browser",
